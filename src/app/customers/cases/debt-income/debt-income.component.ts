@@ -24,6 +24,7 @@ import {CreditWorthinessSnapshot} from '../../../../services/portfolio/domain/in
 import * as fromCustomers from '../../store/index';
 import {Customer} from '../../../../services/customer/domain/customer.model';
 import {TableData} from '../../../../common/data-table/data-table.component';
+import {MainComponent} from '../../../main/main.component';
 
 interface IncomeDebtOverview {
   debtTableData: TableData,
@@ -49,7 +50,7 @@ export class CaseDebtIncomeComponent implements OnInit {
 
   cosignerOverview$: Observable<IncomeDebtOverview>;
 
-  constructor(private store: CasesStore) {
+  constructor(private store: CasesStore, private main: MainComponent) {
   }
 
   ngOnInit(): void {
@@ -114,6 +115,10 @@ export class CaseDebtIncomeComponent implements OnInit {
 
   sum(factors: CreditWorthinessFactor[]): number {
     return factors.reduce((acc, val) => acc + val.amount, 0);
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

@@ -24,6 +24,7 @@ import * as fromPortfolio from './store';
 import {Observable} from 'rxjs';
 import {SEARCH} from './store/product.actions';
 import {FimsProduct} from './store/model/fims-product.model';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './product.list.component.html'
@@ -37,7 +38,7 @@ export class ProductListComponent implements OnInit{
     { name: 'name', label: 'Name' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: PortfolioStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: PortfolioStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.productData = this.store.select(fromPortfolio.getProductSearchResults)
@@ -55,5 +56,9 @@ export class ProductListComponent implements OnInit{
 
   rowSelect(product: FimsProduct): void{
     this.router.navigate(['detail', product.identifier], { relativeTo: this.route })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

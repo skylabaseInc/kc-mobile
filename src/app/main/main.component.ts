@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit, HostListener} from '@angular/core';
 import {Router, NavigationEnd, ActivatedRoute, RouterState} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {HttpClient, Action} from '../../services/http/http.service';
@@ -21,6 +21,7 @@ import {Store} from '@ngrx/store';
 import * as fromRoot from '../reducers';
 import {LOGOUT} from '../reducers/security/security.actions';
 import {Observable} from 'rxjs/Observable';
+import {DevService} from '../../services/dev_logger/dev.service';
 
 @Component({
   selector: 'fims-main',
@@ -40,7 +41,10 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   username$: Observable<string>;
 
-  constructor(private router: Router, private titleService: Title, private httpClient: HttpClient, private store: Store<fromRoot.State>) {}
+  private menuMode = "side";
+  private openMode;
+
+  constructor(private router: Router, private titleService: Title, private httpClient: HttpClient, private store: Store<fromRoot.State>, private consoleLogService: DevService) { }
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -52,7 +56,8 @@ export class MainComponent implements OnInit, AfterViewInit {
     });
 
     this.tenant$ = this.store.select(fromRoot.getTenant);
-    this.username$ = this.store.select(fromRoot.getUsername)
+    this.username$ = this.store.select(fromRoot.getUsername);
+    this.openMode = "true";
   }
 
   ngAfterViewInit(): void {
@@ -86,4 +91,47 @@ export class MainComponent implements OnInit, AfterViewInit {
   goToSettings(): void {
     this.router.navigate(['/user']);
   }
+
+  showSideNavOver(): void {
+    this.menuMode = "over";
+  }
+
+  showSideNavSide(): void {
+    this.menuMode = "side";
+  }
+
+  toggleSideBar(): void {
+    switch(this.openMode) {
+      case "false": {
+        this.openMode = "true";
+        break;
+      }
+      case "true": {
+        this.openMode = "false";
+        break;
+      }
+      default: {
+        this.openMode = "true";
+        break;
+      }
+    }
+  }
+
+  configureOpenMode(event: any) {
+    if (event.target.innerWidth < 800) {
+      this.showSideNavOver();
+    } else if (event.target.innerWidth >= 800) {
+      this.showSideNavSide();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+    onResize(event) {
+      this.configureOpenMode(event);
+    }
+
+  @HostListener('window:load', ['$event'])
+    onload(event) {
+      this.configureOpenMode(event);
+    }
 }

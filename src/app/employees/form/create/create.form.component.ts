@@ -24,6 +24,7 @@ import {Subscription} from 'rxjs';
 import {CREATE, RESET_FORM} from '../../store/employee.actions';
 import {Error} from '../../../../services/domain/error.model';
 import {EmployeesStore} from '../../store/index';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -39,7 +40,7 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy{
     employee: { identifier: '', givenName: '', surname: '', contactDetails: [] }
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: EmployeesStore){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: EmployeesStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.formStateSubscription = this.store.select(fromEmployees.getEmployeeFormError)
@@ -77,5 +78,9 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }
