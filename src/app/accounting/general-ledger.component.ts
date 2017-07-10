@@ -21,6 +21,7 @@ import * as fromAccounting from './store';
 import {LOAD_ALL_TOP_LEVEL} from './store/ledger/ledger.actions';
 import {Observable} from 'rxjs';
 import {AccountingStore} from './store/index';
+import {MainComponent} from '../main/main.component';
 
 @Component({
   templateUrl: './general-ledger.component.html'
@@ -35,7 +36,7 @@ export class GeneralLedgerComponent implements OnInit{
     { name: 'description', label: 'Description', tooltip: 'Description' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.ledgerData = this.store.select(fromAccounting.getAllTopLevelLedgerEntities)
@@ -52,6 +53,10 @@ export class GeneralLedgerComponent implements OnInit{
 
   rowSelect(ledger: Ledger): void{
     this.router.navigate(['ledgers/detail', ledger.identifier, 'ledgers'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

@@ -25,6 +25,7 @@ import {IdentificationCard} from '../../../../services/customer/domain/identific
 import {Observable} from 'rxjs/Observable';
 import {TranslateService} from '@ngx-translate/core';
 import {TdDialogService} from '@covalent/core';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './identity-card.detail.component.html'
@@ -39,7 +40,7 @@ export class CustomerIdentityCardDetailComponent implements OnInit, OnDestroy {
 
   identificationCard: IdentificationCard;
 
-  constructor(private route: ActivatedRoute, private customersStore: CustomersStore, private translate: TranslateService, private dialogService: TdDialogService) {}
+  constructor(private route: ActivatedRoute, private customersStore: CustomersStore, private translate: TranslateService, private dialogService: TdDialogService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.identificationCardSubscription = this.customersStore.select(fromCustomers.getSelectedIdentificationCard)
@@ -80,5 +81,9 @@ export class CustomerIdentityCardDetailComponent implements OnInit, OnDestroy {
           activatedRoute: this.route
         }})
       });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

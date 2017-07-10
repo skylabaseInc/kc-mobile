@@ -19,6 +19,7 @@ import {ProductInstance} from '../../../../services/depositAccount/domain/instan
 import {Observable} from 'rxjs/Observable';
 import {DepositsStore} from '../store/index';
 import * as fromDeposits from '../store/index';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './deposit.detail.component.html'
@@ -27,9 +28,13 @@ export class DepositDetailComponent implements OnInit {
 
   depositInstance$: Observable<ProductInstance>;
 
-  constructor(private store: DepositsStore) {}
+  constructor(private store: DepositsStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.depositInstance$ = this.store.select(fromDeposits.getSelectedDepositInstance)
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

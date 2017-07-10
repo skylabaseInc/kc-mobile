@@ -26,6 +26,7 @@ import {SEARCH} from './store/deposit.actions';
 import {ProductInstance} from '../../../services/depositAccount/domain/instance/product-instance.model';
 import * as fromDeposits from './store/index';
 import * as fromCustomers from '../store';
+import {MainComponent} from '../../main/main.component';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class DepositsListComponent implements OnInit {
     { name: 'state', label: 'State' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.productInstancesData$ = this.depositsStore.select(fromDeposits.getDepositSearchResults)
@@ -72,5 +73,9 @@ export class DepositsListComponent implements OnInit {
 
   rowSelect(productInstance: ProductInstance): void{
     this.router.navigate(['detail', productInstance.accountIdentifier], { relativeTo: this.route })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

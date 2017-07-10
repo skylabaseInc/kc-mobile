@@ -23,6 +23,7 @@ import {Observable} from 'rxjs';
 import {SEARCH} from './store/product.actions';
 import {DepositAccountStore} from './store/index';
 import {ProductDefinition} from '../../services/depositAccount/domain/definition/product-definition.model';
+import {MainComponent} from '../main/main.component';
 
 @Component({
   templateUrl: './deposit-account.component.html'
@@ -39,7 +40,7 @@ export class DepositProductComponent implements OnInit{
     { name: 'interest', label: 'Interest'}
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.productData = this.store.select(fromDepositAccounts.getProductSearchResults)
@@ -57,5 +58,9 @@ export class DepositProductComponent implements OnInit{
 
   rowSelect(productDefinition: ProductDefinition): void{
     this.router.navigate(['detail', productDefinition.identifier], { relativeTo: this.route })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

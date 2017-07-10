@@ -19,6 +19,10 @@
     <md-icon>keyboard_arrow_left</md-icon>
   </a>
   {{'General Ledger' | translate}}
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <ng-container>
+    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
+  </ng-container>
 </md-toolbar>
 
 <fims-layout-card-over title="{{'Journal entries' | translate}}">

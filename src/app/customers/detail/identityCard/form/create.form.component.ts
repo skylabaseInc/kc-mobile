@@ -24,6 +24,7 @@ import {CREATE, RESET_FORM} from '../../../store/identityCards/identity-cards.ac
 import * as fromCustomers from '../../../store/index'
 import {Error} from '../../../../../services/domain/error.model';
 import {Customer} from '../../../../../services/customer/domain/customer.model';
+import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -44,7 +45,7 @@ export class CreateCustomerIdentificationCardFormComponent implements OnInit, On
     expirationDate: null
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent) {}
 
   ngOnInit() {
     this.customerSubscription = this.store.select(fromCustomers.getSelectedCustomer)
@@ -79,5 +80,9 @@ export class CreateCustomerIdentificationCardFormComponent implements OnInit, On
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }
