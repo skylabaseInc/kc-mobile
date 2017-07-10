@@ -27,6 +27,7 @@ import {CostComponent} from '../../../../services/portfolio/domain/individuallen
 import {ChargeName} from '../../../../services/portfolio/domain/individuallending/charge-name.model';
 import {FimsCase} from '../store/model/fims-case.model';
 import {todayAsISOString} from '../../../../services/domain/date.converter';
+import {MainComponent} from '../../../main/main.component';
 
 interface CostComponents {
   [id: string]: CostComponent
@@ -54,7 +55,7 @@ export class CasePaymentsComponent implements OnInit, OnDestroy{
 
   columns: Observable<ChargeName[]>;
 
-  constructor(private casesStore: CasesStore) {}
+  constructor(private casesStore: CasesStore, private main: MainComponent) {}
 
   private createRows(payments: PlannedPayment[]): PaymentRow[] {
     let rows: PaymentRow[] = [];
@@ -101,5 +102,9 @@ export class CasePaymentsComponent implements OnInit, OnDestroy{
       caseIdentifier: this.caseInstance.identifier,
       initialDisbursalDate: startDate
     }});
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

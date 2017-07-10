@@ -22,6 +22,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as fromTeller from '../store/index';
 import {Observable} from 'rxjs/Observable';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './teller-auth.component.html'
@@ -36,7 +37,7 @@ export class TellerAuthComponent implements OnInit, OnDestroy {
 
   error$: Observable<boolean>;
 
-  constructor(private store: TellerStore, private formBuilder: FormBuilder) {
+  constructor(private store: TellerStore, private formBuilder: FormBuilder, private main: MainComponent) {
     this.userIdSubscription = this.store.select(fromRoot.getUsername)
       .subscribe(username => this.userId = username);
   }
@@ -67,6 +68,10 @@ export class TellerAuthComponent implements OnInit, OnDestroy {
         password
       }
     })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

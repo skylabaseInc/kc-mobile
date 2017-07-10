@@ -24,6 +24,7 @@ import * as fromCases from '../store/index';
 import {CasesStore} from '../store/index';
 import {CaseCommand} from '../../../../services/portfolio/domain/case-command.model';
 import {EXECUTE_COMMAND} from '../store/case.actions';
+import {MainComponent} from '../../../main/main.component';
 
 interface StatusCommand {
   action: WorkflowAction;
@@ -49,7 +50,7 @@ export class CaseStatusComponent implements OnInit, OnDestroy {
     { action: 'CLOSE', preStates: ['APPROVED', 'ACTIVE']}
   ];
 
-  constructor(private route: ActivatedRoute, private casesStore: CasesStore) {}
+  constructor(private route: ActivatedRoute, private casesStore: CasesStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.caseSubscription = this.casesStore.select(fromCases.getSelectedCase)
@@ -74,6 +75,10 @@ export class CaseStatusComponent implements OnInit, OnDestroy {
       command: command,
       activatedRoute: this.route
     } });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

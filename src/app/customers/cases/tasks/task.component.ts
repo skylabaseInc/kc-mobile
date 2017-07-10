@@ -24,6 +24,7 @@ import {CasesStore} from '../store/index';
 import {Observable, Subscription} from 'rxjs';
 import {LOAD_ALL} from '../store/tasks/task.actions';
 import {FimsCase} from '../store/model/fims-case.model';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './task.component.html'
@@ -42,7 +43,7 @@ export class CaseTasksComponent implements OnInit, OnDestroy{
     { name: 'description', label: 'Description' }
   ];
 
-  constructor(private router: Router, private casesStore: CasesStore) {}
+  constructor(private router: Router, private casesStore: CasesStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.caseSubscription = this.casesStore.select(fromCases.getSelectedCase)
@@ -72,5 +73,9 @@ export class CaseTasksComponent implements OnInit, OnDestroy{
       caseId: this.caseInstance.identifier,
       productId: this.caseInstance.productIdentifier
     }});
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

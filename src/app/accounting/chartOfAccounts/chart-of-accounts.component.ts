@@ -20,6 +20,7 @@ import {Observable} from 'rxjs/Observable';
 import {AccountingStore} from '../store/index';
 import * as fromAccounting from '../store';
 import {LOAD_CHART_OF_ACCOUNTS} from '../store/ledger/ledger.actions';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './chart-of-accounts.component.html'
@@ -30,7 +31,7 @@ export class ChartOfAccountComponent implements OnInit{
 
   loading$: Observable<boolean>;
 
-  constructor(private store: AccountingStore){}
+  constructor(private store: AccountingStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.chartOfAccountEntries$ = this.store.select(fromAccounting.getChartOfAccountEntries);
@@ -38,6 +39,10 @@ export class ChartOfAccountComponent implements OnInit{
     this.loading$ = this.store.select(fromAccounting.getChartOfAccountLoading);
 
     this.store.dispatch({ type: LOAD_CHART_OF_ACCOUNTS });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

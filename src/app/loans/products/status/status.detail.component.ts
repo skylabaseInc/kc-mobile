@@ -21,6 +21,7 @@ import {SelectAction} from '../store/tasks/task.actions';
 import {PortfolioStore} from '../store/index';
 import {Subscription} from 'rxjs';
 import * as fromPortfolio from '../store';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './status.detail.component.html'
@@ -33,7 +34,7 @@ export class ProductStatusDetailComponent implements OnInit, OnDestroy{
 
   task: TaskDefinition;
 
-  constructor(private route: ActivatedRoute, private portfolioStore: PortfolioStore){}
+  constructor(private route: ActivatedRoute, private portfolioStore: PortfolioStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.actionsSubscription = this.route.params
@@ -47,5 +48,9 @@ export class ProductStatusDetailComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.actionsSubscription.unsubscribe();
     this.taskSubscription.unsubscribe();
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

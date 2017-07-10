@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-import {Component, ViewChild} from '@angular/core';
-import {DevService} from '../../services/dev_logger/dev.service';
-import {MainComponent} from '../main/main.component';
+import { Injectable } from '@angular/core';
 
-@Component({
-  templateUrl: './quick-access.component.html'
-})
-export class QuickAccessComponent {
+@Injectable()
+export class DevService {
 
-  // @ViewChild(MainComponent) mainComponent:MainComponent;
-  // private mainComponent: MainComponent;
-
-  constructor(private consoleLogService: DevService, private main: MainComponent){}
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
+  public consoleLog(logMsg: string) {
+      console.log(logMsg);
   }
 }

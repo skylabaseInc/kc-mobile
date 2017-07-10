@@ -19,6 +19,7 @@ import {AccountCommandAction} from '../../../services/accounting/domain/account-
 import {AccountCommand} from '../../../services/accounting/domain/account-command.model';
 import {AccountingStore} from '../store/index';
 import {EXECUTE_COMMAND} from '../store/account/task/task.actions';
+import {MainComponent} from '../../main/main.component';
 
 interface StatusCommand{
   action: AccountCommandAction;
@@ -39,7 +40,7 @@ export class AccountStatusComponent implements OnInit{
     { action: 'REOPEN' }
   ];
 
-  constructor(private route: ActivatedRoute, private store: AccountingStore) {}
+  constructor(private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => this.accountIdentifier = params['id']);
@@ -55,6 +56,10 @@ export class AccountStatusComponent implements OnInit{
       command: command,
       activatedRoute: this.route
     } });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

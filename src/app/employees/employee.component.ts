@@ -22,6 +22,7 @@ import {Store} from '@ngrx/store';
 import * as fromRoot from '../reducers';
 import {Observable} from 'rxjs';
 import {SEARCH} from '../reducers/employee/employee.actions';
+import {MainComponent} from '../main/main.component';
 
 @Component({
   selector: 'fims-employee',
@@ -43,7 +44,7 @@ export class EmployeeComponent implements OnInit{
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>, private main: MainComponent){}
 
   ngOnInit(): void {
 
@@ -78,5 +79,9 @@ export class EmployeeComponent implements OnInit{
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

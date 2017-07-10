@@ -15,7 +15,7 @@
 -->
 
 <md-sidenav-container fullscreen>
-  <md-sidenav #sideMenu mode="side" opened="true">
+  <md-sidenav #sideMenu [opened]="openMode" [mode]="menuMode">
     <md-toolbar>
       <div layout="column">
         <span layout="row" layout-align="start center">

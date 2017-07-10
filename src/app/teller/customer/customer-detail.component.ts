@@ -23,6 +23,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {LoadAllDepositProductsAction, LoadAllLoanProductsAction} from '../store/teller.actions';
 import {CustomerService} from '../../../services/customer/customer.service';
 import {TransactionType} from '../../../services/teller/domain/teller-transaction.model';
+import {MainComponent} from '../../main/main.component';
 
 interface Action {
   transactionType: TransactionType;
@@ -59,7 +60,7 @@ export class TellerCustomerDetailComponent implements OnDestroy {
     { transactionType: 'CWDL', color: 'indigo-A400', icon: 'arrow_back', title: 'Cash withdrawal', description: ''}
   ];
 
-  constructor(private store: TellerStore, private customerService: CustomerService) {
+  constructor(private store: TellerStore, private customerService: CustomerService, private main: MainComponent) {
     this.customer$ = store.select(fromTeller.getTellerSelectedCustomer)
       .filter(customer => !!customer);
 
@@ -84,5 +85,9 @@ export class TellerCustomerDetailComponent implements OnDestroy {
     this.loadDepositProductsSubscription.unsubscribe();
     this.loadLoanProductsSubscription.unsubscribe();
     this.portraitSubscription.unsubscribe();
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

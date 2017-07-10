@@ -25,6 +25,7 @@ import {Observable, Subscription} from 'rxjs';
 import {AccountingStore} from '../../store/index';
 import {SEARCH} from '../../store/account/entries/entries.actions';
 import {SelectAction} from '../../store/account/account.actions';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './account-entry.list.component.html'
@@ -49,7 +50,7 @@ export class AccountEntryListComponent implements OnInit, OnDestroy{
     { name: 'balance', label: 'Balance', tooltip: 'Balance' }
   ];
 
-  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private store: AccountingStore) {}
+  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private store: AccountingStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     let today = todayAsISOString();
@@ -92,5 +93,9 @@ export class AccountEntryListComponent implements OnInit, OnDestroy{
       fetchRequest: fetchRequest
     } });
 
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

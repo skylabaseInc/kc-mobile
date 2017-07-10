@@ -28,6 +28,7 @@ import {DepositAccountService} from '../../../services/depositAccount/deposit-ac
 import {Currency} from '../../../services/currency/domain/currency.model';
 import {Action} from '../../../services/depositAccount/domain/definition/action.model';
 import {Observable} from 'rxjs/Observable';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './edit.component.html'
@@ -43,7 +44,7 @@ export class DepositProductEditComponent implements OnInit, OnDestroy{
   actions: Observable<Action[]>;
 
   constructor(private router: Router, private route: ActivatedRoute, private depositStore: DepositAccountStore,
-              private depositService: DepositAccountService, private currencyService: CurrencyService) {}
+              private depositService: DepositAccountService, private currencyService: CurrencyService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.currencies = this.currencyService.fetchCurrencies();
@@ -68,6 +69,10 @@ export class DepositProductEditComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

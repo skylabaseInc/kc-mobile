@@ -24,6 +24,7 @@ import * as fromPortfolio from '../../store';
 import {CREATE, RESET_FORM} from '../../store/tasks/task.actions';
 import {Error} from '../../../../../services/domain/error.model';
 import {FimsProduct} from '../../store/model/fims-product.model';
+import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './create.component.html'
@@ -47,7 +48,7 @@ export class ProductStatusCreateFormComponent implements OnInit, OnDestroy{
     mandatory: false
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.productSubscription = this.portfolioStore.select(fromPortfolio.getSelectedProduct)
@@ -85,5 +86,9 @@ export class ProductStatusCreateFormComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

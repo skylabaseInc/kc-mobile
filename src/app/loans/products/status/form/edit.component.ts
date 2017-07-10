@@ -22,6 +22,7 @@ import {Subscription} from 'rxjs';
 import * as fromPortfolio from '../../store';
 import {UPDATE} from '../../store/tasks/task.actions';
 import {FimsProduct} from '../../store/model/fims-product.model';
+import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './edit.component.html'
@@ -36,7 +37,7 @@ export class ProductStatusEditFormComponent implements OnInit, OnDestroy{
 
   task: TaskDefinition;
 
-  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.taskSubscription = this.portfolioStore.select(fromPortfolio.getSelectedProductTask)
@@ -65,5 +66,9 @@ export class ProductStatusEditFormComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

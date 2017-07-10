@@ -24,6 +24,7 @@ import {DepositsStore} from '../store/index';
 import * as fromCustomers from '../../store/index';
 import {Observable} from 'rxjs/Observable';
 import {UPDATE} from '../store/deposit.actions';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './edit.component.html'
@@ -36,7 +37,7 @@ export class DepositEditComponent implements OnInit {
 
   productInstance$: Observable<ProductInstance>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.customer$ = this.depositsStore.select(fromCustomers.getSelectedCustomer);
@@ -56,5 +57,9 @@ export class DepositEditComponent implements OnInit {
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }
