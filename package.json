@@ -17,7 +17,8 @@
     "build": "ng build --prod --aot",
     "checkLicenses": "license-to-fail ./license.config.js",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-    "precache": "sw-precache --verbose --config=sw-precache-config.js"
+    "precache": "sw-precache --root=dist --verbose --config=sw-precache-config.js",
+    "static-serve": "cd dist && live-server --port=4200 --host=localhost --entry-file=/index.html"
   },
   "engines": {
     "node": ">4.4 < 7",
@@ -60,7 +61,8 @@
     "rxjs": "5.4.1",
     "showdown": "1.6.4",
     "text-mask-addons": "^3.6.0",
-    "zone.js": "0.8.11"
+    "zone.js": "0.8.11",
+    "serve-index": "^1.7.2"
   },
   "devDependencies": {
     "@angular/cli": "1.1.2",

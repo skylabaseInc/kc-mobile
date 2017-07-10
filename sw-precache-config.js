@@ -4,7 +4,7 @@
 
 module.exports = {
   staticFileGlobs: [
-    'dist/**.html',
+    'dist/index.html',
     'dist/**.js',
     'dist/**.png',
     'dist/**.css',
@@ -12,13 +12,14 @@ module.exports = {
     'dist/**.woff2',
     'dist/**.ttf',
     'dist/**.eot',
-    'dist/assets/*'
+    'dist/**.json'
   ],
   root: 'dist',
   stripPrefix: 'dist/',
   navigateFallback: '/index.html',
-  runtimeCaching: [{
-    urlPattern: /node-hnapi\.herokuapp\.com/,
+
+  /*runtimeCaching: [{
+    urlPattern: /http\:\/\/pilot\.kuelap\.io/,
     handler: 'networkFirst'
-  }]
+  }]*/
 };
