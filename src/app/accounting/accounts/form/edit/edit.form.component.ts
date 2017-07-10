@@ -21,6 +21,7 @@ import {Subscription} from 'rxjs';
 import * as fromAccounting from '../../../store';
 import {AccountingStore} from '../../../store/index';
 import {SelectAction, UPDATE} from '../../../store/account/account.actions';
+import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './edit.form.component.html'
@@ -35,7 +36,7 @@ export class EditAccountFormComponent implements OnInit, OnDestroy {
 
   @ViewChild('form') formComponent: AccountFormComponent;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
 
   ngOnInit() {
     this.actionsSubscription = this.route.params
@@ -64,5 +65,9 @@ export class EditAccountFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

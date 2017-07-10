@@ -25,6 +25,7 @@ import {FimsProduct} from './store/model/fims-product.model';
 import {FimsPermission} from '../../../services/security/authz/fims-permission.model';
 import {Observable} from 'rxjs/Observable';
 import {TdDialogService} from '@covalent/core';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './product.detail.component.html'
@@ -39,7 +40,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   canDelete$: Observable<boolean>;
 
-  constructor(private route: ActivatedRoute, private portfolioStore: PortfolioStore, private dialogService: TdDialogService){}
+  constructor(private route: ActivatedRoute, private portfolioStore: PortfolioStore, private dialogService: TdDialogService, private main: MainComponent){}
 
   ngOnInit(): void {
     const product$: Observable<FimsProduct> = this.portfolioStore.select(fromPortfolio.getSelectedProduct)
@@ -126,6 +127,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         permission.id === 'portfolio_products' &&
         permission.accessLevel === 'DELETE'
       ).length > 0
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

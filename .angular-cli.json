@@ -24,7 +24,8 @@
       "styles": [
         "styles.scss",
         "theme.scss",
-        "../node_modules/@covalent/core/common/platform.css"
+        "../node_modules/@covalent/core/common/platform.css",
+        "../node_modules/roboto-fontface/css/roboto/roboto-fontface.css"
       ],
       "scripts": [
         "../node_modules/hammerjs/hammer.min.js",

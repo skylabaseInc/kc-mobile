@@ -25,6 +25,7 @@ import {Subscription} from 'rxjs';
 import {CustomersStore} from '../store/index';
 import {LOAD_ALL} from '../store/catalogs/catalog.actions';
 import {CustomerService} from '../../../services/customer/customer.service';
+import {MainComponent} from '../../main/main.component';
 
 interface CatalogFieldPair{
   catalog: Catalog;
@@ -59,7 +60,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
 
   customCatalogs: CustomCatalog[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: CustomersStore, private customerService: CustomerService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private store: CustomersStore, private customerService: CustomerService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.customerSubscription = this.store.select(fromCustomers.getSelectedCustomer)
@@ -138,6 +139,10 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
 
   changePortrait(): void {
     this.router.navigate(['portrait'], { relativeTo: this.route })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

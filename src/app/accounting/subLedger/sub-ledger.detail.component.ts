@@ -27,6 +27,7 @@ import {AccountingStore} from '../store/index';
 import {SEARCH_BY_LEDGER} from '../../reducers/account/account.actions';
 import {FetchRequest} from '../../../services/domain/paging/fetch-request.model';
 import {Account} from '../../../services/accounting/domain/account.model';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './sub-ledger.detail.component.html'
@@ -50,7 +51,7 @@ export class SubLedgerDetailComponent implements OnInit, OnDestroy{
     { name: 'balance', label: 'Balance' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private dialogService: TdDialogService, private translate: TranslateService, private store: AccountingStore){}
+  constructor(private router: Router, private route: ActivatedRoute, private dialogService: TdDialogService, private translate: TranslateService, private store: AccountingStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.ledgerSubscription = this.store.select(fromAccounting.getSelectedLedger)
@@ -114,6 +115,10 @@ export class SubLedgerDetailComponent implements OnInit, OnDestroy{
       fetchRequest: this.lastFetchRequest
     } });
 
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

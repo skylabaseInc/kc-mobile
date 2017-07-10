@@ -24,6 +24,7 @@ import {SelectAction} from '../store/product.actions';
 import * as fromPortfolio from '../store';
 import {LOAD_ALL} from '../store/tasks/task.actions';
 import {FimsProduct} from '../store/model/fims-product.model';
+import {MainComponent} from '../../../main/main.component';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class ProductStatusComponent implements OnInit, OnDestroy{
 
   private product: FimsProduct;
 
-  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.productSubscription = this.portfolioStore.select(fromPortfolio.getSelectedProduct)
@@ -70,5 +71,9 @@ export class ProductStatusComponent implements OnInit, OnDestroy{
 
   rowSelect(taskDefinition: TaskDefinition): void {
     this.router.navigate(['detail', taskDefinition.identifier], { relativeTo: this.route })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }
