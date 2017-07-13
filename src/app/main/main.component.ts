@@ -22,6 +22,7 @@ import * as fromRoot from '../reducers';
 import {LOGOUT} from '../reducers/security/security.actions';
 import {Observable} from 'rxjs/Observable';
 import {DevService} from '../../services/dev_logger/dev.service';
+import {OfflineStoreService} from '../../services/offlineStore/offlineStore.service';
 
 @Component({
   selector: 'fims-main',
@@ -44,7 +45,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   protected menuMode = "side";
   protected openMode;
 
-  constructor(private router: Router, private titleService: Title, private httpClient: HttpClient, private store: Store<fromRoot.State>, private consoleLogService: DevService) { }
+  constructor(private router: Router, private titleService: Title, private httpClient: HttpClient, private store: Store<fromRoot.State>, private consoleLogService: DevService, private offlineStore: OfflineStoreService) { }
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -58,6 +59,8 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.tenant$ = this.store.select(fromRoot.getTenant);
     this.username$ = this.store.select(fromRoot.getUsername);
     this.openMode = "true";
+
+    this.offlineStore.ngOnInit();
   }
 
   ngAfterViewInit(): void {
