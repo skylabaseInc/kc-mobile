@@ -52,6 +52,7 @@ import {DepositAccountService} from '../services/depositAccount/deposit-account.
 import {CurrencyService} from '../services/currency/currency.service';
 import {TellerService} from '../services/teller/teller-service';
 import {DevService} from '../services/dev_logger/dev.service';
+import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 export function HttpLoaderFactory(http: Http){
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -112,7 +113,8 @@ export function HttpLoaderFactory(http: Http){
     ExistsGuardService,
     ...appRoutingProviders,
     ImageService,
-    DevService
+    DevService, 
+    OfflineStoreService
   ],
   bootstrap: [ AppComponent ]
 })
