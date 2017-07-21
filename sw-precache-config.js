@@ -18,8 +18,8 @@ module.exports = {
   stripPrefix: 'dist/',
   navigateFallback: '/index.html',
 
-  /*runtimeCaching: [{
+  runtimeCaching: [{
     urlPattern: /http\:\/\/pilot\.kuelap\.io/,
     handler: 'networkFirst'
-  }]*/
+  }]
 };
