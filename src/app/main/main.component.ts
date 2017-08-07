@@ -42,8 +42,8 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   username$: Observable<string>;
 
-  protected menuMode = "side";
-  protected openMode;
+  public menuMode = "side";
+  public openMode;
 
   constructor(private router: Router, private titleService: Title, private httpClient: HttpClient, private store: Store<fromRoot.State>, private consoleLogService: DevService, private offlineStore: OfflineStoreService) { }
 

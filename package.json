@@ -16,8 +16,15 @@
     "runProd": "ng serve --proxy-config proxy.conf.json --prod --aot",
     "build": "ng build --prod --aot",
     "checkLicenses": "license-to-fail ./license.config.js",
-    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json",
+    "precache-dev": "sw-precache --verbose",
+    "precache-prod": "sw-precache --root=dist --verbose --config=sw-precache-config.js",
+    "static-serve": "cd dist && live-server --port=4200 --host=localhost --entry-file=/index.html"
   },
+  "assets": [
+    "favicon.ico",
+    "manifest.json"
+  ],
   "engines": {
     "node": ">4.4 < 7",
     "npm": ">3"
@@ -61,7 +68,8 @@
     "rxjs": "5.4.1",
     "showdown": "1.6.4",
     "text-mask-addons": "^3.6.0",
-    "zone.js": "0.8.11"
+    "zone.js": "0.8.11",
+    "serve-index": "^1.7.2"
   },
   "devDependencies": {
     "@angular/cli": "1.1.2",
@@ -83,6 +91,7 @@
     "license-to-fail": "2.2.0",
     "phantomjs-prebuilt": "2.1.7",
     "protractor": "5.1.0",
+    "sw-precache": "^5.2.0",
     "ts-node": "3.0.6",
     "tslint": "4.5.1",
     "typescript": "2.3.4",
