@@ -16,7 +16,7 @@
 
 import { Injectable, OnInit } from '@angular/core';
 import {DevService} from '../../services/dev_logger/dev.service';
-import * as PouchDB from 'pouchdb';
+import * as PouchDB from 'pouchdb/dist/pouchdb';
 
 @Injectable()
 export class OfflineStoreService implements OnInit {

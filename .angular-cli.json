@@ -9,8 +9,9 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "favicon.png",
-        "assets"
+        "assets",
+        "favicon.ico",
+        "manifest.json"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -20,7 +21,6 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "mobile": true,
-      "serviceWorker": true,
       "styles": [
         "styles.scss",
         "theme.scss",

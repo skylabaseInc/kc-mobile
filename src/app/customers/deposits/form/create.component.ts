@@ -68,7 +68,7 @@ export class DepositCreateComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  toggelSideNav(): void {
+  toggleSideNav(): void {
     this.main.toggleSideBar();
   }
 }
