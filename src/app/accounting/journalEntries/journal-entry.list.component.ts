@@ -26,6 +26,7 @@ import {Observable} from 'rxjs';
 import {AccountingStore} from '../store/index';
 import {ITdDataTableColumn} from '@covalent/core';
 import {DatePipe} from '@angular/common';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './journal-entry.list.component.html',
@@ -39,7 +40,7 @@ export class JournalEntryListComponent implements OnInit{
 
   columns: ITdDataTableColumn[];
 
-  constructor(private formBuilder: FormBuilder, private store: AccountingStore, private datePipe: DatePipe) {}
+  constructor(private formBuilder: FormBuilder, private store: AccountingStore, private datePipe: DatePipe, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.columns = [
@@ -77,6 +78,10 @@ export class JournalEntryListComponent implements OnInit{
       endDate
     }});
 
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

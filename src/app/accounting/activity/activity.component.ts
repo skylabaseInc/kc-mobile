@@ -17,6 +17,7 @@
 import {OnInit, Component} from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {AccountCommand} from '../../../services/accounting/domain/account-command.model';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './activity.component.html'
@@ -25,9 +26,13 @@ export class AccountActivityComponent implements OnInit{
 
   commands: AccountCommand[];
 
-  constructor(private route: ActivatedRoute){}
+  constructor(private route: ActivatedRoute, private main: MainComponent){}
 
   ngOnInit(): void {
     this.route.data.subscribe(( data: { commands: AccountCommand[]}) => this.commands = data.commands );
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

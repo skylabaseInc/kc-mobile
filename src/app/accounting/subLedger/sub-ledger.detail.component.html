@@ -27,6 +27,10 @@
     </a>
     {{'General Ledger' | translate}}
   </ng-container>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <ng-container>
+    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
+  </ng-container>
 </md-toolbar>
 
 <fims-layout-card-over title="{{ ledger.identifier + ' - ' + ledger.name }}" [subTitle]="ledger.description">

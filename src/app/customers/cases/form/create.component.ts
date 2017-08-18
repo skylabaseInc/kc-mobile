@@ -29,6 +29,7 @@ import {FimsCase} from '../store/model/fims-case.model';
 import {Product} from '../../../../services/portfolio/domain/product.model';
 import {PortfolioService} from '../../../../services/portfolio/portfolio.service';
 import {Observable} from 'rxjs/Observable';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.component.html'
@@ -68,7 +69,7 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
     accountAssignments: []
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.customerSubscription = this.casesStore.select(fromCustomers.getSelectedCustomer)
@@ -109,6 +110,10 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

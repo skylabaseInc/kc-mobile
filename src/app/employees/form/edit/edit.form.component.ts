@@ -22,6 +22,7 @@ import {User} from '../../../../services/identity/domain/user.model';
 import {UPDATE} from '../../store/employee.actions';
 import {Observable, Subscription} from 'rxjs';
 import {EmployeesStore, getSelectedEmployee} from '../../store/index';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './edit.form.component.html'
@@ -36,7 +37,7 @@ export class EditEmployeeFormComponent implements OnInit {
 
   user: User;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: EmployeesStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: EmployeesStore, private main: MainComponent) {}
 
   ngOnInit() {
     this.formData = Observable.combineLatest(
@@ -69,5 +70,9 @@ export class EditEmployeeFormComponent implements OnInit {
 
   private navigateToOffice() {
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

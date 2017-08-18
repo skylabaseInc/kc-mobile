@@ -22,6 +22,7 @@ import {TransactionType} from '../../../../../services/accounting/domain/transac
 import {SelectAction, UPDATE} from '../../../store/ledger/transaction-type/transaction-type.actions';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
+import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './edit.form.component.html'
@@ -32,7 +33,7 @@ export class EditTransactionTypeFormComponent implements OnInit, OnDestroy {
 
   transactionType$: Observable<TransactionType>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
 
   ngOnInit() {
     this.actionsSubscription = this.route.params
@@ -59,5 +60,9 @@ export class EditTransactionTypeFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

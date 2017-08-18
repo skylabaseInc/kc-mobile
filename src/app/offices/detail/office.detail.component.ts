@@ -24,6 +24,7 @@ import {TdDialogService} from '@covalent/core';
 import {TableData} from '../../../common/data-table/data-table.component';
 import {DELETE, SelectAction} from '../store/office.actions';
 import {getSelectedOffice, OfficesStore} from '../store/index';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './office.detail.component.html',
@@ -47,7 +48,7 @@ export class OfficeDetailComponent implements OnInit, OnDestroy {
     {name: 'description', label: 'Description'}
   ];
 
-  constructor(private store: OfficesStore, private route: ActivatedRoute, private router: Router, private officeService: OfficeService, private dialogService: TdDialogService) {
+  constructor(private store: OfficesStore, private route: ActivatedRoute, private router: Router, private officeService: OfficeService, private dialogService: TdDialogService, private main: MainComponent) {
   }
 
   ngOnInit(): void {
@@ -106,6 +107,10 @@ export class OfficeDetailComponent implements OnInit, OnDestroy {
           activatedRoute: this.route
         }
       }));
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

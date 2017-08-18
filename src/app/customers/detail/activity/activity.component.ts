@@ -20,6 +20,7 @@ import {CustomersStore} from '../../store/index';
 import {LOAD_ALL} from '../../store/commands/commands.actions';
 import {Subscription} from 'rxjs';
 import * as fromCustomers from '../../store';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './activity.component.html'
@@ -32,7 +33,7 @@ export class CustomerActivityComponent implements OnInit, OnDestroy{
 
   commands: Command[];
 
-  constructor(private store: CustomersStore){}
+  constructor(private store: CustomersStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.customerSubscription = this.store.select(fromCustomers.getSelectedCustomer)
@@ -45,5 +46,9 @@ export class CustomerActivityComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.commandsSubscription.unsubscribe();
     this.customerSubscription.unsubscribe();
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

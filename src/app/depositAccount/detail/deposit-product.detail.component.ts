@@ -24,6 +24,7 @@ import {TableData} from '../../../common/data-table/data-table.component';
 import {TdDialogService} from '@covalent/core';
 import {Observable} from 'rxjs/Observable';
 import {DELETE} from '../store/product.actions';
+import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './deposit-product.detail.component.html'
@@ -47,7 +48,7 @@ export class DepositProductDetailComponent implements OnInit, OnDestroy {
     { name: 'amount', label: 'Amount', numeric: true, format: value => value ? value.toFixed(2) : undefined }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore, private dialogService: TdDialogService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore, private dialogService: TdDialogService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.productSubscription = this.store.select(fromDepositAccounts.getSelectedProduct)
@@ -91,5 +92,9 @@ export class DepositProductDetailComponent implements OnInit, OnDestroy {
 
   hasTerm(defininition: ProductDefinition): boolean {
     return !!defininition.term.timeUnit || !!defininition.term.period;
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

@@ -26,6 +26,7 @@ import * as fromCustomers from '../../store/index';
 import {DepositAccountService} from '../../../../services/depositAccount/deposit-account.service';
 import {Observable} from 'rxjs/Observable';
 import {ProductDefinition} from '../../../../services/depositAccount/domain/definition/product-definition.model';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.component.html'
@@ -43,7 +44,7 @@ export class DepositCreateComponent implements OnInit {
 
   productDefinitions$: Observable<ProductDefinition[]>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore, private depositService: DepositAccountService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore, private depositService: DepositAccountService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.customer$ = this.depositsStore.select(fromCustomers.getSelectedCustomer);
@@ -65,5 +66,9 @@ export class DepositCreateComponent implements OnInit {
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

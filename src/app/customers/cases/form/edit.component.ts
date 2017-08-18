@@ -28,6 +28,7 @@ import {FimsCase} from '../store/model/fims-case.model';
 import {Product} from '../../../../services/portfolio/domain/product.model';
 import {Observable} from 'rxjs/Observable';
 import {PortfolioService} from '../../../../services/portfolio/portfolio.service';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './edit.component.html'
@@ -48,7 +49,7 @@ export class CaseEditComponent implements OnInit, OnDestroy{
 
   caseInstance: FimsCase;
 
-  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private main: MainComponent) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -89,5 +90,9 @@ export class CaseEditComponent implements OnInit, OnDestroy{
 
   private navigateAway() {
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

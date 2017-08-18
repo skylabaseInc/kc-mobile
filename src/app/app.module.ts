@@ -51,6 +51,8 @@ import {ImageService} from '../services/image/image.service';
 import {DepositAccountService} from '../services/depositAccount/deposit-account.service';
 import {CurrencyService} from '../services/currency/currency.service';
 import {TellerService} from '../services/teller/teller-service';
+import {DevService} from '../services/dev_logger/dev.service';
+import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 export function HttpLoaderFactory(http: Http){
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -110,7 +112,9 @@ export function HttpLoaderFactory(http: Http){
     NotificationService,
     ExistsGuardService,
     ...appRoutingProviders,
-    ImageService
+    ImageService,
+    DevService, 
+    OfflineStoreService
   ],
   bootstrap: [ AppComponent ]
 })

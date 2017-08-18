@@ -20,6 +20,7 @@ import * as fromCustomers from '../../store';
 import {Subscription} from 'rxjs';
 import {CustomersStore} from '../../store/index';
 import {UPDATE} from '../../store/customer.actions';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './edit.form.component.html'
@@ -30,7 +31,7 @@ export class EditCustomerFormComponent implements OnInit, OnDestroy{
 
   customer: Customer;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent) {}
 
   ngOnInit() {
     this.customerSubscription = this.store.select(fromCustomers.getSelectedCustomer)
@@ -54,5 +55,9 @@ export class EditCustomerFormComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }

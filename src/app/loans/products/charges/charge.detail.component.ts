@@ -23,6 +23,7 @@ import {DELETE, SelectAction} from '../store/charges/charge.actions';
 import {PortfolioStore} from '../store/index';
 import * as fromPortfolio from '../store';
 import {FimsProduct} from '../store/model/fims-product.model';
+import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './charge.detail.component.html'
@@ -39,7 +40,7 @@ export class ProductChargeDetailComponent implements OnInit, OnDestroy{
 
   charge: ChargeDefinition;
 
-  constructor(private route: ActivatedRoute, private dialogService: TdDialogService, private portfolioStore: PortfolioStore){}
+  constructor(private route: ActivatedRoute, private dialogService: TdDialogService, private portfolioStore: PortfolioStore, private main: MainComponent){}
 
   ngOnInit(): void {
     this.actionsSubscription = this.route.params
@@ -77,6 +78,10 @@ export class ProductChargeDetailComponent implements OnInit, OnDestroy{
           activatedRoute: this.route
         }});
       });
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 
 }

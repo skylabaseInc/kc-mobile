@@ -29,6 +29,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {TellerTransactionFormComponent, TellerTransactionFormData} from './form.component';
 import {ProductInstance} from '../../../../services/depositAccount/domain/instance/product-instance.model';
 import {Teller} from '../../../../services/teller/domain/teller.model';
+import {MainComponent} from '../../../main/main.component';
 
 const withdrawalTypes: TransactionType[] = ['ACCC', 'ACCT', 'CWDL'];
 
@@ -63,7 +64,7 @@ export class CreateTellerTransactionForm implements OnInit, OnDestroy {
 
   error: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: TellerStore, private tellerService: TellerService, private depositService: DepositAccountService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: TellerStore, private tellerService: TellerService, private depositService: DepositAccountService, private main: MainComponent) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => this.transactionType = params['transactionType']);
@@ -143,5 +144,9 @@ export class CreateTellerTransactionForm implements OnInit, OnDestroy {
 
   cancel(): void {
     this.router.navigate(['../'], { relativeTo: this.route })
+  }
+
+  toggleSideNav(): void {
+    this.main.toggleSideBar();
   }
 }
