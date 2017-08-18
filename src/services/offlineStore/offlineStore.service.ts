@@ -28,14 +28,6 @@ export class OfflineStoreService implements OnInit {
         // enable debugging
         PouchDB.debug.enable('*');
         this.db = new PouchDB("kuelap-mobile-test");
-
-        // var doc = {
-        //     "_id": "test_pouch",
-        //     "name": "PouchTest",
-        //     "occupation": "Developer"
-        // };
-        // this.db.put(doc);
-
         this.db.info().then(function(info){
             consoleLogger.consoleLog(info);
         })

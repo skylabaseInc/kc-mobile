@@ -23,6 +23,7 @@ import * as fromRoot from '../reducers';
 import {SEARCH} from '../reducers/customer/customer.actions';
 import {CustomersStore} from './store/index';
 import {MainComponent} from '../main/main.component';
+import {DevService} from '../../services/dev_logger/dev.service';
 
 @Component({
   templateUrl: './customer.component.html'
@@ -44,7 +45,7 @@ export class CustomerComponent implements OnInit{
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent, private consoleLogger: DevService){}
 
   ngOnInit(): void {
     this.customerData$ = this.store.select(fromRoot.getCustomerSearchResults)
@@ -73,6 +74,7 @@ export class CustomerComponent implements OnInit{
   fetchCustomers(fetchRequest?: TableFetchRequest): void{
     if(fetchRequest){
       this.lastFetchRequest = fetchRequest;
+      this.consoleLogger.consoleAny("This is lastFetchRequest: " + this.lastFetchRequest);
     }
 
     this.lastFetchRequest.searchTerm = this.searchTerm;

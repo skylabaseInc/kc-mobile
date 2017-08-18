@@ -22,4 +22,8 @@ export class DevService {
   public consoleLog(logMsg: string) {
       console.log(logMsg);
   }
+
+  public consoleAny(value: any) {
+    console.log(value);
+  }
 }
