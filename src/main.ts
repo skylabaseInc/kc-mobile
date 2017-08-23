@@ -34,4 +34,9 @@ platformBrowserDynamic([
   { provide: 'portfolioBaseUrl', useValue: '/api/portfolio/v1' },
   { provide: 'depositAccountBaseUrl', useValue: '/api/deposit/v1' },
   { provide: 'tellerBaseUrl', useValue: '/api/teller/v1' }
-]).bootstrapModule(AppModule);
+]).bootstrapModule(AppModule)
+.then(() => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+})

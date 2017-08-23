@@ -27,73 +27,52 @@ export class OfflineStoreService implements OnInit {
 
         // enable debugging
         PouchDB.debug.enable('*');
+
+        // Initialize PouchDB database
         this.db = new PouchDB("kuelap-mobile-test");
-
-        // var doc = {
-        //     "_id": "test_pouch",
-        //     "name": "PouchTest",
-        //     "occupation": "Developer"
-        // };
-        // this.db.put(doc);
-
-        this.db.info().then(function(info){
-            consoleLogger.consoleLog(info);
-        })
     }
 
     ngOnInit(): void {
-        // this.getAllData();
-        var doc = {
-            "_id": "test_pouch",
-            "name": "PouchTest",
-            "occupation": "Developer"
-        };
-        this.db.put(doc);
+        this.getAllData();
     }
 
-    // Initializers
-    intializeCustomers(): void {
-        var customer = {
-
-        }
-
-        this.db.put(customer);
-    }
-
-    getAllData(): void {
-        this.getCustomerData();
-        this.getOfficeData();
-        this.getLoanProductData();
-        this.getDepositProductData();
-        this.getLoanAccountTransactionData();
-        this.getDepositAccountTransactionData();
-    }
-
-    getCustomerData(): void {
-        this.db.get('customers').then(function(customers){
-            // code here ...
+    // get all Data
+    getAllData() {
+        return this.db.allDocs({
+            include_docs: true
         })
+        .then(db => {
+            return db.rows.map(row => {
+                this.consoleLogger.consoleAny("Data gotten: " + row.doc);
+                return row.doc;
+            });
+        });
     }
 
-    getOfficeData(): void {
-        this.db.get('office').then(function(office){
-            // code here ...
-        })
+    get(id) {
+        return this.db.get(id);
     }
 
-    getLoanProductData(): void {
-
+    save(item) {
+        return item._id ? this.update(item) : this.add(item);
     }
 
-    getDepositProductData(): void {
-
+    add(item) {
+        return this.db.post(item);
     }
 
-    getLoanAccountTransactionData(): void {
-
+    update(item) {
+        return this.db.get(item._id)
+            .then(updatingItem => {
+                Object.assign(updatingItem, item);
+                return this.db.put(updatingItem);
+            });
     }
 
-    getDepositAccountTransactionData(): void {
-
+    remove(id) {
+        return this.db.get(id)
+            .then(item => {
+                return this.db.remove(item);
+            });
     }
 }
