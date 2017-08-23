@@ -1,6 +1,4 @@
-/**
- * Created by Kamdjou on 7/6/2017.
- */
+'use strict';
 
 module.exports = {
   staticFileGlobs: [
