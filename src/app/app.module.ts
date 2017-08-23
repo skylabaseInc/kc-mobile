@@ -113,7 +113,7 @@ export function HttpLoaderFactory(http: Http){
     ExistsGuardService,
     ...appRoutingProviders,
     ImageService,
-    DevService, 
+    DevService,
     OfflineStoreService
   ],
   bootstrap: [ AppComponent ]

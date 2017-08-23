@@ -14,86 +14,95 @@
  * limitations under the License.
  */
 
-import { Injectable, OnInit } from '@angular/core';
+import {Inject, Injectable, OnInit} from '@angular/core';
 import {DevService} from '../../services/dev_logger/dev.service';
 import * as PouchDB from 'pouchdb/dist/pouchdb';
+import {LoginComponent} from "../../app/login/login.component";
 
 @Injectable()
 export class OfflineStoreService implements OnInit {
 
-    private db: any;
+  private db: any;
+  private remoteCouchDb: any;
 
-    constructor(private consoleLogger: DevService) {
+  constructor(private consoleLogger: DevService, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
 
-        // enable debugging
-        PouchDB.debug.enable('*');
-        this.db = new PouchDB("kuelap-mobile-test");
+    // enable debugging
+    PouchDB.debug.enable('*');
+    this.db = new PouchDB("kuelap-mobile-test");
 
-        // var doc = {
-        //     "_id": "test_pouch",
-        //     "name": "PouchTest",
-        //     "occupation": "Developer"
-        // };
-        // this.db.put(doc);
+    this.db.info().then(function (info) {
+      consoleLogger.consoleLog(info);
+    });
+    this.connectToCouchDbOnline();
+  }
 
-        this.db.info().then(function(info){
-            consoleLogger.consoleLog(info);
-        })
-    }
+  ngOnInit(): void {
+    // this.getAllData();
+    var doc = {
+      "_id": "test_pouch",
+      "name": "PouchTest",
+      "occupation": "Developer"
+    };
+    this.db.put(doc);
+  }
 
-    ngOnInit(): void {
-        // this.getAllData();
-        var doc = {
-            "_id": "test_pouch",
-            "name": "PouchTest",
-            "occupation": "Developer"
-        };
-        this.db.put(doc);
-    }
-
-    // Initializers
-    intializeCustomers(): void {
-        var customer = {
-
+  connectToCouchDbOnline(): void {
+    this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground',
+      {
+        auth: {
+          username: 'admin',
+          password: 'admin'
         }
+      }
+    );
+    this.remoteCouchDb.info().then(function (info) {
+      console.log(info);
 
-        this.db.put(customer);
-    }
+    })
+  }
 
-    getAllData(): void {
-        this.getCustomerData();
-        this.getOfficeData();
-        this.getLoanProductData();
-        this.getDepositProductData();
-        this.getLoanAccountTransactionData();
-        this.getDepositAccountTransactionData();
-    }
+  // Initializers
+  intializeCustomers(): void {
+    var customer = {}
 
-    getCustomerData(): void {
-        this.db.get('customers').then(function(customers){
-            // code here ...
-        })
-    }
+    this.db.put(customer);
+  }
 
-    getOfficeData(): void {
-        this.db.get('office').then(function(office){
-            // code here ...
-        })
-    }
+  getAllData(): void {
+    this.getCustomerData();
+    this.getOfficeData();
+    this.getLoanProductData();
+    this.getDepositProductData();
+    this.getLoanAccountTransactionData();
+    this.getDepositAccountTransactionData();
+  }
 
-    getLoanProductData(): void {
+  getCustomerData(): void {
+    this.db.get('customers').then(function (customers) {
+      // code here ...
+    })
+  }
 
-    }
+  getOfficeData(): void {
+    this.db.get('office').then(function (office) {
+      // code here ...
+    })
+  }
 
-    getDepositProductData(): void {
+  getLoanProductData(): void {
 
-    }
+  }
 
-    getLoanAccountTransactionData(): void {
+  getDepositProductData(): void {
 
-    }
+  }
 
-    getDepositAccountTransactionData(): void {
+  getLoanAccountTransactionData(): void {
 
-    }
+  }
+
+  getDepositAccountTransactionData(): void {
+
+  }
 }
