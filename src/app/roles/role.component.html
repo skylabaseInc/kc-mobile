@@ -14,14 +14,7 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <md-icon style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-</md-toolbar>
-
 <fims-layout-card-over title="{{'Manage roles' | translate}}">
   <fims-data-table flex (onActionCellClick)="rowSelect($event)" [columns]="columns" [data]="rolesData$ | async" [loading]="loading$ | async"></fims-data-table>
 </fims-layout-card-over>
-
-<a md-fab color="accent" class="md-fab-position-bottom-right" title="{{'Create new role' | translate}}" [routerLink]="['create']" *hasPermission="{ id: 'identity_roles', accessLevel: 'CHANGE' }">
-  <md-icon>add</md-icon>
-</a>
+<fims-fab-button title="{{'Create new role' | translate}}" icon="add" [link]="['create']" [permission]="{ id: 'identity_roles', accessLevel: 'CHANGE'}"></fims-fab-button>

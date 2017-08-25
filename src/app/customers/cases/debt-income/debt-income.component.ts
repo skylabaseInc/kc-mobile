@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CasesStore} from '../store/index';
+import {Component, OnInit} from '@angular/core';
 import * as fromCases from '../store/index';
-import {FimsCase} from '../store/model/fims-case.model';
+import {CasesStore} from '../store/index';
 import {Observable} from 'rxjs/Observable';
-import {CreditWorthinessFactor} from '../../../../services/portfolio/domain/individuallending/credit-worthiness-factor.model';
-import {CreditWorthinessSnapshot} from '../../../../services/portfolio/domain/individuallending/credit-worthiness-snapshot.model';
+import {CreditWorthinessFactor} from '../../../services/portfolio/domain/individuallending/credit-worthiness-factor.model';
+import {CreditWorthinessSnapshot} from '../../../services/portfolio/domain/individuallending/credit-worthiness-snapshot.model';
 import * as fromCustomers from '../../store/index';
-import {Customer} from '../../../../services/customer/domain/customer.model';
-import {TableData} from '../../../../common/data-table/data-table.component';
-import {MainComponent} from '../../../main/main.component';
+import {Customer} from '../../../services/customer/domain/customer.model';
+import {TableData} from '../../../common/data-table/data-table.component';
+import {FimsCase} from '../../../services/portfolio/domain/fims-case.model';
 
 interface IncomeDebtOverview {
   debtTableData: TableData,
@@ -50,8 +49,12 @@ export class CaseDebtIncomeComponent implements OnInit {
 
   cosignerOverview$: Observable<IncomeDebtOverview>;
 
+<<<<<<< HEAD
   constructor(private store: CasesStore, private main: MainComponent) {
   }
+=======
+  constructor(private store: CasesStore) {}
+>>>>>>> d3d1a1b496be86b16ce707657cff6afa770d18c1
 
   ngOnInit(): void {
     const selectedCustomer$: Observable<Customer> = this.store.select(fromCustomers.getSelectedCustomer);

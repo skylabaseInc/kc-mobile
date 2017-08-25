@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {type} from '../../../util';
-import {Teller} from '../../../../services/teller/domain/teller.model';
+import {type} from '../../../store/util';
+import {Teller} from '../../../services/teller/domain/teller.model';
 import {Action} from '@ngrx/store';
 import {
   CreateResourceSuccessPayload, LoadResourcePayload, SelectResourcePayload,
   UpdateResourceSuccessPayload
-} from '../../../../common/store/resource.reducer';
-import {RoutePayload} from '../../../../common/store/route-payload';
-import {TellerManagementCommand} from '../../../../services/teller/domain/teller-management-command.model';
+} from '../../../common/store/resource.reducer';
+import {RoutePayload} from '../../../common/store/route-payload';
+import {TellerManagementCommand} from '../../../services/teller/domain/teller-management-command.model';
 
 export const LOAD_TELLER = type('[Office Teller] Load All ');
 export const LOAD_TELLER_SUCCESS = type('[Office Teller] Load All Success');
@@ -52,6 +52,11 @@ export interface ExecuteCommandPayload extends RoutePayload {
   officeId: string;
   tellerCode: string;
   command: TellerManagementCommand;
+}
+
+export interface ExecuteCommandFailPayload {
+  command: TellerManagementCommand;
+  error: Error;
 }
 
 export interface TellerPayload extends RoutePayload {
@@ -134,7 +139,7 @@ export class ExecuteCommandSuccessAction implements Action {
 export class ExecuteCommandFailAction implements Action {
   readonly type = EXECUTE_COMMAND_FAIL;
 
-  constructor(public payload: Error) {}
+  constructor(public payload: ExecuteCommandFailPayload) {}
 }
 
 export type Actions

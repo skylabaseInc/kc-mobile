@@ -16,14 +16,13 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {TableData} from '../../common/data-table/data-table.component';
-import {FetchRequest} from '../../services/domain/paging/fetch-request.model';
+import {TableData} from '../common/data-table/data-table.component';
+import {FetchRequest} from '../services/domain/paging/fetch-request.model';
 import * as fromDepositAccounts from './store';
 import {Observable} from 'rxjs';
 import {SEARCH} from './store/product.actions';
 import {DepositAccountStore} from './store/index';
-import {ProductDefinition} from '../../services/depositAccount/domain/definition/product-definition.model';
-import {MainComponent} from '../main/main.component';
+import {ProductDefinition} from '../services/depositAccount/domain/definition/product-definition.model';
 
 @Component({
   templateUrl: './deposit-account.component.html'
@@ -58,9 +57,5 @@ export class DepositProductComponent implements OnInit{
 
   rowSelect(productDefinition: ProductDefinition): void{
     this.router.navigate(['detail', productDefinition.identifier], { relativeTo: this.route })
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

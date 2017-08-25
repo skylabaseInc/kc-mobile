@@ -16,12 +16,12 @@
 
 import {Component, Input} from '@angular/core';
 import {FormArray, FormGroup, FormBuilder, Validators, AbstractControl} from '@angular/forms';
-import {Charge} from '../../../../services/depositAccount/domain/definition/charge.model';
-import {FormComponent} from '../../../../common/forms/form.component';
-import {Action} from '../../../../services/depositAccount/domain/definition/action.model';
-import {accountExists} from '../../../../common/validator/account-exists.validator';
-import {AccountingService} from '../../../../services/accounting/accounting.service';
-import {FimsValidators} from '../../../../common/validator/validators';
+import {Charge} from '../../../services/depositAccount/domain/definition/charge.model';
+import {FormComponent} from '../../../common/forms/form.component';
+import {Action} from '../../../services/depositAccount/domain/definition/action.model';
+import {accountExists} from '../../../common/validator/account-exists.validator';
+import {AccountingService} from '../../../services/accounting/accounting.service';
+import {FimsValidators} from '../../../common/validator/validators';
 
 @Component({
   selector: 'fims-deposit-product-charges-form',
@@ -62,8 +62,8 @@ export class DepositProductChargesFormComponent extends FormComponent<Charge[]> 
     return this.formBuilder.group({
       actionIdentifier: [charge ? charge.actionIdentifier : '', Validators.required],
       incomeAccountIdentifier: [charge ? charge.incomeAccountIdentifier : '', [Validators.required], accountExists(this.accountingService)],
-      name: [charge ? charge.name : '', Validators.required],
-      description: [charge ? charge.description : ''],
+      name: [charge ? charge.name : '', [Validators.required, Validators.maxLength(256)]],
+      description: [charge ? charge.description : '', Validators.maxLength(2048)],
       proportional: [charge ? charge.proportional : false ],
       amount: [amount.toFixed(2), [ FimsValidators.minValue(0)] ]
     })

@@ -19,14 +19,12 @@ import {Subscription} from 'rxjs/Subscription';
 import {ActivatedRoute} from '@angular/router';
 import * as fromDepositAccounts from '../../store/index';
 import {
-    Action,
-    ProductDefinitionCommand,
-} from '../../../../services/depositAccount/domain/definition/product-definition-command.model';
-import { ProductDefinition } from '../../../../services/depositAccount/domain/definition/product-definition.model';
-import { MainComponent } from '../../../main/main.component';
-import { DepositAccountStore } from '../../store/index';
-import { EXECUTE_COMMAND } from '../../store/product.actions';
-import '../../../main/main.component';
+  Action,
+  ProductDefinitionCommand
+} from '../../../services/depositAccount/domain/definition/product-definition-command.model';
+import {DepositAccountStore} from '../../store/index';
+import {EXECUTE_COMMAND} from '../../store/product.actions';
+import {ProductDefinition} from '../../../services/depositAccount/domain/definition/product-definition.model';
 
 interface StatusCommand {
   action: Action;
@@ -70,10 +68,6 @@ export class DepositProductStatusComponent implements OnInit, OnDestroy {
       command,
       activatedRoute: this.route
     } });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

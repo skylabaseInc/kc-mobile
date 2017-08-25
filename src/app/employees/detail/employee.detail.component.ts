@@ -15,10 +15,10 @@
  */
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Employee} from '../../../services/office/domain/employee.model';
+import {Employee} from '../../services/office/domain/employee.model';
 import {TdDialogService} from '@covalent/core';
 import {Observable, Subscription} from 'rxjs';
-import {User} from '../../../services/identity/domain/user.model';
+import {User} from '../../services/identity/domain/user.model';
 import * as fromEmployee from '../store';
 import {DELETE, SelectAction} from '../store/employee.actions';
 import {EmployeesStore} from '../store/index';
@@ -46,6 +46,7 @@ export class EmployeeDetailComponent implements OnInit, OnDestroy{
       .subscribe(this.store);
 
     this.employeeSubscription = this.store.select(fromEmployee.getSelectedEmployee)
+      .filter(employee => !!employee)
       .subscribe(employee => this.employee = employee);
 
     // TODO load user via store

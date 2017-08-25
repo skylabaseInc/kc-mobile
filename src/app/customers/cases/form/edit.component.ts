@@ -15,20 +15,19 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Case} from '../../../../services/portfolio/domain/case.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Customer} from '../../../../services/customer/domain/customer.model';
+import {Customer} from '../../../services/customer/domain/customer.model';
+import * as fromCases from '../store/index';
 import {CasesStore} from '../store/index';
 import {SelectAction, UPDATE} from '../store/case.actions';
-import * as customerActions from '../../store/customer.actions';
 import {Subscription} from 'rxjs';
-import * as fromCases from '../store/index';
 import * as fromCustomers from '../../store/index';
-import {FimsCase} from '../store/model/fims-case.model';
-import {Product} from '../../../../services/portfolio/domain/product.model';
+import {Product} from '../../../services/portfolio/domain/product.model';
 import {Observable} from 'rxjs/Observable';
-import {PortfolioService} from '../../../../services/portfolio/portfolio.service';
-import {MainComponent} from '../../../main/main.component';
+import {PortfolioService} from '../../../services/portfolio/portfolio.service';
+import {ProductInstance} from '../../../services/depositAccount/domain/instance/product-instance.model';
+import {DepositAccountService} from '../../../services/depositAccount/deposit-account.service';
+import {FimsCase} from '../../../services/portfolio/domain/fims-case.model';
 
 @Component({
   templateUrl: './edit.component.html'
@@ -45,11 +44,13 @@ export class CaseEditComponent implements OnInit, OnDestroy{
 
   products$: Observable<Product[]>;
 
+  productsInstances$: Observable<ProductInstance[]>;
+
   customer: Customer;
 
   caseInstance: FimsCase;
 
-  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private depositService: DepositAccountService) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -61,13 +62,20 @@ export class CaseEditComponent implements OnInit, OnDestroy{
       .subscribe(this.casesStore);
 
     this.caseSubscription = this.casesStore.select(fromCases.getSelectedCase)
+      .filter(caseInstance => !!caseInstance)
       .subscribe(caseInstance => this.caseInstance = caseInstance);
 
-    this.customerSubscription = this.casesStore.select(fromCustomers.getSelectedCustomer)
+    const selectedCustomer$ = this.casesStore.select(fromCustomers.getSelectedCustomer)
+      .filter(customer => !!customer);
+
+    this.customerSubscription = selectedCustomer$
       .subscribe(customer => this.customer = customer);
 
     this.products$ = this.portfolioService.findAllProducts(false)
       .map(productPage => productPage.elements);
+
+    this.productsInstances$ = selectedCustomer$
+      .flatMap(customer => this.depositService.fetchProductInstances(customer.identifier));
   }
 
   ngOnDestroy(): void {
@@ -76,7 +84,7 @@ export class CaseEditComponent implements OnInit, OnDestroy{
     this.caseSubscription.unsubscribe();
   }
 
-  onSave(caseInstance: Case) {
+  onSave(caseInstance: FimsCase) {
     this.casesStore.dispatch({ type: UPDATE, payload: {
       productId: this.productId,
       caseInstance: caseInstance,
@@ -90,9 +98,5 @@ export class CaseEditComponent implements OnInit, OnDestroy{
 
   private navigateAway() {
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

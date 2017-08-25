@@ -15,13 +15,13 @@
  */
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {OfficeService} from '../../../services/office/office.service';
-import {Office} from '../../../services/office/domain/office.model';
-import {FetchRequest} from '../../../services/domain/paging/fetch-request.model';
-import {OfficePage} from '../../../services/office/domain/office-page.model';
+import {OfficeService} from '../../services/office/office.service';
+import {Office} from '../../services/office/domain/office.model';
+import {FetchRequest} from '../../services/domain/paging/fetch-request.model';
+import {OfficePage} from '../../services/office/domain/office-page.model';
 import {Observable, Subscription} from 'rxjs';
 import {TdDialogService} from '@covalent/core';
-import {TableData} from '../../../common/data-table/data-table.component';
+import {TableData} from '../../common/data-table/data-table.component';
 import {DELETE, SelectAction} from '../store/office.actions';
 import {getSelectedOffice, OfficesStore} from '../store/index';
 import {MainComponent} from '../../main/main.component';
@@ -80,14 +80,6 @@ export class OfficeDetailComponent implements OnInit, OnDestroy {
 
   searchOffice(searchTerm: string): void {
     this.router.navigate(['../../../'], {queryParams: {term: searchTerm}, relativeTo: this.route});
-  }
-
-  goToParent(): void {
-    if (this.office.parentIdentifier) {
-      this.router.navigate(['../../', this.office.parentIdentifier], {relativeTo: this.route});
-    } else {
-      this.router.navigate(['../../'], {relativeTo: this.route});
-    }
   }
 
   confirmDeletion(): Observable<boolean> {

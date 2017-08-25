@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {TellerService} from '../../../../../services/teller/teller-service';
+import {TellerService} from '../../../../services/teller/teller-service';
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Observable} from 'rxjs/Observable';
@@ -70,6 +70,9 @@ export class TellerApiEffects {
     .mergeMap(payload =>
       this.tellerService.createCommand(payload.officeId, payload.tellerCode, payload.command)
         .map(() => new tellerActions.ExecuteCommandSuccessAction(payload))
-        .catch((error) => of(new tellerActions.ExecuteCommandFailAction(error)))
+        .catch((error) => of(new tellerActions.ExecuteCommandFailAction({
+          command: payload.command,
+          error
+        })))
     );
 }

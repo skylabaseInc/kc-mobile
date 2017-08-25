@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as fromRoot from '../../reducers';
+import * as fromRoot from '../../store';
 import * as fromTellers from '../store/teller/tellers.reducer';
 import {ActionReducer, Store} from '@ngrx/store';
-import {createReducer} from '../../reducers/index';
+import {createReducer} from '../../store/index';
 import {createSelector} from 'reselect';
 import {
   createResourceReducer, getResourceAll,
@@ -25,15 +25,14 @@ import {
   getResourceLoadedAt,
   getResourceSelected,
   ResourceState
-} from '../../../common/store/resource.reducer';
-import {createFormReducer, FormState, getFormError} from '../../../common/store/form.reducer';
+} from '../../common/store/resource.reducer';
+import {createFormReducer, FormState, getFormError} from '../../common/store/form.reducer';
 
 export interface State extends fromRoot.State{
   offices: ResourceState;
   officeForm: FormState;
   tellers: ResourceState;
   tellerForm: FormState;
-  tellerCommandForm: FormState;
 }
 
 const reducers = {
@@ -41,7 +40,6 @@ const reducers = {
   officeForm: createFormReducer('Office'),
   tellers: createResourceReducer('Office Teller', fromTellers.reducer, 'code'),
   tellerForm: createFormReducer('Office Teller'),
-  tellerCommandForm: createFormReducer('Office Teller Command')
 };
 
 export const officeModuleReducer: ActionReducer<State> = createReducer(reducers);
@@ -72,6 +70,3 @@ export const getAllTellerEntities = createSelector(getTellerState, getResourceAl
 
 export const getTellersLoadedAt = createSelector(getTellerState, getResourceLoadedAt);
 export const getSelectedTeller = createSelector(getTellerState, getResourceSelected);
-
-export const getTellerCommandFormState = (state: State) => state.tellerCommandForm;
-export const getTellerCommandFormError = createSelector(getTellerFormState, getFormError);

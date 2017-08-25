@@ -16,20 +16,21 @@
 
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Case} from '../../../../services/portfolio/domain/case.model';
-import {Customer} from '../../../../services/customer/domain/customer.model';
+import {Case} from '../../../services/portfolio/domain/case.model';
+import {Customer} from '../../../services/customer/domain/customer.model';
 import {CaseFormComponent} from './form.component';
 import * as fromCases from '../store/index';
 import {CasesStore} from '../store/index';
 import * as fromCustomers from '../../store/index';
 import {Subscription} from 'rxjs';
 import {CREATE, RESET_FORM} from '../store/case.actions';
-import {Error} from '../../../../services/domain/error.model';
-import {FimsCase} from '../store/model/fims-case.model';
-import {Product} from '../../../../services/portfolio/domain/product.model';
-import {PortfolioService} from '../../../../services/portfolio/portfolio.service';
+import {Error} from '../../../services/domain/error.model';
+import {Product} from '../../../services/portfolio/domain/product.model';
+import {PortfolioService} from '../../../services/portfolio/portfolio.service';
 import {Observable} from 'rxjs/Observable';
-import {MainComponent} from '../../../main/main.component';
+import {DepositAccountService} from '../../../services/depositAccount/deposit-account.service';
+import {ProductInstance} from '../../../services/depositAccount/domain/instance/product-instance.model';
+import {FimsCase} from '../../../services/portfolio/domain/fims-case.model';
 
 @Component({
   templateUrl: './create.component.html'
@@ -43,6 +44,8 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
   @ViewChild('form') formComponent: CaseFormComponent;
 
   products$: Observable<Product[]>;
+
+  productsInstances$: Observable<ProductInstance[]>;
 
   customer: Customer;
 
@@ -66,13 +69,19 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
       },
       creditWorthinessSnapshots: []
     },
-    accountAssignments: []
+    depositAccountIdentifier: ''
   };
 
+<<<<<<< HEAD
   constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private main: MainComponent) {}
+=======
+  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private depositService: DepositAccountService) {}
+>>>>>>> d3d1a1b496be86b16ce707657cff6afa770d18c1
 
   ngOnInit(): void {
-    this.customerSubscription = this.casesStore.select(fromCustomers.getSelectedCustomer)
+    const selectedCustomer$ = this.casesStore.select(fromCustomers.getSelectedCustomer);
+
+    this.customerSubscription = selectedCustomer$
       .subscribe(customer => this.customer = customer);
 
     this.formStateSubscription = this.casesStore.select(fromCases.getCaseFormError)
@@ -87,6 +96,9 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
 
     this.products$ = this.portfolioService.findAllProducts(false)
       .map(productPage => productPage.elements);
+
+    this.productsInstances$ = selectedCustomer$
+      .flatMap(customer => this.depositService.fetchProductInstances(customer.identifier));
   }
 
   ngOnDestroy(): void {
@@ -96,7 +108,7 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
     this.casesStore.dispatch({ type: RESET_FORM })
   }
 
-  onSave(caseToSave: Case): void {
+  onSave(caseToSave: FimsCase): void {
     this.casesStore.dispatch({ type: CREATE, payload: {
       productId: caseToSave.productIdentifier,
       caseInstance: caseToSave,

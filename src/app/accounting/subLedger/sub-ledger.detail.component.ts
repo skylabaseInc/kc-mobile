@@ -15,19 +15,18 @@
  */
 import {OnInit, Component, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Ledger} from '../../../services/accounting/domain/ledger.model';
-import {TableData, TableFetchRequest} from '../../../common/data-table/data-table.component';
+import {Ledger} from '../../services/accounting/domain/ledger.model';
+import {TableData, TableFetchRequest} from '../../common/data-table/data-table.component';
 import {Observable, Subscription} from 'rxjs';
 import {TdDialogService} from '@covalent/core';
 import {TranslateService} from '@ngx-translate/core';
 import * as fromAccounting from '../store';
-import * as fromRoot from '../../reducers';
+import * as fromRoot from '../../store';
 import {SelectAction, DELETE} from '../store/ledger/ledger.actions';
 import {AccountingStore} from '../store/index';
-import {SEARCH_BY_LEDGER} from '../../reducers/account/account.actions';
-import {FetchRequest} from '../../../services/domain/paging/fetch-request.model';
-import {Account} from '../../../services/accounting/domain/account.model';
-import {MainComponent} from '../../main/main.component';
+import {SEARCH_BY_LEDGER} from '../../store/account/account.actions';
+import {FetchRequest} from '../../services/domain/paging/fetch-request.model';
+import {Account} from '../../services/accounting/domain/account.model';
 
 @Component({
   templateUrl: './sub-ledger.detail.component.html'
@@ -116,9 +115,4 @@ export class SubLedgerDetailComponent implements OnInit, OnDestroy{
     } });
 
   }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
-  }
-
 }

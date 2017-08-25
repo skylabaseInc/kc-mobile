@@ -14,12 +14,6 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary">
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
 <fims-layout-card-over title="{{'Create new employee' | translate}}">
   <fims-employee-form-component #form
                                   (onSave)="onSave($event)"

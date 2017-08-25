@@ -15,12 +15,12 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {FormComponent} from '../../../../../common/forms/form.component';
-import {InterestBasis} from '../../../../../services/portfolio/domain/interest-basis.model';
+import {FormComponent} from '../../../../common/forms/form.component';
+import {InterestBasis} from '../../../../services/portfolio/domain/interest-basis.model';
 import {FormBuilder, FormControl, ValidatorFn, Validators} from '@angular/forms';
-import {FimsValidators} from '../../../../../common/validator/validators';
-import {AccountingService} from '../../../../../services/accounting/accounting.service';
-import {accountExists} from '../../../../../common/validator/account-exists.validator';
+import {FimsValidators} from '../../../../common/validator/validators';
+import {AccountingService} from '../../../../services/accounting/accounting.service';
+import {accountExists} from '../../../../common/validator/account-exists.validator';
 import {createNumberMask} from 'text-mask-addons/dist/textMaskAddons';
 
 interface InterestBasisOption {
@@ -29,8 +29,6 @@ interface InterestBasisOption {
 }
 
 export interface InterestFormData {
-  minimum: string;
-  maximum: string;
   interestBasis: InterestBasis;
   incomeAccount: string;
   accrualAccount: string;
@@ -50,12 +48,11 @@ export class ProductInterestFormComponent extends FormComponent<InterestFormData
   ];
 
   @Input() set formData(interestFormData: InterestFormData) {
-    const interestRangeEnabled: boolean = this.hasInterestRange(interestFormData.minimum, interestFormData.maximum);
+    // Portfolio service does not support ranges yet
+    const interestRangeEnabled: boolean = false;
 
     this.form = this.formBuilder.group({
       interestRangeEnabled: [interestRangeEnabled],
-      minimum: [interestFormData.minimum, this.minMaxValidators],
-      maximum: [interestFormData.maximum],
       interestBasis: [interestFormData.interestBasis, Validators.required],
       incomeAccount: [interestFormData.incomeAccount, [Validators.required], accountExists(this.accountingService)],
       accrualAccount: [interestFormData.accrualAccount, [Validators.required], accountExists(this.accountingService)]
@@ -71,8 +68,6 @@ export class ProductInterestFormComponent extends FormComponent<InterestFormData
 
   get formData(): InterestFormData {
     return {
-      minimum: this.form.get('minimum').value,
-      maximum: this.form.get('interestRangeEnabled').value ? this.form.get('maximum').value : this.form.get('minimum').value,
       interestBasis: this.form.get('interestBasis').value,
       incomeAccount: this.form.get('incomeAccount').value,
       accrualAccount: this.form.get('accrualAccount').value
@@ -92,12 +87,6 @@ export class ProductInterestFormComponent extends FormComponent<InterestFormData
 
     maximumControl.updateValueAndValidity();
     this.form.updateValueAndValidity();
-  }
-
-  private hasInterestRange(min: string, max: string): boolean {
-    return this.hasValue(min) &&
-        this.hasValue(max) &&
-        min !== max;
   }
 
   private hasValue(value: string): boolean {

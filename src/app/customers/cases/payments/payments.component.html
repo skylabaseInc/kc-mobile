@@ -14,18 +14,7 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary">
-  <a md-icon-button title="{{'Go to overview' | translate}}" [routerLink]="['../']">
-    <md-icon>keyboard_arrow_left</md-icon>
-  </a>
-  {{'Customer loan' | translate}}
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
-<fims-layout-card-over title="{{'Planned payments' | translate}}">
+<fims-layout-card-over title="{{'Planned payments' | translate}}" [navigateBackTo]="['../']">
   <div layout="row" layout-margin>
     <md-input-container layout-margin>
       <input mdInput type="date" placeholder="{{'Start date' | translate}}" [(ngModel)]="startDate">
@@ -34,17 +23,19 @@
         <button layout-margin md-button md-icon-button (click)="fetchPayments(startDate)"><md-icon>search</md-icon></button>
       </span>
   </div>
-  <table td-data-table>
-    <th td-data-table-column [active]="true" translate>Date</th>
-    <th td-data-table-column [active]="true" [numeric]="true" *ngFor="let col of (columns | async)" translate>{{col.name}}</th>
-    <th td-data-table-column [active]="true" [numeric]="true" translate>Remaining principal</th>
+  <div layout="row" class="md-content">
+    <table td-data-table>
+      <th td-data-table-column [active]="true" translate>Date</th>
+      <th td-data-table-column [active]="true" [numeric]="true" *ngFor="let col of (columns | async)" translate>{{col.name}}</th>
+      <th td-data-table-column [active]="true" [numeric]="true" translate>Remaining principal</th>
 
-    <tr td-data-table-row *ngFor="let row of (rows | async)">
-      <td td-data-table-cell>{{row.date | date}}</td>
-      <td td-data-table-cell [numeric]="true" *ngFor="let col of (columns | async)">
-        {{row.costComponents[col.identifier]?.amount | number}}
-      </td>
-      <td td-data-table-cell [numeric]="true">{{row.remainingPrincipal | number}}</td>
-    </tr>
-  </table>
+      <tr td-data-table-row *ngFor="let row of (rows | async)">
+        <td td-data-table-cell>{{row.date | date}}</td>
+        <td td-data-table-cell [numeric]="true" *ngFor="let col of (columns | async)">
+          {{row.costComponents[col.identifier]?.amount | number}}
+        </td>
+        <td td-data-table-cell [numeric]="true">{{row.remainingPrincipal | number}}</td>
+      </tr>
+    </table>
+  </div>
 </fims-layout-card-over>

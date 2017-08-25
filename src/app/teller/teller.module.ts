@@ -28,13 +28,13 @@ import {TellerApiEffects} from './store/effects/service.effects';
 import {
   MdAutocompleteModule,
   MdButtonModule,
-  MdCardModule,
+  MdCardModule, MdCheckboxModule,
   MdIconModule,
   MdInputModule,
   MdListModule, MdSelectModule,
   MdToolbarModule
 } from '@angular/material';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {TellerRouteEffects} from './store/effects/route.effects';
 import {CovalentDataTableModule, CovalentSearchModule, CovalentStepsModule} from '@covalent/core';
@@ -42,10 +42,13 @@ import {TellerCustomerExistsGuard} from './customer/teller-customer-exists.guard
 import {TellerCustomerDetailComponent} from './customer/customer-detail.component';
 import {TellerProductsApiEffects} from './store/effects/products.service.effects';
 import {TellerCustomerIndexComponent} from './customer/customer-index.component';
-import {FimsSharedModule} from '../../common/common.module';
-import {TellerTransactionFormComponent} from './customer/transaction/form.component';
-import {CreateTellerTransactionForm} from './customer/transaction/create.form.component';
+import {FimsSharedModule} from '../common/common.module';
+import {TellerTransactionFormComponent} from './customer/transaction/deposit/form.component';
 import {TellerNotificationEffects} from './store/effects/notification.effects';
+import {LoanTransactionFormComponent} from './customer/transaction/loan/form.component';
+import {CreateLoanTransactionForm} from './customer/transaction/loan/create.form.component';
+import {TransactionCostComponent} from './customer/transaction/components/cost.component';
+import {CreateDepositTransactionForm} from './customer/transaction/deposit/create.form.component';
 
 @NgModule({
   imports: [
@@ -53,6 +56,7 @@ import {TellerNotificationEffects} from './store/effects/notification.effects';
     TranslateModule,
     FimsSharedModule,
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MdIconModule,
     MdButtonModule,
@@ -62,6 +66,7 @@ import {TellerNotificationEffects} from './store/effects/notification.effects';
     MdToolbarModule,
     MdAutocompleteModule,
     MdSelectModule,
+    MdCheckboxModule,
     CovalentStepsModule,
     CovalentSearchModule,
     CovalentDataTableModule,
@@ -75,8 +80,11 @@ import {TellerNotificationEffects} from './store/effects/notification.effects';
     TellerAuthComponent,
     TellerCustomerIndexComponent,
     TellerCustomerDetailComponent,
-    CreateTellerTransactionForm,
-    TellerTransactionFormComponent
+    CreateDepositTransactionForm,
+    TellerTransactionFormComponent,
+    LoanTransactionFormComponent,
+    CreateLoanTransactionForm,
+    TransactionCostComponent
   ],
   providers: [
     TellerLoginGuard,

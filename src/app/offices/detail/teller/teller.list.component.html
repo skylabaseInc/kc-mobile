@@ -14,14 +14,7 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <a md-icon-button title="{{'Go back to office' | translate}}" [routerLink]="['../']">
-    <md-icon>keyboard_arrow_left</md-icon>
-  </a>
-  {{'Office' | translate}}
-</md-toolbar>
-
-<fims-layout-card-over title="{{ 'Manage teller' | translate}}">
+<fims-layout-card-over title="{{ 'Manage teller' | translate}}" [navigateBackTo]="['../']">
   <fims-data-table flex
                    (onActionCellClick)="rowSelect($event)"
                    [columns]="columns"
@@ -30,6 +23,4 @@
                    [pageable]="false">
   </fims-data-table>
 </fims-layout-card-over>
-<a md-fab color="accent" class="md-fab-position-bottom-right" title="{{'Create teller' | translate}}" [routerLink]="['create']" *hasPermission="{ id: 'office_offices', accessLevel: 'CHANGE' }">
-  <md-icon>add</md-icon>
-</a>
+<fims-fab-button title="{{'Create teller' | translate}}" icon="add" [link]="['create']" [permission]="{ id: 'office_offices', accessLevel: 'CHANGE'}"></fims-fab-button>

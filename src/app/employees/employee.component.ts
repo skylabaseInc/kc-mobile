@@ -15,14 +15,13 @@
  */
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-import {Employee} from '../../services/office/domain/employee.model';
-import {FetchRequest} from '../../services/domain/paging/fetch-request.model';
-import {TableData} from '../../common/data-table/data-table.component';
+import {Employee} from '../services/office/domain/employee.model';
+import {FetchRequest} from '../services/domain/paging/fetch-request.model';
+import {TableData} from '../common/data-table/data-table.component';
 import {Store} from '@ngrx/store';
-import * as fromRoot from '../reducers';
+import * as fromRoot from '../store';
 import {Observable} from 'rxjs';
-import {SEARCH} from '../reducers/employee/employee.actions';
-import {MainComponent} from '../main/main.component';
+import {SEARCH} from '../store/employee/employee.actions';
 
 @Component({
   selector: 'fims-employee',
@@ -79,9 +78,5 @@ export class EmployeeComponent implements OnInit{
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest })
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

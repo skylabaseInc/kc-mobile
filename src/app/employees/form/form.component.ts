@@ -17,17 +17,17 @@ import {Component, ViewChild, Input, Output, EventEmitter, OnInit} from '@angula
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {TdStepComponent} from '@covalent/core';
-import {Office} from '../../../services/office/domain/office.model';
-import {Employee} from '../../../services/office/domain/employee.model';
-import {ContactDetail, BUSINESS, PHONE, EMAIL, MOBILE} from '../../../services/domain/contact/contact-detail.model';
-import {FetchRequest} from '../../../services/domain/paging/fetch-request.model';
-import {Role} from '../../../services/identity/domain/role.model';
-import {User} from '../../../services/identity/domain/user.model';
-import {FimsValidators} from '../../../common/validator/validators';
+import {Office} from '../../services/office/domain/office.model';
+import {Employee} from '../../services/office/domain/employee.model';
+import {ContactDetail, BUSINESS, PHONE, EMAIL, MOBILE} from '../../services/domain/contact/contact-detail.model';
+import {FetchRequest} from '../../services/domain/paging/fetch-request.model';
+import {Role} from '../../services/identity/domain/role.model';
+import {User} from '../../services/identity/domain/user.model';
+import {FimsValidators} from '../../common/validator/validators';
 import {Store} from '@ngrx/store';
-import * as fromRoot from '../../reducers';
-import {SEARCH as SEARCH_OFFICE} from '../../reducers/office/office.actions';
-import {SEARCH as SEARCH_ROLE} from '../../reducers/role/role.actions';
+import * as fromRoot from '../../store';
+import {SEARCH as SEARCH_OFFICE} from '../../store/office/office.actions';
+import {SEARCH as SEARCH_ROLE} from '../../store/role/role.actions';
 
 export interface EmployeeFormData {
   user: User;
@@ -96,10 +96,10 @@ export class EmployeeFormComponent implements OnInit{
 
   prepareDetailForm(employee: Employee, user: User): void {
     this.detailForm = this.formBuilder.group({
-      identifier: [employee.identifier, [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe()]],
-      firstName: [employee.givenName, Validators.required],
-      middleName: [employee.middleName],
-      lastName: [employee.surname, Validators.required],
+      identifier: [employee.identifier, [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe]],
+      firstName: [employee.givenName, [Validators.required, Validators.maxLength(256)]],
+      middleName: [employee.middleName, Validators.maxLength(256)],
+      lastName: [employee.surname, [Validators.required, Validators.maxLength(256)]],
       password: ['', this.editMode ? Validators.nullValidator : Validators.required],
       role: [user ? user.role : '', Validators.required]
     });
@@ -125,9 +125,9 @@ export class EmployeeFormComponent implements OnInit{
     }
 
     this.contactForm = this.formBuilder.group({
-      email: [email],
-      phone: [phone],
-      mobile: [mobile]
+      email: [email, [Validators.maxLength(256), FimsValidators.email]],
+      phone: [phone, Validators.maxLength(256)],
+      mobile: [mobile, Validators.maxLength(256)]
     });
   }
 

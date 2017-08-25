@@ -16,10 +16,10 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TableData, TableFetchRequest} from '../../../../common/data-table/data-table.component';
-import {ChargeDefinition} from '../../../../services/portfolio/domain/charge-definition.model';
+import {TableData, TableFetchRequest} from '../../../common/data-table/data-table.component';
+import {ChargeDefinition} from '../../../services/portfolio/domain/charge-definition.model';
 import {ITdDataTableColumn} from '@covalent/core';
-import {ActionOption, ActionOptions} from '../../../../common/domain/action-option.model';
+import {ActionOption, ActionOptions} from '../../../common/domain/action-option.model';
 import {PortfolioStore} from '../store/index';
 import * as fromPortfolio from '../store';
 import {Observable, Subscription} from 'rxjs';
@@ -42,7 +42,7 @@ export class ProductChargeListComponent implements OnInit, OnDestroy{
     { name: 'name', label: 'Name' },
     { name: 'amount', label: 'Amount', numeric: true, format: value => value.toFixed(2) },
     { name: 'chargeAction', label: 'Applied when', format: value => {
-      let result: ActionOption = ActionOptions.find((option) => {
+      const result: ActionOption = ActionOptions.find((option) => {
         return option.type === value
       });
       return result.label;
@@ -53,17 +53,22 @@ export class ProductChargeListComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.productSubscription = this.portfolioStore.select(fromPortfolio.getSelectedProduct)
+      .filter(product => !!product)
       .subscribe(product => {
         this.product = product;
         this.fetchCharges();
       });
 
     this.chargesData$ = this.portfolioStore.select(fromPortfolio.getAllProductChargeEntities)
-      .map(charges => ({
-        totalElements: charges.length,
-        totalPages: 1,
-        data: charges
-      }));
+      .map(charges => {
+        const data = charges.filter(charge => !charge.readOnly);
+
+        return {
+          totalElements: data.length,
+          totalPages: 1,
+          data
+        }
+      });
   }
 
   ngOnDestroy(): void {

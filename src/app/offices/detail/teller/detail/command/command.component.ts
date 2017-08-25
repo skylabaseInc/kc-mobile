@@ -36,11 +36,11 @@ import {Observable} from 'rxjs/Observable';
 import {
   Action,
   TellerManagementCommand
-} from '../../../../../../services/teller/domain/teller-management-command.model';
-import {Teller} from '../../../../../../services/teller/domain/teller.model';
+} from '../../../../../services/teller/domain/teller-management-command.model';
+import {Teller} from '../../../../../services/teller/domain/teller.model';
 import {OfficesStore} from '../../../../store/index';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Office} from '../../../../../../services/office/domain/office.model';
+import {Office} from '../../../../../services/office/domain/office.model';
 import {Subscription} from 'rxjs/Subscription';
 import {EXECUTE_COMMAND} from '../../../../store/teller/teller.actions';
 
@@ -65,9 +65,11 @@ export class OfficeTellerCommandComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => this.action = params['action']);
 
     this.officeSubscription = this.store.select(fromOffices.getSelectedOffice)
+      .filter(office => !!office)
       .subscribe(office => this.office = office);
 
     this.tellerSubscription = this.store.select(fromOffices.getSelectedTeller)
+      .filter(teller => !!teller)
       .subscribe(teller => this.teller = teller);
   }
 

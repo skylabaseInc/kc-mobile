@@ -14,18 +14,7 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <a md-icon-button title="{{'Go back to customer' | translate}}" [routerLink]="['../']">
-    <md-icon>keyboard_arrow_left</md-icon>
-  </a>
-  {{'Customer' | translate}}
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
-<fims-layout-card-over title="{{'Tasks' | translate}}">
+<fims-layout-card-over title="{{'Tasks' | translate}}" [navigateBackTo]="['../']">
   <div layout="row" layout-align="start start" layout-margin>
     <div layout="column" flex="100">
       <div layout="row" layout-align="start start" *ngFor="let command of statusCommands">
@@ -53,7 +42,5 @@
     </div>
   </div>
 </fims-layout-card-over>
-<a md-fab color="accent" class="md-fab-position-bottom-right" title="{{'Create new task for customer' | translate}}" [routerLink]="['create']">
-  <md-icon>add</md-icon>
-</a>
+<fims-fab-button title="{{'Create new task for customer' | translate}}" icon="add" [link]="['create']" [permission]="{ id: 'customer_customers', accessLevel: 'CHANGE'}"></fims-fab-button>
 

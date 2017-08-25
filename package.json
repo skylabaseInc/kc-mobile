@@ -51,7 +51,8 @@
     "@angular/platform-server": "4.2.2",
     "@angular/router": "4.2.2",
     "@angular/service-worker": "^1.0.0-beta.16",
-    "@covalent/core": "1.0.0-beta.5",
+    "@covalent/core": "1.0.0-beta.6",
+    "@angular/cdk": "2.0.0-beta.8",
     "@ngrx/core": "1.2.0",
     "@ngrx/effects": "2.0.3",
     "@ngrx/store": "2.2.2",
@@ -70,11 +71,11 @@
     "serve-index": "^1.7.2",
     "showdown": "1.6.4",
     "text-mask-addons": "^3.6.0",
-    "zone.js": "0.8.11"
+    "zone.js": "0.8.12"
   },
   "devDependencies": {
-    "@angular/cli": "1.1.2",
-    "@angular/compiler-cli": "4.2.2",
+    "@angular/cli": "1.2.4",
+    "@angular/compiler-cli": "4.2.6",
     "@types/hammerjs": "2.0.30",
     "@types/jasmine": "2.5.38",
     "@types/selenium-webdriver": "2.53.36",

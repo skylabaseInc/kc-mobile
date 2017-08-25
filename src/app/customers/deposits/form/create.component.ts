@@ -17,16 +17,15 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {DepositFormComponent} from './form.component';
-import {Customer} from '../../../../services/customer/domain/customer.model';
-import {ProductInstance} from '../../../../services/depositAccount/domain/instance/product-instance.model';
+import {Customer} from '../../../services/customer/domain/customer.model';
+import {ProductInstance} from '../../../services/depositAccount/domain/instance/product-instance.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DepositsStore} from '../store/index';
 import {CREATE} from '../store/deposit.actions';
 import * as fromCustomers from '../../store/index';
-import {DepositAccountService} from '../../../../services/depositAccount/deposit-account.service';
+import {DepositAccountService} from '../../../services/depositAccount/deposit-account.service';
 import {Observable} from 'rxjs/Observable';
-import {ProductDefinition} from '../../../../services/depositAccount/domain/definition/product-definition.model';
-import {MainComponent} from '../../../main/main.component';
+import {ProductDefinition} from '../../../services/depositAccount/domain/definition/product-definition.model';
 
 @Component({
   templateUrl: './create.component.html'
@@ -47,7 +46,8 @@ export class DepositCreateComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private depositsStore: DepositsStore, private depositService: DepositAccountService, private main: MainComponent) {}
 
   ngOnInit(): void {
-    this.customer$ = this.depositsStore.select(fromCustomers.getSelectedCustomer);
+    this.customer$ = this.depositsStore.select(fromCustomers.getSelectedCustomer)
+      .filter(customer => !!customer);
 
     this.productDefinitions$ = this.depositService.fetchProductDefinitions()
       .map(productDefinitions => productDefinitions.filter(productDefinitions => productDefinitions.active));
@@ -66,9 +66,5 @@ export class DepositCreateComponent implements OnInit {
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

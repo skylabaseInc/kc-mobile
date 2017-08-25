@@ -14,10 +14,6 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-</md-toolbar>
-
 <fims-layout-card-over title="{{'Create new office' | translate}}">
   <fims-office-form-component #form (onSave)="onSave($event)" (onCancel)="onCancel()" [office]="office"></fims-office-form-component>
 </fims-layout-card-over>

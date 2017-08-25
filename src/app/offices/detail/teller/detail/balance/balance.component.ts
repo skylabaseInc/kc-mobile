@@ -15,8 +15,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {TellerService} from '../../../../../../services/teller/teller-service';
-import {TellerBalanceSheet} from '../../../../../../services/teller/domain/teller-balance-sheet.model';
+import {TellerService} from '../../../../../services/teller/teller-service';
+import {TellerBalanceSheet} from '../../../../../services/teller/domain/teller-balance-sheet.model';
 import {Observable} from 'rxjs/Observable';
 import {OfficesStore} from '../../../../store/index';
 import * as fromOffices from '../../../../store/index';
@@ -32,8 +32,8 @@ export class TellerBalanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.balance$ = Observable.combineLatest(
-      this.store.select(fromOffices.getSelectedTeller),
-      this.store.select(fromOffices.getSelectedOffice),
+      this.store.select(fromOffices.getSelectedTeller).filter(teller => !!teller),
+      this.store.select(fromOffices.getSelectedOffice).filter(office => !!office),
       (teller, office) => ({
         teller,
         office

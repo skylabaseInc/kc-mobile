@@ -23,7 +23,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Store} from '@ngrx/store';
-import {LOGIN} from '../reducers/security/security.actions';
+import {LOGIN} from '../store/security/security.actions';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MdCardModule,
@@ -34,7 +34,7 @@ import {
   MdTooltipModule
 } from '@angular/material';
 import {CovalentLoadingModule} from '@covalent/core';
-import {setValueByFormControlName} from '../../common/testing/input-fields';
+import {setValueByFormControlName} from '../common/testing/input-fields';
 
 describe('Test Login Component', () => {
 
@@ -100,7 +100,7 @@ describe('Test Login Component', () => {
     expect(button.properties['disabled']).toBeFalsy('Button should be enabled');
   });
 
-  xit('should show error message', async(inject([Store], (store: Store<any>) => {
+  it('should show error message', async(inject([Store], (store: Store<any>) => {
     store.select = jasmine.createSpy('select').and.returnValue(Observable.of({ error: {} }));
 
     fixture.detectChanges();

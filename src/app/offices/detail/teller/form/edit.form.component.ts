@@ -15,14 +15,14 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Teller} from '../../../../../services/teller/domain/teller.model';
+import {Teller} from '../../../../services/teller/domain/teller.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import * as fromOffices from '../../../store/index';
 import {OfficesStore} from '../../../store/index';
 import {RESET_FORM, UPDATE_TELLER} from '../../../store/teller/teller.actions';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import {Office} from '../../../../../services/office/domain/office.model';
+import {Office} from '../../../../services/office/domain/office.model';
 
 @Component({
   templateUrl: './edit.form.component.html'
@@ -38,9 +38,11 @@ export class EditOfficeTellerFormComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private route: ActivatedRoute, private store: OfficesStore) {}
 
   ngOnInit(): void {
-    this.teller$ = this.store.select(fromOffices.getSelectedTeller);
+    this.teller$ = this.store.select(fromOffices.getSelectedTeller)
+      .filter(teller => !!teller);
 
     this.officeSubscription = this.store.select(fromOffices.getSelectedOffice)
+      .filter(office => !!office)
       .subscribe(office => this.office = office);
   }
 

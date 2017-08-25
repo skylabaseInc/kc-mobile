@@ -16,11 +16,11 @@
 
 import {accountTypes, AccountTypeOption} from '../account-types.model';
 import {OnInit, Component, ViewChild, Input, EventEmitter, Output} from '@angular/core';
-import {FormComponent} from '../../../common/forms/form.component';
-import {Ledger} from '../../../services/accounting/domain/ledger.model';
+import {FormComponent} from '../../common/forms/form.component';
+import {Ledger} from '../../services/accounting/domain/ledger.model';
 import {TdStepComponent} from '@covalent/core';
 import {FormBuilder, Validators} from '@angular/forms';
-import {FimsValidators} from '../../../common/validator/validators';
+import {FimsValidators} from '../../common/validator/validators';
 
 @Component({
   selector: 'fims-ledger-form-component',
@@ -53,11 +53,11 @@ export class LedgerFormComponent extends FormComponent<Ledger> implements OnInit
   ngOnInit(): void {
     this.openDetailStep();
     this.form = this.formBuilder.group({
-      'identifier': [ this.ledger.identifier, [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe() ] ],
+      'identifier': [ this.ledger.identifier, [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe ] ],
       'type': [ this.parentLedger ? this.parentLedger.type : this.ledger.type, [Validators.required] ],
-      'name': [ this.ledger.name, [Validators.required] ],
+      'name': [ this.ledger.name, [Validators.required, Validators.maxLength(256)] ],
       'showAccountsInChart': [ this.ledger.showAccountsInChart, [Validators.required]],
-      'description': [ this.ledger.description ],
+      'description': [ this.ledger.description, Validators.maxLength(2048) ],
     });
   }
 

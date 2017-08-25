@@ -15,7 +15,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ChargeDefinition} from '../../../../../services/portfolio/domain/charge-definition.model';
+import {ChargeDefinition} from '../../../../services/portfolio/domain/charge-definition.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import * as fromPortfolio from '../../store/index';
 import {PortfolioStore} from '../../store/index';
@@ -41,7 +41,8 @@ export class ProductChargeCreateFormComponent implements OnInit, OnDestroy{
     chargeMethod: 'FIXED',
     fromAccountDesignator: '',
     toAccountDesignator: '',
-    forCycleSizeUnit: 'WEEKS'
+    forCycleSizeUnit: 'WEEKS',
+    proportionalTo: ''
   };
 
   constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore) {}

@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TableFetchRequest, TableData} from '../../../../common/data-table/data-table.component';
-import {Account} from '../../../../services/accounting/domain/account.model';
+import {TableData, TableFetchRequest} from '../../../common/data-table/data-table.component';
+import {Account} from '../../../services/accounting/domain/account.model';
 import {ActivatedRoute} from '@angular/router';
-import {FormGroup, Validators, FormBuilder} from '@angular/forms';
-import {todayAsISOString, toLongISOString} from '../../../../services/domain/date.converter';
-import {FimsValidators} from '../../../../common/validator/validators';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {todayAsISOString, toShortISOString} from '../../../services/domain/date.converter';
+import {FimsValidators} from '../../../common/validator/validators';
 import * as fromAccounting from '../../store';
 import {Observable, Subscription} from 'rxjs';
 import {AccountingStore} from '../../store/index';
 import {SEARCH} from '../../store/account/entries/entries.actions';
 import {SelectAction} from '../../store/account/account.actions';
-import {MainComponent} from '../../../main/main.component';
+import {DatePipe} from '@angular/common';
 
 @Component({
-  templateUrl: './account-entry.list.component.html'
+  templateUrl: './account-entry.list.component.html',
+  providers: [DatePipe]
 })
-export class AccountEntryListComponent implements OnInit, OnDestroy{
+export class AccountEntryListComponent implements OnInit, OnDestroy {
 
   private actionsSubscription: Subscription;
 
@@ -43,27 +44,31 @@ export class AccountEntryListComponent implements OnInit, OnDestroy{
   accountEntryData$: Observable<TableData>;
 
   columns: any[] = [
-    { name: 'transactionDate', label: 'Transaction date', tooltip: 'Transaction date' },
-    { name: 'type', label: 'Type', tooltip: 'Type' },
-    { name: 'message', label: 'Message', tooltip: 'Message' },
-    { name: 'amount', label: 'Amount', tooltip: 'Amount' },
-    { name: 'balance', label: 'Balance', tooltip: 'Balance' }
+    {name: 'transactionDate', label: 'Transaction date', tooltip: 'Transaction date', format:  (v: any) => {
+      return this.datePipe.transform(v, 'short')
+    }},
+    {name: 'type', label: 'Type', tooltip: 'Type'},
+    {name: 'message', label: 'Message', tooltip: 'Message'},
+    {name: 'amount', label: 'Amount', tooltip: 'Amount'},
+    {name: 'balance', label: 'Balance', tooltip: 'Balance'}
   ];
 
-  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private store: AccountingStore, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private store: AccountingStore, private datePipe: DatePipe) {
+  }
 
   ngOnInit(): void {
     let today = todayAsISOString();
     this.form = this.formBuilder.group({
-      'startDate': [ today, [Validators.required] ],
-      'endDate': [ today, [Validators.required] ],
-    }, { validator: FimsValidators.matchRange('startDate', 'endDate') });
+      'startDate': [today, [Validators.required]],
+      'endDate': [today, [Validators.required]],
+    }, {validator: FimsValidators.matchRange('startDate', 'endDate')});
 
     this.actionsSubscription = this.route.params
       .map(params => new SelectAction(params['id']))
       .subscribe(this.store);
 
     this.accountSubscription = this.store.select(fromAccounting.getSelectedAccount)
+      .filter(account => !!account)
       .subscribe(account => {
         this.account = account;
         this.fetchAccountsEntries();
@@ -83,19 +88,17 @@ export class AccountEntryListComponent implements OnInit, OnDestroy{
   }
 
   fetchAccountsEntries(fetchRequest?: TableFetchRequest): void{
-    let startDate = toLongISOString(this.form.get('startDate').value);
-    let endDate = toLongISOString(this.form.get('endDate').value);
+    const startDate = toShortISOString(this.form.get('startDate').value);
+    const endDate = toShortISOString(this.form.get('endDate').value);
 
-    this.store.dispatch({ type: SEARCH, payload: {
-      accountId: this.account.identifier,
-      startDate: startDate,
-      endDate: endDate,
-      fetchRequest: fetchRequest
-    } });
+    this.store.dispatch({
+      type: SEARCH, payload: {
+        accountId: this.account.identifier,
+        startDate: startDate,
+        endDate: endDate,
+        fetchRequest: fetchRequest
+      }
+    });
 
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

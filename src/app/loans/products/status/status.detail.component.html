@@ -14,19 +14,11 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <a md-icon-button title="{{'Go to overview' | translate}}" [routerLink]="['../../']">
-    <md-icon>keyboard_arrow_left</md-icon>
-  </a>
-  {{'Tasks' | translate}}
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
-<fims-layout-card-over [title]="task.name" [subTitle]="task.description">
-  <div class="md-content" class="inset" flex>
+<fims-layout-card-over [title]="task.name" [subTitle]="task.description" *ngIf="task$ | async as task" [navigateBackTo]="['../../']">
+  <fims-layout-card-over-header-menu *ngIf="product$ | async as product">
+    <button md-icon-button (click)="deleteTask(product, task)" title="{{'Delete this task' | translate}}" *hasPermission="{ id: 'portfolio_products', accessLevel: 'CHANGE' }"><md-icon>delete</md-icon></button>
+  </fims-layout-card-over-header-menu>
+  <div class="md-content inset" flex>
     <div layout="row">
       <md-list>
         <md-list-item>
@@ -48,7 +40,4 @@
     </div>
   </div>
 </fims-layout-card-over>
-
-<a md-fab color="accent" class="md-fab-position-bottom-right" title="{{'Edit task' | translate}}" [routerLink]="['edit']" *hasPermission="{ id: 'portfolio_products', accessLevel: 'CHANGE'}">
-  <md-icon>edit_mode</md-icon>
-</a>
+<fims-fab-button title="{{'Edit task' | translate}}" icon="mode_edit" [link]="['edit']" [permission]="{ id: 'portfolio_products', accessLevel: 'CHANGE'}"></fims-fab-button>

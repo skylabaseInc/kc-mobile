@@ -16,13 +16,13 @@
 
 import {Component, OnInit, Input, ViewChild, EventEmitter, Output} from '@angular/core';
 import {TdStepComponent} from '@covalent/core';
-import {Customer} from '../../../services/customer/domain/customer.model';
+import {Customer} from '../../services/customer/domain/customer.model';
 import {CustomerDetailFormData, CustomerDetailFormComponent} from './detail/detail.component';
-import {AddressFormComponent} from '../../../common/address/address.component';
-import {Address} from '../../../services/domain/address/address.model';
+import {AddressFormComponent} from '../../common/address/address.component';
+import {Address} from '../../services/domain/address/address.model';
 import {CustomerContactFormComponent} from './contact/contact.component';
-import {ContactDetail} from '../../../services/domain/contact/contact-detail.model';
-import {Value} from '../../../services/catalog/domain/value.model';
+import {ContactDetail} from '../../services/domain/contact/contact-detail.model';
+import {Value} from '../../services/catalog/domain/value.model';
 import {CustomerCustomFieldsComponent} from './customFields/custom-fields.component';
 
 @Component({
@@ -31,15 +31,17 @@ import {CustomerCustomFieldsComponent} from './customFields/custom-fields.compon
 })
 export class CustomerFormComponent implements OnInit {
 
+  private _customer: Customer;
+
   @Input('customer') set customer(customer: Customer) {
+    this._customer = customer;
+
     this.detailFormData = {
       identifier: customer.identifier,
       firstName: customer.givenName,
       middleName: customer.middleName,
       lastName: customer.surname,
-      birthDay: customer.dateOfBirth.day,
-      birthMonth: customer.dateOfBirth.month,
-      birthYear: customer.dateOfBirth.year,
+      dateOfBirth: customer.dateOfBirth,
       member: customer.member
     };
 
@@ -103,22 +105,23 @@ export class CustomerFormComponent implements OnInit {
     return (this.detailForm.valid && this.addressForm.valid) && this.contactForm.validWhenOptional && this.customFieldsForm.validWhenOptional
   }
 
+  get customer(): Customer {
+    return this._customer;
+  }
+
   save() {
     const detailFormData = this.detailForm.formData;
 
     const customer: Customer = {
       identifier: detailFormData.identifier,
+      currentState: this.customer.currentState,
       givenName: detailFormData.firstName,
       surname: detailFormData.lastName,
       middleName: detailFormData.middleName,
       type: 'PERSON',
       address: this.addressForm.formData,
       contactDetails: this.contactForm.formData,
-      dateOfBirth: {
-        day: detailFormData.birthDay,
-        month: detailFormData.birthMonth,
-        year: detailFormData.birthYear
-      },
+      dateOfBirth: detailFormData.dateOfBirth,
       member: detailFormData.member,
       assignedOffice: this.selectedOffices && this.selectedOffices.length > 0 ? this.selectedOffices[0] : undefined,
       assignedEmployee: this.selectedEmployees && this.selectedEmployees.length > 0 ? this.selectedEmployees[0] : undefined,

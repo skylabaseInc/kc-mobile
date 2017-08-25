@@ -14,17 +14,12 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary">
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
 <fims-layout-card-over title="{{'Create new loan for customer' | translate:{value: customer.givenName + ' ' + customer.surname} }}">
   <fims-case-form-component #form
                                  (onSave)="onSave($event)"
                                  (onCancel)="onCancel()"
                                  [products]="products$ | async"
+                                 [productInstances]="productsInstances$ | async"
                                  [case]="caseInstance"
                                  [customerId]="customer.identifier"
                                  [editMode]="false">

@@ -14,18 +14,7 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <a md-icon-button title="{{'Go to account' | translate}}" [routerLink]="['../']">
-    <md-icon>keyboard_arrow_left</md-icon>
-  </a>
-  {{'Account' | translate}}
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
-<fims-layout-card-over title="{{'Account entries for account' | translate:{ value: account.identifier} }}">
+<fims-layout-card-over title="{{'Account entries for account' | translate:{ value: account.identifier} }}" [navigateBackTo]="['../']">
   <form [formGroup]="form">
     <div layout="row">
       <md-input-container layout-margin>
@@ -44,7 +33,7 @@
                    (onFetch)="fetchAccountsEntries($event)"
                    [columns]="columns"
                    [data]="accountEntryData$ | async"
-                   [selectable]="false"
+                   [actionColumn]="false"
                    [sortable]="true"
                    [pageable]="true">
   </fims-data-table>

@@ -17,13 +17,12 @@
 import {Component, OnDestroy} from '@angular/core';
 import {TellerStore} from '../store/index';
 import * as fromTeller from '../store/index';
-import {Customer} from '../../../services/customer/domain/customer.model';
+import {Customer} from '../../services/customer/domain/customer.model';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {LoadAllDepositProductsAction, LoadAllLoanProductsAction} from '../store/teller.actions';
-import {CustomerService} from '../../../services/customer/customer.service';
-import {TransactionType} from '../../../services/teller/domain/teller-transaction.model';
-import {MainComponent} from '../../main/main.component';
+import {CustomerService} from '../../services/customer/customer.service';
+import {TransactionType} from '../../services/teller/domain/teller-transaction.model';
 
 interface Action {
   transactionType: TransactionType;
@@ -31,6 +30,7 @@ interface Action {
   icon: string;
   title: string;
   description: string;
+  disabled?: boolean;
 }
 
 @Component({
@@ -42,9 +42,7 @@ export class TellerCustomerDetailComponent implements OnDestroy {
 
   private loadLoanProductsSubscription: Subscription;
 
-  private portraitSubscription: Subscription;
-
-  portrait: Blob;
+  portrait$: Observable<Blob>;
 
   customer$: Observable<Customer>;
 
@@ -52,21 +50,24 @@ export class TellerCustomerDetailComponent implements OnDestroy {
 
   hasLoanProducts$: Observable<boolean>;
 
-  actions: Action[] = [
-    { transactionType: 'ACCO', color: 'indigo-A400', icon: 'create', title: 'Open account', description: ''},
+  depositActions: Action[] = [
+    { transactionType: 'ACCO', color: 'indigo-A400', icon: 'create', title: 'Open account', description: '' },
     { transactionType: 'ACCC', color: 'indigo-A400', icon: 'close', title: 'Close account', description: ''},
     { transactionType: 'ACCT', color: 'indigo-A400', icon: 'swap_horiz', title: 'Account transfer', description: ''},
     { transactionType: 'CDPT', color: 'indigo-A400', icon: 'arrow_forward', title: 'Cash deposit', description: ''},
     { transactionType: 'CWDL', color: 'indigo-A400', icon: 'arrow_back', title: 'Cash withdrawal', description: ''}
   ];
 
-  constructor(private store: TellerStore, private customerService: CustomerService, private main: MainComponent) {
+  loanActions: Action[] = [
+    { transactionType: 'PPAY', color: 'indigo-A400', icon: 'arrow_forward', title: 'Repay loan', description: '' }
+  ];
+
+  constructor(private store: TellerStore, private customerService: CustomerService) {
     this.customer$ = store.select(fromTeller.getTellerSelectedCustomer)
       .filter(customer => !!customer);
 
-    this.portraitSubscription = this.customer$
-      .flatMap(customer => this.customerService.getPortrait(customer.identifier))
-      .subscribe(portrait => this.portrait = portrait);
+    this.portrait$ = this.customer$
+      .flatMap(customer => this.customerService.getPortrait(customer.identifier));
 
     this.hasDepositProducts$ = store.select(fromTeller.hasTellerCustomerDepositProducts);
 
@@ -84,10 +85,5 @@ export class TellerCustomerDetailComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.loadDepositProductsSubscription.unsubscribe();
     this.loadLoanProductsSubscription.unsubscribe();
-    this.portraitSubscription.unsubscribe();
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

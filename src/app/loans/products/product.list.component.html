@@ -14,12 +14,6 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
 <fims-layout-card-over title="{{'Manage loan products' | translate}}">
   <fims-data-table flex
                    (onFetch)="fetchProducts($event)"
@@ -30,6 +24,4 @@
                    [data]="productData | async">
   </fims-data-table>
 </fims-layout-card-over>
-<a md-fab color="accent" class="md-fab-position-bottom-right" title="{{'Create new product' | translate}}" [routerLink]="['create']" *hasPermission="{ id: 'portfolio_products', accessLevel: 'CHANGE'}">
-  <md-icon>add</md-icon>
-</a>
+<fims-fab-button title="{{'Create new product' | translate}}" icon="add" [link]="['create']" [permission]="{ id: 'portfolio_products', accessLevel: 'CHANGE'}"></fims-fab-button>

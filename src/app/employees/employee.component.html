@@ -14,14 +14,8 @@
  limitations under the License.
 -->
 
-<md-toolbar color="primary" class="md-whiteframe-z1">
-  <ng-container>
-    <md-icon layout-sm style="cursor: pointer;" (click)="toggleSideNav()">toc</md-icon>&nbsp;
-  </ng-container>
-</md-toolbar>
-
 <fims-layout-card-over title="{{'Manage employees' | translate}}">
-  <fims-layout-card-over-header-menu layout="row" layout-align="end center">
+  <fims-layout-card-over-header-menu>
     <td-search-box #searchBox placeholder="{{'Search' | translate}}" (search)="search($event)" [alwaysVisible]="false"></td-search-box>
   </fims-layout-card-over-header-menu>
   <div layout="row" flex>
@@ -36,7 +30,4 @@
     </fims-data-table>
   </div>
 </fims-layout-card-over>
-
-<a md-fab color="accent" class="md-fab-position-bottom-right" title="{{'Create new employee' | translate}}" [routerLink]="['create']" *hasPermission="{ id: 'office_employees', accessLevel: 'CHANGE' }">
-  <md-icon>add</md-icon>
-</a>
+<fims-fab-button title="{{'Create new employee' | translate}}" icon="add" [link]="['create']" [permission]="{ id: 'office_employees', accessLevel: 'CHANGE'}"></fims-fab-button>

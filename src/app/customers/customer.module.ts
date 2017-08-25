@@ -20,7 +20,7 @@ import {NgModule} from '@angular/core';
 import {CustomerComponent} from './customer.component';
 import {CustomerFormComponent} from './form/form.component';
 import {CreateCustomerFormComponent} from './form/create/create.form.component';
-import {FimsSharedModule} from '../../common/common.module';
+import {FimsSharedModule} from '../common/common.module';
 import {CustomerDetailComponent} from './detail/customer.detail.component';
 import {CustomerDetailFormComponent} from './form/detail/detail.component';
 import {CustomerOfficesComponent} from './form/offices/offices.component';
@@ -55,7 +55,7 @@ import {
   MdRadioModule,
   MdToolbarModule
 } from '@angular/material';
-import {CovalentFileModule, CovalentSearchModule, CovalentStepsModule} from '@covalent/core';
+import {CovalentFileModule, CovalentMessageModule, CovalentSearchModule, CovalentStepsModule} from '@covalent/core';
 
 @NgModule({
   imports: [
@@ -75,6 +75,7 @@ import {CovalentFileModule, CovalentSearchModule, CovalentStepsModule} from '@co
     CovalentSearchModule,
     CovalentStepsModule,
     CovalentFileModule,
+    CovalentMessageModule,
 
     EffectsModule.run(CustomerApiEffects),
     EffectsModule.run(CustomerRouteEffects),

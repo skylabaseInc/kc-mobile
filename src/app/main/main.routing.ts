@@ -16,9 +16,9 @@
 
 import {Routes} from '@angular/router';
 import {MainComponent} from './main.component';
-import {ChangePasswordGuard} from '../../services/security/change.password.service';
+import {ChangePasswordGuard} from '../services/security/change.password.service';
 import {AccessDeniedComponent} from './access.denied.component';
-import {PermissionGuard} from '../../services/security/authz/permission.guard';
+import {PermissionGuard} from '../services/security/authz/permission.guard';
 import {QuickAccessComponent} from '../quickAccess/quick-access.component';
 
 export const MainRoutes: Routes = [
@@ -35,6 +35,7 @@ export const MainRoutes: Routes = [
       { path: 'loans', loadChildren: './../loans/products/product.module#ProductModule' },
       { path: 'deposits', loadChildren: './../depositAccount/deposit-account.module#DepositAccountModule' },
       { path: 'teller', loadChildren: './../teller/teller.module#TellerModule' },
+      { path: 'reports', loadChildren: './../reporting/reporting.module#ReportingModule' },
       { path: 'denied', component: AccessDeniedComponent, data: { title: "Not allowed" } }
     ]
   },

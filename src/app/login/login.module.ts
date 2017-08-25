@@ -18,7 +18,7 @@ import {NgModule} from '@angular/core';
 import {LoginComponent} from './login.component';
 import {LoginRoutes} from './login.routing';
 import {RouterModule} from '@angular/router';
-import {FimsSharedModule} from '../../common/common.module';
+import {FimsSharedModule} from '../common/common.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   MdButtonModule, MdCardModule, MdIconModule, MdInputModule, MdSelectModule,
@@ -30,7 +30,6 @@ import {CovalentLoadingModule} from '@covalent/core';
 
 @NgModule({
   imports: [
-    FimsSharedModule,
     RouterModule.forChild(LoginRoutes),
     TranslateModule,
     CommonModule,

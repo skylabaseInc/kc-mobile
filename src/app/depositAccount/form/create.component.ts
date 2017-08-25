@@ -20,13 +20,13 @@ import {DepositAccountStore} from '../store/index';
 import {CREATE, RESET_FORM} from '../store/product.actions';
 import {Subscription} from 'rxjs';
 import * as fromDepositAccount from '../store';
-import {Error} from '../../../services/domain/error.model';
-import {ProductDefinition} from '../../../services/depositAccount/domain/definition/product-definition.model';
+import {Error} from '../../services/domain/error.model';
+import {ProductDefinition} from '../../services/depositAccount/domain/definition/product-definition.model';
 import {DepositProductFormComponent} from './form.component';
-import {CurrencyService} from '../../../services/currency/currency.service';
-import {DepositAccountService} from '../../../services/depositAccount/deposit-account.service';
-import {Currency} from '../../../services/currency/domain/currency.model';
-import {Action} from '../../../services/depositAccount/domain/definition/action.model';
+import {CurrencyService} from '../../services/currency/currency.service';
+import {DepositAccountService} from '../../services/depositAccount/deposit-account.service';
+import {Currency} from '../../services/currency/domain/currency.model';
+import {Action} from '../../services/depositAccount/domain/definition/action.model';
 import {Observable} from 'rxjs/Observable';
 import {MainComponent} from '../../main/main.component';
 
@@ -53,6 +53,7 @@ export class DepositProductCreateComponent implements OnInit, OnDestroy {
     },
     flexible: false,
     minimumBalance: 0,
+    cashAccountIdentifier: '',
     expenseAccountIdentifier: '',
     term: {
       interestPayable: 'ANNUALLY'

@@ -15,18 +15,26 @@
  */
 
 import {OnInit, Component, Input, EventEmitter, Output, ViewChild} from '@angular/core';
-import {ChargeDefinition} from '../../../../../services/portfolio/domain/charge-definition.model';
+import {ChargeDefinition} from '../../../../services/portfolio/domain/charge-definition.model';
 import {Validators, FormGroup, FormBuilder, AbstractControl} from '@angular/forms';
-import {ChargeMethod} from '../../../../../services/portfolio/domain/charge-method.model';
-import {temporalOptionList} from '../../../../../common/domain/temporal.domain';
+import {ChargeMethod} from '../../../../services/portfolio/domain/charge-method.model';
+import {temporalOptionList} from '../../../../common/domain/temporal.domain';
 import {TdStepComponent} from '@covalent/core';
-import {ActionOption, ActionOptions} from '../../../../../common/domain/action-option.model';
-import {FimsValidators} from '../../../../../common/validator/validators';
+import {ActionOption, ActionOptions} from '../../../../common/domain/action-option.model';
+import {FimsValidators} from '../../../../common/validator/validators';
 
-interface ChargeMethodOption{
+interface ChargeMethodOption {
   type: ChargeMethod,
   label: string
 }
+
+const ChargeActionToProportionalMap = {
+  "OPEN": "{maximumbalance}",
+  "ACCEPT_PAYMENT": "{runningbalance}",
+  "MARK_LATE": "repayment",
+  "DISBURSE": "{maximumbalance}",
+  "APPROVE": "{maximumbalance}"
+};
 
 @Component({
   selector: 'fims-product-charge-form-component',
@@ -66,7 +74,7 @@ export class ProductChargeFormComponent implements OnInit {
 
   private prepareDetailForm(charge: ChargeDefinition) {
     this.detailForm = this.formBuilder.group({
-      identifier: [charge.identifier, [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe()]],
+      identifier: [charge.identifier, [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe]],
       name: [charge.name, [Validators.required]],
       description: [charge.description, [Validators.required]],
       chargeMethod: [charge.chargeMethod, [Validators.required]],
@@ -74,18 +82,17 @@ export class ProductChargeFormComponent implements OnInit {
     });
   }
 
-  save(): void{
-    const charge: ChargeDefinition = {
+  save(): void {
+    const chargeMethod: ChargeMethod = this.detailForm.get('chargeMethod').value;
+
+    const charge: ChargeDefinition = Object.assign({}, this.charge, {
       identifier: this.detailForm.get('identifier').value,
       name: this.detailForm.get('name').value,
       description: this.detailForm.get('description').value,
-      chargeAction: this.charge.chargeAction,
-      chargeMethod: this.detailForm.get('chargeMethod').value,
+      chargeMethod,
       amount: this.detailForm.get('amount').value,
-      toAccountDesignator: this.charge.toAccountDesignator,
-      fromAccountDesignator: this.charge.fromAccountDesignator,
-      forCycleSizeUnit: this.charge.forCycleSizeUnit,
-    };
+      proportionalTo: chargeMethod === 'PROPORTIONAL' ? ChargeActionToProportionalMap[this.charge.chargeAction] : undefined
+    });
 
     this.onSave.emit(charge);
   }

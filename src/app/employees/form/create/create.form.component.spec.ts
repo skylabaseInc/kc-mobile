@@ -19,10 +19,10 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CovalentStepsModule} from '@covalent/core';
 import {EmployeeFormComponent, EmployeeSaveEvent} from '../form.component';
-import {SelectListComponent} from '../../../../common/select-list/select-list.component';
-import {IdInputComponent} from '../../../../common/id-input/id-input.component';
+import {SelectListComponent} from '../../../common/select-list/select-list.component';
+import {IdInputComponent} from '../../../common/id-input/id-input.component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LayoutCardOverComponent} from '../../../../common/layout-card-over/layout-card-over.component';
+import {LayoutCardOverComponent} from '../../../common/layout-card-over/layout-card-over.component';
 import {Observable} from 'rxjs';
 import {CreateEmployeeFormComponent} from './create.form.component';
 import {mapEmployee, mapUser} from '../form.mapper';
@@ -30,9 +30,11 @@ import {EmployeesStore} from '../../store/index';
 import {CREATE} from '../../store/employee.actions';
 import {Store} from '@ngrx/store';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {FormContinueActionComponent} from '../../../../common/forms/form-continue-action.component';
-import {FormFinalActionComponent} from '../../../../common/forms/form-final-action.component';
-import {MdCardModule, MdInputModule, MdOptionModule, MdSelectModule} from '@angular/material';
+import {FormContinueActionComponent} from '../../../common/forms/form-continue-action.component';
+import {FormFinalActionComponent} from '../../../common/forms/form-final-action.component';
+import {MdButtonModule, MdCardModule, MdInputModule, MdOptionModule, MdSelectModule} from '@angular/material';
+import {RouterLinkStubDirective} from '../../../common/testing/router-stubs';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 
 
 let eventMock: EmployeeSaveEvent = {
@@ -68,7 +70,6 @@ describe('Test employee form component', () => {
 
     TestBed.configureTestingModule({
       declarations: [
-        LayoutCardOverComponent,
         IdInputComponent,
         FormContinueActionComponent,
         FormFinalActionComponent,
@@ -100,7 +101,8 @@ describe('Test employee form component', () => {
             select = jasmine.createSpy('select').and.returnValue(Observable.empty())
           }
         }
-      ]
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
 
     fixture = TestBed.createComponent(CreateEmployeeFormComponent);

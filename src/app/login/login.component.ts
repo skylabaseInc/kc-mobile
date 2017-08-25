@@ -18,11 +18,12 @@ import {ITdLoadingConfig, LoadingType, TdLoadingService} from '@covalent/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import * as fromRoot from '../reducers';
+import * as fromRoot from '../store';
 import {Store} from '@ngrx/store';
-import {LOGIN} from '../reducers/security/security.actions';
+import {LOGIN} from '../store/security/security.actions';
 import {Subscription} from 'rxjs';
 import {MdSelectChange} from '@angular/material';
+import {TRANSLATE_STORAGE_KEY} from '../common/i18n/translate';
 
 @Component({
   selector: 'fims-login',
@@ -92,7 +93,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     }});
   }
 
-  selectLanguage(mdSelectChange: MdSelectChange): void{
-    this.translate.use(mdSelectChange.value);
+  selectLanguage(mdSelectChange: MdSelectChange): void {
+    sessionStorage.setItem(TRANSLATE_STORAGE_KEY, mdSelectChange.value);
+    location.reload();
   }
 }

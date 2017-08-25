@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {JournalEntry} from '../../../../services/accounting/domain/journal-entry.model';
-import {FormComponent} from '../../../../common/forms/form.component';
+import {JournalEntry} from '../../../services/accounting/domain/journal-entry.model';
+import {FormComponent} from '../../../common/forms/form.component';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TdStepComponent} from '@covalent/core';
-import {FetchRequest} from '../../../../services/domain/paging/fetch-request.model';
-import {Account} from '../../../../services/accounting/domain/account.model';
+import {FetchRequest} from '../../../services/domain/paging/fetch-request.model';
+import {Account} from '../../../services/accounting/domain/account.model';
 import {Observable, Subscription} from 'rxjs';
-import {toLongISOString} from '../../../../services/domain/date.converter';
-import {FimsValidators} from '../../../../common/validator/validators';
+import {toLongISOString} from '../../../services/domain/date.converter';
+import {FimsValidators} from '../../../common/validator/validators';
 import * as fromAccounting from '../../store';
-import * as fromRoot from '../../../reducers';
+import * as fromRoot from '../../../store';
 import {CREATE, RESET_FORM} from '../../store/ledger/journal-entry/journal-entry.actions';
-import {Error} from '../../../../services/domain/error.model';
-import {SEARCH} from '../../../reducers/account/account.actions';
+import {Error} from '../../../services/domain/error.model';
+import {SEARCH} from '../../../store/account/account.actions';
 import {AccountingStore} from '../../store/index';
 import {JournalEntryValidators} from './journal-entry.validator';
-import {AccountingService} from '../../../../services/accounting/accounting.service';
+import {AccountingService} from '../../../services/accounting/accounting.service';
 import {transactionTypeExists} from './transaction-type-select/validator/transaction-type-exists.validator';
 import {MainComponent} from '../../../main/main.component';
 
@@ -74,7 +74,7 @@ export class JournalEntryFormComponent extends FormComponent<JournalEntry> imple
     this.userNameSubscription = this.store.select(fromRoot.getUsername).subscribe(username => this.selectedClerk = username);
 
     this.form = this.formBuilder.group({
-      transactionIdentifier: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe()]],
+      transactionIdentifier: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), FimsValidators.urlSafe]],
       transactionType: ['', [Validators.required], transactionTypeExists(this.accountingService)],
       transactionDate: [new Date().toISOString().slice(0, 10), Validators.required],
       note: [''],

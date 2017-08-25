@@ -16,16 +16,15 @@
 
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Customer} from '../../../services/customer/domain/customer.model';
-import {Catalog} from '../../../services/catalog/domain/catalog.model';
-import {Field} from '../../../services/catalog/domain/field.model';
-import {Option} from '../../../services/catalog/domain/option.model';
+import {Customer} from '../../services/customer/domain/customer.model';
+import {Catalog} from '../../services/catalog/domain/catalog.model';
+import {Field} from '../../services/catalog/domain/field.model';
+import {Option} from '../../services/catalog/domain/option.model';
 import * as fromCustomers from '../store';
 import {Subscription} from 'rxjs';
 import {CustomersStore} from '../store/index';
 import {LOAD_ALL} from '../store/catalogs/catalog.actions';
-import {CustomerService} from '../../../services/customer/customer.service';
-import {MainComponent} from '../../main/main.component';
+import {CustomerService} from '../../services/customer/customer.service';
 
 interface CatalogFieldPair{
   catalog: Catalog;
@@ -60,11 +59,15 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
 
   customCatalogs: CustomCatalog[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: CustomersStore, private customerService: CustomerService, private main: MainComponent) {}
+  isCustomerActive: boolean;
+
+  constructor(private route: ActivatedRoute, private router: Router, private store: CustomersStore, private customerService: CustomerService) {}
 
   ngOnInit(): void {
     this.customerSubscription = this.store.select(fromCustomers.getSelectedCustomer)
+      .filter(customer => !!customer)
       .do(customer => this.customer = customer)
+      .do(customer => this.isCustomerActive = customer.currentState === 'ACTIVE')
       .flatMap(customer => this.customerService.getPortrait(customer.identifier))
       .subscribe(portrait => this.portrait = portrait);
 
@@ -141,8 +144,8 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['portrait'], { relativeTo: this.route })
   }
 
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
+  goToTasks(): void {
+    this.router.navigate(['tasks'], { relativeTo: this.route })
   }
 
 }

@@ -16,8 +16,8 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {Ledger} from '../../../services/accounting/domain/ledger.model';
-import {TableData} from '../../../common/data-table/data-table.component';
+import {Ledger} from '../../services/accounting/domain/ledger.model';
+import {TableData} from '../../common/data-table/data-table.component';
 import {AccountingStore} from '../store/index';
 import {ActivatedRoute, Router} from '@angular/router';
 import * as fromAccounting from '../store';
@@ -52,6 +52,7 @@ export class SubLedgerListComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.selectionSubscription = this.store.select(fromAccounting.getSelectedLedger)
+      .filter(ledger => !!ledger)
       .subscribe(ledger => this.ledger = ledger);
   }
 
