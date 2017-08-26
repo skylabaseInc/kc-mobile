@@ -21,7 +21,6 @@ import * as fromEmployees from '../../../store';
 import {Subscription} from 'rxjs';
 import {ADD_TASK_TO_CUSTOMER} from '../../../store/tasks/task.actions';
 import {CustomersStore} from '../../../store/index';
-import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './customer-task.form.component.html'
@@ -38,7 +37,7 @@ export class CustomerTaskFormComponent implements OnInit, OnDestroy{
 
   tasks: TaskDefinition[];
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: CustomersStore, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private router: Router, private store: CustomersStore) {}
 
   ngOnInit(): void {
     this.tasksSubscription = this.store.select(fromEmployees.getAllCustomerTaskEntities)
@@ -66,9 +65,5 @@ export class CustomerTaskFormComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

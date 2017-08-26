@@ -58,7 +58,7 @@ export class CreateDepositTransactionForm implements OnInit, OnDestroy {
 
   error: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: TellerStore, private tellerService: TellerService, private depositService: DepositAccountService, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: TellerStore, private tellerService: TellerService, private depositService: DepositAccountService) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => this.transactionType = params['transactionType']);

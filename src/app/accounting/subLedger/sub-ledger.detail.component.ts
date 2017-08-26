@@ -50,7 +50,7 @@ export class SubLedgerDetailComponent implements OnInit, OnDestroy{
     { name: 'balance', label: 'Balance' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private dialogService: TdDialogService, private translate: TranslateService, private store: AccountingStore, private main: MainComponent){}
+  constructor(private router: Router, private route: ActivatedRoute, private dialogService: TdDialogService, private translate: TranslateService, private store: AccountingStore){}
 
   ngOnInit(): void {
     this.ledgerSubscription = this.store.select(fromAccounting.getSelectedLedger)

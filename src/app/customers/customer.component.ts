@@ -22,7 +22,6 @@ import {Observable} from 'rxjs';
 import * as fromRoot from '../store';
 import {SEARCH} from '../store/customer/customer.actions';
 import {CustomersStore} from './store/index';
-import {MainComponent} from '../main/main.component';
 
 @Component({
   templateUrl: './customer.component.html'
@@ -44,7 +43,7 @@ export class CustomerComponent implements OnInit{
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore){}
 
   ngOnInit(): void {
     this.customerData$ = this.store.select(fromRoot.getCustomerSearchResults)
@@ -78,9 +77,5 @@ export class CustomerComponent implements OnInit{
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

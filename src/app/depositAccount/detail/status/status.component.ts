@@ -45,7 +45,7 @@ export class DepositProductStatusComponent implements OnInit, OnDestroy {
     { action: 'DEACTIVATE' }
   ];
 
-  constructor(private route: ActivatedRoute, private store: DepositAccountStore, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private store: DepositAccountStore) {}
 
   ngOnInit(): void {
     this.productSubscription = this.store.select(fromDepositAccounts.getSelectedProduct)

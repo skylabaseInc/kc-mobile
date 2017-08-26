@@ -25,7 +25,6 @@ import {Observable} from 'rxjs/Observable';
 import {DELETE} from '../store/ledger/ledger.actions';
 import {TranslateService} from '@ngx-translate/core';
 import {TdDialogService} from '@covalent/core';
-import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './sub-ledger.list.component.html'
@@ -48,7 +47,7 @@ export class SubLedgerListComponent implements OnInit, OnDestroy{
     { name: 'description', label: 'Description' }
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router, private store: AccountingStore, private translate: TranslateService, private dialogService: TdDialogService, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private router: Router, private store: AccountingStore, private translate: TranslateService, private dialogService: TdDialogService) {}
 
   ngOnInit(): void {
     this.selectionSubscription = this.store.select(fromAccounting.getSelectedLedger)
@@ -101,10 +100,6 @@ export class SubLedgerListComponent implements OnInit, OnDestroy{
           activatedRoute: this.route
         }})
       });
-  }
-  
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

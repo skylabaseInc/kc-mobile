@@ -49,12 +49,7 @@ export class CaseDebtIncomeComponent implements OnInit {
 
   cosignerOverview$: Observable<IncomeDebtOverview>;
 
-<<<<<<< HEAD
-  constructor(private store: CasesStore, private main: MainComponent) {
-  }
-=======
   constructor(private store: CasesStore) {}
->>>>>>> d3d1a1b496be86b16ce707657cff6afa770d18c1
 
   ngOnInit(): void {
     const selectedCustomer$: Observable<Customer> = this.store.select(fromCustomers.getSelectedCustomer);
@@ -118,10 +113,6 @@ export class CaseDebtIncomeComponent implements OnInit {
 
   sum(factors: CreditWorthinessFactor[]): number {
     return factors.reduce((acc, val) => acc + val.amount, 0);
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

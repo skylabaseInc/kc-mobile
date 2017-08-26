@@ -116,6 +116,10 @@ export class MainComponent implements OnInit, AfterViewInit {
     return data;
   }
 
+  toggleSideNav(): void {
+    this.sidenav.toggle(!this.sidenav.opened)
+  }
+
   logout(): void {
     this.store.dispatch({ type: LOGOUT });
   }

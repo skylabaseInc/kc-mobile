@@ -39,7 +39,7 @@ export class DepositProductComponent implements OnInit{
     { name: 'interest', label: 'Interest'}
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore) {}
 
   ngOnInit(): void {
     this.productData = this.store.select(fromDepositAccounts.getProductSearchResults)

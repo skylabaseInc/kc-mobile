@@ -51,7 +51,7 @@ export class DepositProductDetailComponent implements OnInit, OnDestroy {
     { name: 'amount', label: 'Amount', numeric: true, format: value => value ? value.toFixed(2) : undefined }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore, private dialogService: TdDialogService, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: DepositAccountStore, private dialogService: TdDialogService) {}
 
   ngOnInit(): void {
     const selectedProduct$ = this.store.select(fromDepositAccounts.getSelectedProduct)

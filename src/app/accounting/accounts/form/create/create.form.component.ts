@@ -23,7 +23,6 @@ import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {Error} from '../../../../services/domain/error.model';
 import {CREATE, RESET_FORM} from '../../../store/account/account.actions';
-import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -44,7 +43,7 @@ export class CreateAccountFormComponent implements OnInit, OnDestroy {
     balance: 0
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromAccounting.State>, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromAccounting.State>) {}
 
   ngOnInit() {
     this.formStateSubscription = this.store.select(fromAccounting.getAccountFormError)
@@ -80,9 +79,5 @@ export class CreateAccountFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

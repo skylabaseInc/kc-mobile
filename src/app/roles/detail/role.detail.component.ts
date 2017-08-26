@@ -27,7 +27,6 @@ import {FormPermission} from '../model/form-permission.model';
 import {Observable} from 'rxjs/Observable';
 import {FormPermissionService} from '../helper/form-permission.service';
 import {TdDialogService} from '@covalent/core';
-import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './role.detail.component.html'
@@ -41,7 +40,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
 
   formPermissions$: Observable<FormPermission[]>;
 
-  constructor(private route: ActivatedRoute, private identityService: IdentityService, private store: RolesStore, private formPermissionService: FormPermissionService, private dialogService: TdDialogService, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private identityService: IdentityService, private store: RolesStore, private formPermissionService: FormPermissionService, private dialogService: TdDialogService) {}
 
   ngOnInit(): void {
     this.actionsSubscription = this.route.params
@@ -82,9 +81,5 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.actionsSubscription.unsubscribe();
     this.roleSubscription.unsubscribe();
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

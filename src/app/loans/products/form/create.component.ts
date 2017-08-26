@@ -28,7 +28,6 @@ import {FimsProduct} from '../store/model/fims-product.model';
 import {Currency} from '../../../services/currency/domain/currency.model';
 import {CurrencyService} from '../../../services/currency/currency.service';
 import {Observable} from 'rxjs/Observable';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.component.html'
@@ -66,7 +65,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy{
     }
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore, private currencyService: CurrencyService, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private portfolioStore: PortfolioStore, private currencyService: CurrencyService) {}
 
   ngOnInit(): void {
     this.formStateSubscription = this.portfolioStore.select(fromPortfolio.getProductFormError)
@@ -101,10 +100,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

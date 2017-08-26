@@ -52,7 +52,7 @@ export class CasePaymentsComponent implements OnInit, OnDestroy{
 
   columns: Observable<ChargeName[]>;
 
-  constructor(private casesStore: CasesStore, private main: MainComponent) {}
+  constructor(private casesStore: CasesStore) {}
 
   private createRows(payments: PlannedPayment[]): PaymentRow[] {
     let rows: PaymentRow[] = [];
@@ -99,9 +99,5 @@ export class CasePaymentsComponent implements OnInit, OnDestroy{
       caseIdentifier: this.caseInstance.identifier,
       initialDisbursalDate: startDate
     }});
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

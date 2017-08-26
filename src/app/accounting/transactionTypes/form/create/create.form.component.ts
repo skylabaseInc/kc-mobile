@@ -23,7 +23,6 @@ import {Error} from '../../../../services/domain/error.model';
 import {TransactionType} from '../../../../services/accounting/domain/transaction-type.model';
 import {CREATE, RESET_FORM} from '../../../store/ledger/transaction-type/transaction-type.actions';
 import {TransactionTypeFormComponent} from '../transaction-type-form.component';
-import {MainComponent} from '../../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -39,7 +38,7 @@ export class CreateTransactionTypeFormComponent implements OnInit, OnDestroy {
     name: ''
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore) {}
 
   ngOnInit() {
     this.formStateSubscription = this.store.select(fromAccounting.getTransactionTypeFormError)
@@ -68,9 +67,5 @@ export class CreateTransactionTypeFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

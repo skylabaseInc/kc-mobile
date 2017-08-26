@@ -23,7 +23,6 @@ import * as fromCustomers from '../../store';
 import {Subscription} from 'rxjs';
 import {EXECUTE_COMMAND, EXECUTE_TASK, LOAD_ALL} from '../../store/tasks/task.actions';
 import {CustomersStore} from '../../store/index';
-import {MainComponent} from '../../../main/main.component';
 
 interface StatusCommand {
   action: CommandAction;
@@ -51,7 +50,7 @@ export class CustomerStatusComponent implements OnInit, OnDestroy {
     { action: 'REOPEN', preStates: ['CLOSED'], tasks: []},
   ];
 
-  constructor(private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private store: CustomersStore) {}
 
   ngOnInit(): void {
     this.tasksSubscription = this.store.select(fromCustomers.getAllCustomerTaskEntities)
@@ -93,10 +92,6 @@ export class CustomerStatusComponent implements OnInit, OnDestroy {
       command: command,
       activatedRoute: this.route
     } });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

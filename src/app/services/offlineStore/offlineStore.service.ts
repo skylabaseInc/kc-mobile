@@ -1,3 +1,4 @@
+import { OfflineStoreService } from '../../../services/offlineStore/offlineStore.service';
 /**
  * Copyright 2017 The Mifos Initiative.
  *
@@ -14,16 +15,12 @@
  * limitations under the License.
  */
 
-import {Component, ViewChild} from '@angular/core';
-import {DevService} from '../../services/dev_logger/dev.service';
+// import {Inject, Injectable, OnInit} from '@angular/core';
+// import * as PouchDB from 'pouchdb/dist/pouchdb';
+// import {LoginComponent} from "../app/login/login.component";
 
-@Component({
-  templateUrl: './quick-access.component.html'
-})
-export class QuickAccessComponent {
+// @Injectable()
+// export class OfflineStoreService implements OnInit{
 
-  // @ViewChild(MainComponent) mainComponent:MainComponent;
-  // private mainComponent: MainComponent;
 
-  constructor(private consoleLogService: DevService){}
-}
+// }

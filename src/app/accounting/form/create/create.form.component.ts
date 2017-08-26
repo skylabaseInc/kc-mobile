@@ -22,7 +22,6 @@ import * as fromAccounting from '../../store';
 import {Subscription} from 'rxjs';
 import {CREATE, CREATE_SUB_LEDGER, RESET_FORM, SelectAction} from '../../store/ledger/ledger.actions';
 import {AccountingStore} from '../../store/index';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -45,7 +44,7 @@ export class CreateLedgerFormComponent implements OnInit, OnDestroy {
     subLedgers: [],
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore) {}
 
   ngOnInit() {
     this.formStateSubscription = this.store.select(fromAccounting.getLedgerFormError)
@@ -84,9 +83,5 @@ export class CreateLedgerFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

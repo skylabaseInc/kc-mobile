@@ -21,7 +21,6 @@ import {Office} from '../services/office/domain/office.model';
 import {Store} from '@ngrx/store';
 import * as fromRoot from '../store';
 import * as fromOffice from './store';
-import {MainComponent} from '../main/main.component';
 
 import {Observable} from 'rxjs';
 import {SEARCH} from '../store/office/office.actions';
@@ -47,7 +46,7 @@ export class OfficeComponent implements OnInit {
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: OfficesStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: OfficesStore) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: Params) => {
@@ -80,9 +79,5 @@ export class OfficeComponent implements OnInit {
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest});
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

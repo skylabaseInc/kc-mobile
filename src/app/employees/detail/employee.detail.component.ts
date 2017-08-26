@@ -22,7 +22,6 @@ import {User} from '../../services/identity/domain/user.model';
 import * as fromEmployee from '../store';
 import {DELETE, SelectAction} from '../store/employee.actions';
 import {EmployeesStore} from '../store/index';
-import {MainComponent} from '../../main/main.component';
 
 @Component({
   selector: 'fims-employee-detail',
@@ -38,7 +37,7 @@ export class EmployeeDetailComponent implements OnInit, OnDestroy{
 
   user: User;
 
-  constructor(private route: ActivatedRoute, private router: Router, private dialogService: TdDialogService, private store: EmployeesStore, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private router: Router, private dialogService: TdDialogService, private store: EmployeesStore) {}
 
   ngOnInit(): void {
     this.actionsSubscription = this.route.params
@@ -86,9 +85,5 @@ export class EmployeeDetailComponent implements OnInit, OnDestroy{
 
   goToOverviewPage(term?: string): void{
     this.router.navigate(['../../'], { queryParams: { term: term }, relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

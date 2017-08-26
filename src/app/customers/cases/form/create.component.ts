@@ -72,11 +72,7 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
     depositAccountIdentifier: ''
   };
 
-<<<<<<< HEAD
-  constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private main: MainComponent) {}
-=======
   constructor(private router: Router, private route: ActivatedRoute, private casesStore: CasesStore, private portfolioService: PortfolioService, private depositService: DepositAccountService) {}
->>>>>>> d3d1a1b496be86b16ce707657cff6afa770d18c1
 
   ngOnInit(): void {
     const selectedCustomer$ = this.casesStore.select(fromCustomers.getSelectedCustomer);
@@ -122,10 +118,6 @@ export class CaseCreateComponent implements OnInit, OnDestroy{
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

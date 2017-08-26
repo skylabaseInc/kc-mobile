@@ -115,14 +115,9 @@ export function HttpLoaderFactory(http: Http){
     ExistsGuardService,
     ...appRoutingProviders,
     ImageService,
-<<<<<<< HEAD
-    DevService, 
-    OfflineStoreService
-=======
     {
       provide: LOCALE_ID, useFactory: getSelectedLanguage, deps: [TranslateService],
     }
->>>>>>> d3d1a1b496be86b16ce707657cff6afa770d18c1
   ],
   bootstrap: [ AppComponent ]
 })

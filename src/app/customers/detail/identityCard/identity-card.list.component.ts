@@ -23,7 +23,6 @@ import {TableData} from '../../../common/data-table/data-table.component';
 import {LOAD_ALL} from '../../store/identityCards/identity-cards.actions';
 import {IdentificationCard} from '../../../services/customer/domain/identification-card.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './identity-card.list.component.html'
@@ -40,7 +39,7 @@ export class CustomerIdentityCardListComponent implements OnInit, OnDestroy {
     { name: 'issuer', label: 'Issuer' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore) {}
 
   ngOnInit(): void {
     this.identityCardData$ = this.store.select(fromCustomers.getAllCustomerIdentificationCardEntities)
@@ -62,10 +61,6 @@ export class CustomerIdentityCardListComponent implements OnInit, OnDestroy {
 
   rowSelect(identificationCard: IdentificationCard): void {
     this.router.navigate(['detail', identificationCard.number], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

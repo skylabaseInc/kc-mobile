@@ -33,7 +33,6 @@ import {AccountingStore} from '../../store/index';
 import {JournalEntryValidators} from './journal-entry.validator';
 import {AccountingService} from '../../../services/accounting/accounting.service';
 import {transactionTypeExists} from './transaction-type-select/validator/transaction-type-exists.validator';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   selector: 'fims-journal-entry-form-component',
@@ -53,7 +52,7 @@ export class JournalEntryFormComponent extends FormComponent<JournalEntry> imple
 
   accounts: Observable<Account[]>;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private store: AccountingStore, private accountingService: AccountingService, private main: MainComponent) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private store: AccountingStore, private accountingService: AccountingService) {
     super();
   }
 
@@ -184,9 +183,4 @@ export class JournalEntryFormComponent extends FormComponent<JournalEntry> imple
       amount: [0]
     })
   }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
-  }
-
 }

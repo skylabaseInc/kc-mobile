@@ -21,7 +21,6 @@ import {SelectAction, UPDATE} from '../../store/ledger/ledger.actions';
 import * as fromAccounting from '../../store';
 import {Subscription} from 'rxjs';
 import {AccountingStore} from '../../store/index';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './edit.form.component.html'
@@ -34,7 +33,7 @@ export class EditLedgerFormComponent implements OnInit, OnDestroy {
 
   @ViewChild('form') formComponent: LedgerFormComponent;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore) {}
 
   ngOnInit() {
     this.ledgerSubscription = this.store.select(fromAccounting.getSelectedLedger)
@@ -60,9 +59,5 @@ export class EditLedgerFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

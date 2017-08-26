@@ -92,6 +92,7 @@
     "license-to-fail": "2.2.0",
     "phantomjs-prebuilt": "2.1.7",
     "protractor": "5.1.0",
+    "sw-precache": "^5.2.0",
     "ts-node": "3.0.6",
     "tslint": "4.5.1",
     "typescript": "2.3.4",

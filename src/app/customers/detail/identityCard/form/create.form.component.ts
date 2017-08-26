@@ -44,7 +44,7 @@ export class CreateCustomerIdentificationCardFormComponent implements OnInit, On
     expirationDate: null
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore) {}
 
   ngOnInit() {
     this.customerSubscription = this.store.select(fromCustomers.getSelectedCustomer)
@@ -79,9 +79,5 @@ export class CreateCustomerIdentificationCardFormComponent implements OnInit, On
 
   navigateAway(): void{
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

@@ -22,7 +22,6 @@ import {Error} from '../../../services/domain/error.model';
 import {Subscription} from 'rxjs';
 import {CustomersStore} from '../../store/index';
 import {CREATE, RESET_FORM} from '../../store/customer.actions';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -50,7 +49,7 @@ export class CreateCustomerFormComponent implements OnInit, OnDestroy {
     customValues: []
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: CustomersStore) {}
 
   ngOnInit() {
     this.formStateSubscription = this.store.select(fromCustomers.getCustomerFormError)
@@ -77,9 +76,5 @@ export class CreateCustomerFormComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

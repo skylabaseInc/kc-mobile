@@ -22,7 +22,6 @@ import {FetchRequest} from '../../services/domain/paging/fetch-request.model';
 import {SEARCH} from '../store/ledger/transaction-type/transaction-type.actions';
 import {TransactionType} from '../../services/accounting/domain/transaction-type.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './transaction-types.list.component.html'
@@ -43,7 +42,7 @@ export class TransactionTypeListComponent implements OnInit {
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore, private main: MainComponent) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: AccountingStore) {}
 
   ngOnInit(): void {
     this.transactionTypesData$ = this.store.select(fromAccounting.getTransactionTypeSearchResults)
@@ -70,9 +69,5 @@ export class TransactionTypeListComponent implements OnInit {
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

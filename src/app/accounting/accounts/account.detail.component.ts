@@ -25,7 +25,6 @@ import {Observable} from 'rxjs/Observable';
 import {FimsPermission} from '../../services/security/authz/fims-permission.model';
 import {TranslateService} from '@ngx-translate/core';
 import {TdDialogService} from '@covalent/core';
-import {MainComponent} from '../../main/main.component';
 
 @Component({
   templateUrl: './account.detail.component.html'
@@ -40,7 +39,7 @@ export class AccountDetailComponent implements OnInit, OnDestroy{
 
   account: Account;
 
-  constructor(private route: ActivatedRoute, private dialogService: TdDialogService, private translate: TranslateService, private store: AccountingStore, private main: MainComponent) {}
+  constructor(private route: ActivatedRoute, private dialogService: TdDialogService, private translate: TranslateService, private store: AccountingStore) {}
 
   ngOnInit(): void {
     this.actionsSubscription = this.route.params
@@ -99,10 +98,6 @@ export class AccountDetailComponent implements OnInit, OnDestroy{
           activatedRoute: this.route
         }})
       });
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

@@ -25,13 +25,9 @@ export class AccountActivityComponent implements OnInit{
 
   commands: AccountCommand[];
 
-  constructor(private route: ActivatedRoute, private main: MainComponent){}
+  constructor(private route: ActivatedRoute){}
 
   ngOnInit(): void {
     this.route.data.subscribe(( data: { commands: AccountCommand[]}) => this.commands = data.commands );
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }

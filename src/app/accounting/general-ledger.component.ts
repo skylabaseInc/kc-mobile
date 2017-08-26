@@ -55,8 +55,5 @@ export class GeneralLedgerComponent implements OnInit{
     this.router.navigate(['ledgers/detail', ledger.identifier, 'ledgers'], { relativeTo: this.route });
   }
 
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
-  }
 
 }

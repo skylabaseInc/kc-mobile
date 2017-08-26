@@ -23,7 +23,6 @@ import {CREATE, CREATE_BRANCH, RESET_FORM} from '../../store/office.actions';
 import {Error} from '../../../services/domain/error.model';
 import {Subscription} from 'rxjs';
 import {OfficesStore} from '../../store/index';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './create.form.component.html'
@@ -38,7 +37,7 @@ export class CreateOfficeFormComponent implements OnInit, OnDestroy{
 
   @ViewChild('form') formComponent: OfficeFormComponent;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: OfficesStore, private main: MainComponent) {
+  constructor(private router: Router, private route: ActivatedRoute, private store: OfficesStore) {
 
     this.formStateSubscription = store.select(fromOffice.getOfficeFormError)
       .filter((error: Error) => !!error)
@@ -88,10 +87,6 @@ export class CreateOfficeFormComponent implements OnInit, OnDestroy{
     }else{
       this.router.navigate(['../'], { relativeTo: this.route });
     }
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 
 }

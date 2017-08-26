@@ -42,8 +42,4 @@ export class TrailBalanceComponent implements OnInit{
     this.store.dispatch({ type: LOAD_TRIAL_BALANCE, payload: this.includeEmptyEntries });
   }
 
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
-  }
-
 }

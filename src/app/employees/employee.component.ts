@@ -43,7 +43,7 @@ export class EmployeeComponent implements OnInit{
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>, private main: MainComponent){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>){}
 
   ngOnInit(): void {
 

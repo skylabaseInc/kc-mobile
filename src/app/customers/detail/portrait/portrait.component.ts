@@ -25,7 +25,6 @@ import {NotificationService, NotificationType} from '../../../services/notificat
 import {TdDialogService} from '@covalent/core';
 import {Observable} from 'rxjs/Observable';
 import {TranslateService} from '@ngx-translate/core';
-import {MainComponent} from '../../../main/main.component';
 
 @Component({
   templateUrl: './portrait.component.html'
@@ -44,7 +43,7 @@ export class CustomerPortraitComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private route: ActivatedRoute, private customerService: CustomerService,
               private store: CustomersStore, private notificationService: NotificationService,
-              private dialogService: TdDialogService, private translate: TranslateService, private main: MainComponent) {
+              private dialogService: TdDialogService, private translate: TranslateService) {
   }
 
   ngOnInit(): void {
@@ -105,9 +104,5 @@ export class CustomerPortraitComponent implements OnInit, OnDestroy {
 
   navigateAway(): void {
     this.router.navigate(['../'], {relativeTo: this.route});
-  }
-
-  toggleSideNav(): void {
-    this.main.toggleSideBar();
   }
 }
