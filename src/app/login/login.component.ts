@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loadingSubscription = this.store.select(fromRoot.getAuthenticationLoading).subscribe(loading => {
       if(loading){
-        this._loadingService.register('login');
+        // this._loadingService.register('login');
       }else{
         this._loadingService.resolve('login');
       }

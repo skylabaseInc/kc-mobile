@@ -15,7 +15,6 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
-import {DevService} from '../../services/dev_logger/dev.service';
 
 @Component({
   templateUrl: './quick-access.component.html'
@@ -25,5 +24,5 @@ export class QuickAccessComponent {
   // @ViewChild(MainComponent) mainComponent:MainComponent;
   // private mainComponent: MainComponent;
 
-  constructor(private consoleLogService: DevService){}
+  constructor(){}
 }
