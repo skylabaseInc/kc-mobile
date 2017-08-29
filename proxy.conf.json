@@ -49,7 +49,7 @@
     }
   },
   "/api/reporting": {
-    "target": "http://localhost:2029",
+    "target": "http://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/reporting": "/reporting"
