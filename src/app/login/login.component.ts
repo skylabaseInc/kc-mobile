@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   currentLanguage: string;
 
   languageOptions: any[] = [
-    { id: 'en', label: 'Welcome to fims'},
-    { id: 'es', label: 'Bienvenido a fims'}
+    { id: 'en', label: 'Welcome to Kuelap Mobile'},
+    { id: 'es', label: 'Bienvenido a Kuelap Mobile'}
   ];
 
   form: FormGroup;
