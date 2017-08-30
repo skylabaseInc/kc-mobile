@@ -15,6 +15,7 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
+import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 @Component({
   templateUrl: './quick-access.component.html'
