@@ -20,30 +20,29 @@ import * as PouchDB from 'pouchdb/dist/pouchdb';
 @Injectable()
 export class OfflineStoreService implements OnInit {
 
-    private db: any;
     private remoteCouchDb: any;
+    private testDb: any;
 
-    constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
+    // constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
+    constructor(@Inject('remoteCouchDbUrl') private couchDbUrl: string) {
 
         // enable debugging
         PouchDB.debug.enable('*');
-        this.db = new PouchDB("kuelap-mobile-test");
+        // this.remoteCouchDb = new PouchDB("kuelap-mobile-test");
 
-        // start sync in pull mode
-        PouchDB.sync(name, `${remote}/${name}`, {
-            live: true,
-            retry: true
-        }).on('change', info => {
-            onChange(info);
-        });
-
+        // // start sync in pull mode
+        // PouchDB.sync(name, `${remote}/${name}`, {
+        //     live: true,
+        //     retry: true
+        // }).on('change', info => {
+        //     onChange(info);
+        // });
         this.connectToCouchDbOnline();
         this.getAll();
+        this.get("offices");
     }
     
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     connectToCouchDbOnline(): void {
         this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground', {
@@ -52,23 +51,24 @@ export class OfflineStoreService implements OnInit {
                 password: 'admin'
             }
         });
-        this.remoteCouchDb.info().then(function(info) {
-            console.log(info);
-        })
     }
 
     // CRUD methods
     getAll() {
-        return this.db.allDocs({ include_docs: true })
-            .then(db => {
-                return db.rows.map(row => {
+        return this.remoteCouchDb.allDocs({ include_docs: true })
+            .then(remoteCouchDbdb => {
+                return remoteCouchDbdb.rows.map(row => {
+                    console.log(row.doc);
                     return row.doc;
                 });
             });
     }
 
     get(id) {
-        return this.db.get(id);
+        // return this.remoteCouchDb.get(id);
+        this.remoteCouchDb.get(id).then(item => {
+            return item;
+        })
     }
 
     save(item) {
@@ -79,23 +79,23 @@ export class OfflineStoreService implements OnInit {
 
     // add new item
     add(item) {
-        return this.db.post(item);
+        return this.remoteCouchDb.post(item);
     }
 
     // update item
     update(item) {
-        return this.db.get(item._id)
+        return this.remoteCouchDb.get(item._id)
             .then(updatingItem => {
                 Object.assign(updatingItem, item);
-                return this.db.put(updatingItem);
+                return this.remoteCouchDb.put(updatingItem);
             });
     }
 
     // find item by id
     remove(id) {
-        return this.db.get(id)
+        return this.remoteCouchDb.get(id)
             .then(item => {
-                return this.db.remove(item);
+                return this.remoteCouchDb.remove(item);
             });
     }
 }

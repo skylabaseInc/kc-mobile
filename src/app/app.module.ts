@@ -102,6 +102,7 @@ export function HttpLoaderFactory(http: Http){
     IdentityService,
     OfficeService,
     CustomerService,
+    OfflineStoreService,
     CatalogService,
     AccountingService,
     PortfolioService,
@@ -114,7 +115,6 @@ export function HttpLoaderFactory(http: Http){
     ExistsGuardService,
     ...appRoutingProviders,
     ImageService,
-    OfflineStoreService,
     {
       provide: LOCALE_ID, useFactory: getSelectedLanguage, deps: [TranslateService],
     }

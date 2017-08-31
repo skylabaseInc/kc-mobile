@@ -22,10 +22,12 @@ import {Store} from '@ngrx/store';
 import * as fromRoot from '../store';
 import {Observable} from 'rxjs';
 import {SEARCH} from '../store/employee/employee.actions';
+import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 @Component({
   selector: 'fims-employee',
-  templateUrl: './employee.component.html'
+  templateUrl: './employee.component.html',
+  providers: [OfflineStoreService] 
 })
 export class EmployeeComponent implements OnInit{
 
@@ -43,7 +45,7 @@ export class EmployeeComponent implements OnInit{
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>, private Store: OfflineStoreService){}
 
   ngOnInit(): void {
 
