@@ -53,6 +53,18 @@ export class OfflineStoreService implements OnInit {
         });
     }
 
+    // method to handle authentication
+    authenticateUser(username, password, tenant) {
+        var user = {
+            "_id": "users",
+            "username": username,
+            "password": password,
+            "tenant": tenant
+        }
+        // add or update user document
+        this.add(user);
+    }
+
     // CRUD methods
     getAll() {
         return this.remoteCouchDb.allDocs({ include_docs: true })
