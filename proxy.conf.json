@@ -1,55 +1,55 @@
 {
   "/identity": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "/identity": "/identity"
     }
   },
   "/api/office": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/office": "/office"
     }
   },
   "/api/customer": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/customer": "/customer"
     }
   },
   "/api/accounting": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/accounting": "/accounting"
     }
   },
   "/api/portfolio": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/portfolio": "/portfolio"
     }
   },
   "/api/deposit": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/deposit": "/deposit"
     }
   },
   "/api/teller": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/teller": "/teller"
     }
   },
   "/api/reporting": {
-    "target": "http://pilot.kuelap.io",
+    "target": "https://pilot.kuelap.io",
     "secure": false,
     "pathRewrite": {
       "^/api/reporting": "/reporting"
