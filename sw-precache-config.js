@@ -17,8 +17,7 @@ module.exports = {
   navigateFallback: '/index.html',
 
   runtimeCaching: [{
-    urlPattern: /http\:\/\/pilot\.kuelap\.io/,
-   // urlPattern: /./, // Match everything
+    urlPattern: /https\:\/\/pilot\.kuelap\.io/,
     handler: 'networkFirst'
   }]
 };
