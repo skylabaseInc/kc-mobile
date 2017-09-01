@@ -18,16 +18,14 @@
   <fims-layout-card-over-header-menu>
     <td-search-box #searchBox placeholder="{{'Search' | translate}}" (search)="search($event)" [alwaysVisible]="false"></td-search-box>
   </fims-layout-card-over-header-menu>
-  <div layout="row" flex>
-    <fims-data-table flex
-                    (onFetch)="fetchEmployees($event)"
-                    (onActionCellClick)="rowSelect($event)"
-                    [columns]="columns"
-                    [data]="employeeData$ | async"
-                    [loading]="loading$ | async"
-                    [sortable]="true"
-                    [pageable]="true">
-    </fims-data-table>
-  </div>
+  <fims-data-table flex
+                  (onFetch)="fetchEmployees($event)"
+                  (onActionCellClick)="rowSelect($event)"
+                  [columns]="columns"
+                  [data]="employeeData$ | async"
+                  [loading]="loading$ | async"
+                  [sortable]="true"
+                  [pageable]="true">
+  </fims-data-table>
 </fims-layout-card-over>
 <fims-fab-button title="{{'Create new employee' | translate}}" icon="add" [link]="['create']" [permission]="{ id: 'office_employees', accessLevel: 'CHANGE'}"></fims-fab-button>

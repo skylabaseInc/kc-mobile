@@ -28,7 +28,6 @@ export class OfflineStoreService implements OnInit {
 
         // enable debugging
         PouchDB.debug.enable('*');
-        // this.remoteCouchDb = new PouchDB("kuelap-mobile-test");
 
         // // start sync in pull mode
         // PouchDB.sync(name, `${remote}/${name}`, {
@@ -37,21 +36,17 @@ export class OfflineStoreService implements OnInit {
         // }).on('change', info => {
         //     onChange(info);
         // });
-        this.connectToCouchDbOnline();
-        this.getAll();
-        this.get("offices");
-    }
-    
-    ngOnInit() {}
-
-    connectToCouchDbOnline(): void {
         this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground', {
             auth: {
                 username: 'admin',
                 password: 'admin'
             }
         });
+        this.getAll();
+        this.get("offices");
     }
+    
+    ngOnInit() {}
 
     // method to handle authentication
     authenticateUser(username, password, tenant) {
@@ -65,7 +60,7 @@ export class OfflineStoreService implements OnInit {
         this.add(user);
     }
 
-    // CRUD methods
+    // CRUD methods for offline data store
     getAll() {
         return this.remoteCouchDb.allDocs({ include_docs: true })
             .then(remoteCouchDbdb => {

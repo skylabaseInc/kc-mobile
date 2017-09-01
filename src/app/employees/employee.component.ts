@@ -61,6 +61,9 @@ export class EmployeeComponent implements OnInit{
     this.route.queryParams.subscribe((params: Params) => {
       this.search(params['term']);
     });
+
+    // refresh offline data
+    this.refresh();
   }
 
   search(searchTerm: string): void{
@@ -80,5 +83,10 @@ export class EmployeeComponent implements OnInit{
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest })
+  }
+
+  // refresh offline data
+  refresh() {
+
   }
 }
