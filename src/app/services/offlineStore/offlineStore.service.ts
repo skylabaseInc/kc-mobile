@@ -21,43 +21,50 @@ import * as PouchDB from 'pouchdb/dist/pouchdb';
 export class OfflineStoreService implements OnInit {
 
     private remoteCouchDb: any;
+    private localPouchDb: any;
     private testDb: any;
 
-    // constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
+    //constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
     constructor(@Inject('remoteCouchDbUrl') private couchDbUrl: string) {
 
         // enable debugging
         PouchDB.debug.enable('*');
 
-        // // start sync in pull mode
+        // start sync in pull mode
         // PouchDB.sync(name, `${remote}/${name}`, {
         //     live: true,
         //     retry: true
         // }).on('change', info => {
         //     onChange(info);
         // });
-        this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground', {
-            auth: {
-                username: 'admin',
-                password: 'admin'
-            }
-        });
-        this.getAll();
-        this.get("offices");
+        // this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground', {
+        //     auth: {
+        //         username: 'admin',
+        //         password: 'admin'
+        //     }
+        // });
+        // this.localPouchDb = new PouchDB('kuelap-mobile-test');
+
+        // sync online couchDB to offline pouchDB
+        // this.localPouchDb.sync(this.remoteCouchDb, {live: true, retry: true})
+        //     .on('error', console.log.bind(console));
+
+        // this.getAll();
+        // this.get("offices");
     }
     
     ngOnInit() {}
 
     // method to handle authentication
     authenticateUser(username, password, tenant) {
-        var user = {
-            "_id": "users",
-            "username": username,
-            "password": password,
-            "tenant": tenant
-        }
-        // add or update user document
-        this.add(user);
+        // var user = {
+        //     "_id": "users",
+        //     "username": username,
+        //     "password": password,
+        //     "tenant": tenant
+        // }
+        // // add or update user document
+        // this.save(user);
     }
 
     // CRUD methods for offline data store
@@ -65,7 +72,6 @@ export class OfflineStoreService implements OnInit {
         return this.remoteCouchDb.allDocs({ include_docs: true })
             .then(remoteCouchDbdb => {
                 return remoteCouchDbdb.rows.map(row => {
-                    console.log(row.doc);
                     return row.doc;
                 });
             });

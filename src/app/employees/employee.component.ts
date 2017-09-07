@@ -56,6 +56,14 @@ export class EmployeeComponent implements OnInit{
         totalPages: employeePage.totalPages
       }));
 
+      // put data in pouchDB
+      var customerData = {
+        "_id": "",
+        "data": this.employeeData$
+      }
+      console.info("Saving data to database....");
+      this.Store.save(customerData);
+
     this.loading$ = this.store.select(fromRoot.getEmployeeSearchLoading);
 
     this.route.queryParams.subscribe((params: Params) => {

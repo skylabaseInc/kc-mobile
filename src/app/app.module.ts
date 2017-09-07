@@ -53,7 +53,7 @@ import {CurrencyService} from './services/currency/currency.service';
 import {TellerService} from './services/teller/teller-service';
 import {ReportingService} from './services/reporting/reporting.service';
 import {getSelectedLanguage} from './common/i18n/translate';
-import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
+import {OfflineStoreService} from './services/offlineStore/offlineStore.service';
 import {environment} from '../environments/environment';
 
 export function HttpLoaderFactory(http: Http){
