@@ -42,6 +42,6 @@
   "background_color": "#43a047",
   "theme_color": "#43a047",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "start_url": "/"
+  "orientation": "portrait",
+  "start_url": "/index.html"
 }
