@@ -20,42 +20,23 @@ import * as PouchDB from 'pouchdb/dist/pouchdb';
 @Injectable()
 export class OfflineStoreService implements OnInit {
 
-    private remoteCouchDb: any;
     private localPouchDb: any;
-    private testDb: any;
 
     //constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
     constructor(@Inject('remoteCouchDbUrl') private couchDbUrl: string) {
-
-        // enable debugging
         PouchDB.debug.enable('*');
-
-        // start sync in pull mode
-        // PouchDB.sync(name, `${remote}/${name}`, {
-        //     live: true,
-        //     retry: true
-        // }).on('change', info => {
-        //     onChange(info);
-        // });
-        // this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground', {
-        //     auth: {
-        //         username: 'admin',
-        //         password: 'admin'
-        //     }
-        // });
-        // this.localPouchDb = new PouchDB('kuelap-mobile-test');
-
-        // sync online couchDB to offline pouchDB
-        // this.localPouchDb.sync(this.remoteCouchDb, {live: true, retry: true})
-        //     .on('error', console.log.bind(console));
-
-        // this.getAll();
-        // this.get("offices");
+        this.localPouchDb = new PouchDB(this.couchDbUrl + "employee_database", 
+            {
+                auth: {
+                    username: 'admin',
+                    password: 'admin'
+                }
+            }
+        );
     }
     
     ngOnInit() {}
 
-    // method to handle authentication
     authenticateUser(username, password, tenant) {
         // var user = {
         //     "_id": "users",
@@ -67,21 +48,17 @@ export class OfflineStoreService implements OnInit {
         // this.save(user);
     }
 
-    // CRUD methods for offline data store
     getAll() {
-        return this.remoteCouchDb.allDocs({ include_docs: true })
-            .then(remoteCouchDbdb => {
-                return remoteCouchDbdb.rows.map(row => {
+        return this.localPouchDb.allDocs({ include_docs: true })
+            .then(localPouchDb => {
+                return localPouchDb.rows.map(row => {
                     return row.doc;
                 });
             });
     }
 
-    get(id) {
-        // return this.remoteCouchDb.get(id);
-        this.remoteCouchDb.get(id).then(item => {
-            return item;
-        })
+    get(id: string) {
+        return this.localPouchDb.get(id);
     }
 
     save(item) {
@@ -90,25 +67,15 @@ export class OfflineStoreService implements OnInit {
             : this.add(item);
     }
 
-    // add new item
     add(item) {
-        return this.remoteCouchDb.post(item);
+        return this.localPouchDb.put(item);
     }
 
-    // update item
     update(item) {
-        return this.remoteCouchDb.get(item._id)
+        return this.localPouchDb.get(item._id)
             .then(updatingItem => {
                 Object.assign(updatingItem, item);
-                return this.remoteCouchDb.put(updatingItem);
-            });
-    }
-
-    // find item by id
-    remove(id) {
-        return this.remoteCouchDb.get(id)
-            .then(item => {
-                return this.remoteCouchDb.remove(item);
+                return this.localPouchDb.put(updatingItem);
             });
     }
 }
