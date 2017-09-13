@@ -43,5 +43,5 @@
   "theme_color": "#43a047",
   "display": "standalone",
   "orientation": "portrait",
-  "start_url": "/?utm_source=homescreen"
+  "start_url": "/index.html"
 }
