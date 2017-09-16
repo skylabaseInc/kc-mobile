@@ -32,11 +32,12 @@ import {ChartOfAccountEntry} from './domain/chart-of-account-entry.model';
 import {TransactionType} from './domain/transaction-type.model';
 import {TransactionTypePage} from './domain/transaction-type-page.model';
 import {AccountType} from './domain/account-type.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class AccountingService{
 
-  constructor(private http: HttpClient, @Inject('accountingBaseUrl') private baseUrl: string) {}
+  constructor(private http: HttpClient, @Inject('accountingBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   public createLedger(ledger: Ledger): Observable<void>{
     return this.http.post(`${this.baseUrl}/ledgers`, ledger);
@@ -52,7 +53,10 @@ export class AccountingService{
       params
     };
 
-    return this.http.get(`${this.baseUrl}/ledgers`, requestOptions);
+    return Observable.fromPromise<LedgerPage>(this.Store.get('ledgers_doc'))
+        .map(data => data)
+        .do(data => console.log("[OK] Ledger data gotten"));
+    // return this.http.get(`${this.baseUrl}/ledgers`, requestOptions);
   }
 
   public findLedger(identifier: string, silent?: boolean): Observable<Ledger>{

@@ -27,11 +27,12 @@ import {TaskDefinition} from './domain/task-definition.model';
 import {ImageService} from '../image/image.service';
 import {IdentificationCard} from './domain/identification-card.model';
 import {IdentificationCardScan} from './domain/identification-card-scan.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class CustomerService {
 
-  constructor(@Inject('customerBaseUrl') private baseUrl: string, private http: HttpClient, private imageService: ImageService) {}
+  constructor(@Inject('customerBaseUrl') private baseUrl: string, private http: HttpClient, private imageService: ImageService, private Store: OfflineStoreService) {}
 
   fetchCustomers(fetchRequest: FetchRequest): Observable<CustomerPage> {
     const params: URLSearchParams = buildSearchParams(fetchRequest);
@@ -40,7 +41,10 @@ export class CustomerService {
       search: params
     };
 
-    return this.http.get(`${this.baseUrl}/customers`, requestOptions).share();
+    return Observable.fromPromise<CustomerPage>(this.Store.get('customer_doc'))
+        .map(data => data)
+        .do(data => console.log('[OK] Customer data gotten! ')); 
+    // return this.http.get(`${this.baseUrl}/customers`, requestOptions).share();
   }
 
   getCustomer(id: string, silent?: boolean): Observable<Customer>{

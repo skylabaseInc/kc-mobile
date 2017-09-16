@@ -20,12 +20,15 @@ import * as PouchDB from 'pouchdb/dist/pouchdb';
 @Injectable()
 export class OfflineStoreService implements OnInit {
 
-    private localPouchDb: any;
+    private localDb: any;
+    private remoteDb: any;
+    private data: any;
 
-    //constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
     constructor(@Inject('remoteCouchDbUrl') private couchDbUrl: string) {
         PouchDB.debug.enable('*');
-        this.localPouchDb = new PouchDB(this.couchDbUrl + "employee_database", 
+        this.localDb = new PouchDB('kuelap-mobile');
+
+        this.remoteDb = new PouchDB(this.couchDbUrl + "employee_database", 
             {
                 auth: {
                     username: 'admin',
@@ -33,32 +36,65 @@ export class OfflineStoreService implements OnInit {
                 }
             }
         );
+
+        let options = {
+            live: true,
+            retry: true,
+            continuous: true
+        };
+
+        // Synchronization mechanism
+        this.localDb.sync(this.remoteDb, options).on('complete', () => { 
+            console.log("[POUCHDB] Completed replication")
+        }).on('error', err => {
+            console.error("[POUCHDB] Error in replication!!");
+        });
     }
     
     ngOnInit() {}
 
-    authenticateUser(username, password, tenant) {
-        // var user = {
-        //     "_id": "users",
-        //     "username": username,
-        //     "password": password,
-        //     "tenant": tenant
-        // }
-        // // add or update user document
-        // this.save(user);
-    }
+    // TODO: handle offline authentication
+    authenticateUser(username, password, tenant) {}
 
     getAll() {
-        return this.localPouchDb.allDocs({ include_docs: true })
-            .then(localPouchDb => {
-                return localPouchDb.rows.map(row => {
-                    return row.doc;
+        return this.remoteDb.allDocs({ include_docs: true })
+            .then(localDb => {
+                return localDb.rows.map(row => {
+                    console.log(row.doc.data);
+                    this.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+                        this.handleChange(change);
+                    });
+                    return row.doc.data;
                 });
             });
     }
 
     get(id: string) {
-        return this.localPouchDb.get(id);
+        return this.localDb.get(id)
+            .then(row => {
+                return row.data;
+            });
+    }
+
+    getUpdate(id: string) {
+        return this.localDb.get(id)
+            .then(row => {
+                return row;
+            });
+    }
+
+    add(item) {
+        return this.localDb.put(item).then(response => {
+            console.info("[POUCHDB-DEV] response: " + response);
+        })
+    }
+
+    update(item) {
+        return this.localDb.get(item._id)
+            .then(updatingItem => {
+                Object.assign(updatingItem, item);
+                return this.localDb.put(updatingItem);
+            });
     }
 
     save(item) {
@@ -67,15 +103,28 @@ export class OfflineStoreService implements OnInit {
             : this.add(item);
     }
 
-    add(item) {
-        return this.localPouchDb.put(item);
-    }
+    handleChange(change) {
+        
+        let changedDoc = null;
+        let changedIndex = null;
 
-    update(item) {
-        return this.localPouchDb.get(item._id)
-            .then(updatingItem => {
-                Object.assign(updatingItem, item);
-                return this.localPouchDb.put(updatingItem);
-            });
-    }
+        this.data.forEach((doc, index) => {
+            if(doc._id === change.id) {
+                changedDoc = doc;
+                changedIndex = index;
+            }
+        });
+
+        // A document was deleted
+        if(change.deleted) {
+            this.data.splice(changedIndex, 1);
+        } else {
+            // A document was updated
+            if(changedDoc) {
+                this.data[changedIndex] = change.doc;
+            } else { // A document was added
+                this.data.push(change.doc);
+            }
+        }
+    }   
 }
