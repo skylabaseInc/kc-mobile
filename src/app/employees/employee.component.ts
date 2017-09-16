@@ -1,3 +1,4 @@
+import { EmployeePage } from '../services/office/domain/employee-page.model';
 /**
  * Copyright 2017 The Mifos Initiative.
  *
@@ -22,12 +23,11 @@ import {Store} from '@ngrx/store';
 import * as fromRoot from '../store';
 import {Observable} from 'rxjs';
 import {SEARCH} from '../store/employee/employee.actions';
-import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 @Component({
   selector: 'fims-employee',
   templateUrl: './employee.component.html',
-  providers: [OfflineStoreService] 
+  providers: [] 
 })
 export class EmployeeComponent implements OnInit{
 

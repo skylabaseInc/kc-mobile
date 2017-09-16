@@ -26,11 +26,14 @@ import {EmployeePage} from './domain/employee-page.model';
 import {Employee} from './domain/employee.model';
 import {buildSearchParams} from '../domain/paging/search-param.builder';
 import {ContactDetail} from '../domain/contact/contact-detail.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class OfficeService{
 
-  constructor(private http: HttpClient, @Inject('officeBaseUrl') private baseUrl: string) {}
+  private testData: any;
+
+  constructor(private http: HttpClient, @Inject('officeBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   createOffice(office: Office): Observable<Office>{
     return this.http.post(this.baseUrl + '/offices', office)
@@ -58,8 +61,10 @@ export class OfficeService{
     let requestOptions: RequestOptionsArgs = {
       search: params
     };
-    return this.http.get(this.baseUrl + '/offices', requestOptions)
-      .catch(Error.handleError);
+
+    return Observable.fromPromise<OfficePage>(this.Store.get('office_doc'))
+        .map(data => data)
+        .do(data => console.log('[OK] Office data gotten!'));
   }
 
   listBranches(parentIdentifier: string, fetchRequest?: FetchRequest): Observable<OfficePage>{
@@ -68,6 +73,7 @@ export class OfficeService{
     let requestOptions: RequestOptionsArgs = {
       search: params
     };
+
     return this.http.get(this.baseUrl + '/offices/' + parentIdentifier + '/branches', requestOptions)
       .catch(Error.handleError);
   }
@@ -84,8 +90,9 @@ export class OfficeService{
       search: params
     };
 
-    return this.http.get(this.baseUrl + '/employees', requestOptions)
-      .catch(Error.handleError);
+    return Observable.fromPromise<EmployeePage>(this.Store.get('employee_doc'))
+        .map(data => data)
+        .do(data => console.log('[OK] Employee data gotten! '));
   }
 
   getEmployee(id: string, silent?: true): Observable<Employee>{
@@ -94,8 +101,17 @@ export class OfficeService{
   }
 
   createEmployee(employee: Employee): Observable<Employee>{
-    return this.http.post(this.baseUrl + '/employees', employee)
-      .catch(Error.handleError);
+    
+    return Observable.fromPromise<Employee>(this.Store.getUpdate('employee_doc').then(row => {
+      console.log(row._rev);
+      this.Store.update({
+        "_id": "employee_doc",
+        "_rev": row._rev,  // specify this to avoid update conflicts
+        "data": row.data.employees.push(employee),
+        "totalElements": row.data.totalElements + 1
+      });
+    }))
+    .catch(Error.handleError);
   }
 
   updateEmployee(employee: Employee): Observable<Employee>{
