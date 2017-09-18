@@ -31,7 +31,8 @@ import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 @Injectable()
 export class OfficeService{
 
-  private testData: any;
+  private employee: Employee;
+  private office: Office;
 
   constructor(private http: HttpClient, @Inject('officeBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
@@ -81,6 +82,13 @@ export class OfficeService{
   getOffice(id: string): Observable<Office>{
     return this.http.get(this.baseUrl + '/offices/' + id)
       .catch(Error.handleError);
+
+      // return Observable.fromPromise<Office>(this.Store.getUpdate('office_doc').then(row => {
+      //   var data = row.data.offices;
+      //   this.office = data.filter(element => element.identifier == id);
+      // }))
+      // .map(office => this.office[0])
+      // .do(office => console.log('[OK] Office: ', office));
   }
 
   listEmployees(fetchRequest?: FetchRequest): Observable<EmployeePage>{
@@ -96,32 +104,81 @@ export class OfficeService{
   }
 
   getEmployee(id: string, silent?: true): Observable<Employee>{
-    return this.http.get(this.baseUrl + '/employees/' + id, {}, silent)
-      .catch(Error.handleError);
+
+    return Observable.fromPromise<Employee>(this.Store.getUpdate('employee_doc').then(row => {
+      var data = row.data.employees;
+      this.employee = data.filter(element => element.identifier == id);
+    }))
+    .map(employee => this.employee[0])
+    .do(employee => console.log('[OK] Employee: ', employee));
   }
 
   createEmployee(employee: Employee): Observable<Employee>{
     
     return Observable.fromPromise<Employee>(this.Store.getUpdate('employee_doc').then(row => {
-      console.log(row._rev);
+      var updatedData = row.data.employees;
+      var count = updatedData.push(employee);
+      var elements = count;
+      var pages = row.data.totalPages;
+
       this.Store.update({
         "_id": "employee_doc",
         "_rev": row._rev,  // specify this to avoid update conflicts
-        "data": row.data.employees.push(employee),
-        "totalElements": row.data.totalElements + 1
+        "data": {
+          "employees": updatedData,
+          "totalElements": elements,
+          "totalPages": pages
+        }
       });
     }))
     .catch(Error.handleError);
   }
 
   updateEmployee(employee: Employee): Observable<Employee>{
-    return this.http.put(this.baseUrl + '/employees/' + employee.identifier, employee)
-      .catch(Error.handleError);
+    
+    return Observable.fromPromise<Employee>(this.Store.getUpdate('employee_doc').then(row => {
+      var updatedData = row.data.employees;
+      var index = updatedData.findIndex(element => element.identifier == employee.identifier);
+      var removedItems = updatedData.splice(index, 1); // remove old employee data
+      updatedData.splice(index, 0, employee); // replace with new employee data
+      
+      var elements = row.data.totalElements + 1;
+      var pages = row.data.totalPages;
+
+      this.Store.update({
+        "_id": "employee_doc",
+        "_rev": row._rev,  // specify this to avoid update conflicts
+        "data": {
+          "employees": updatedData,
+          "totalElements": elements,
+          "totalPages": pages
+        }
+      })
+    }))
+    .catch(Error.handleError);
   }
 
   deleteEmployee(id: string): Observable<Employee>{
-    return this.http.delete(this.baseUrl + '/employees/' + id, {})
-      .catch(Error.handleError);
+    
+    return Observable.fromPromise<Employee>(this.Store.getUpdate('employee_doc').then(row => {
+      var updatedData = row.data.employees;
+      var index = updatedData.findIndex(element => element.identifier == id);
+      var removedItems = updatedData.splice(index, 1); // remove old employee data
+      
+      var elements = row.data.totalElements + 1;
+      var pages = row.data.totalPages;
+
+      this.Store.update({
+        "_id": "employee_doc",
+        "_rev": row._rev,  // specify this to avoid update conflicts
+        "data": {
+          "employees": updatedData,
+          "totalElements": elements,
+          "totalPages": pages
+        }
+      })
+    }))
+    .catch(Error.handleError);
   }
 
   setContactDetails(id: string, contactDetails: ContactDetail[]): Observable<void>{
