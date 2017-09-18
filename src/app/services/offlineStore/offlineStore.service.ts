@@ -44,11 +44,7 @@ export class OfflineStoreService implements OnInit {
         };
 
         // Synchronization mechanism
-        this.localDb.sync(this.remoteDb, options).on('complete', () => { 
-            console.log("[POUCHDB] Completed replication")
-        }).on('error', err => {
-            console.error("[POUCHDB] Error in replication!!");
-        });
+        this.localDb.sync(this.remoteDb, options).on('complete', () => {}).on('error', err => {});
     }
     
     ngOnInit() {}
@@ -60,7 +56,6 @@ export class OfflineStoreService implements OnInit {
         return this.remoteDb.allDocs({ include_docs: true })
             .then(localDb => {
                 return localDb.rows.map(row => {
-                    console.log(row.doc.data);
                     this.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
                         this.handleChange(change);
                     });
@@ -93,7 +88,9 @@ export class OfflineStoreService implements OnInit {
         return this.localDb.get(item._id)
             .then(updatingItem => {
                 Object.assign(updatingItem, item);
-                return this.localDb.put(updatingItem);
+                return this.localDb.put(updatingItem).then(response => {
+                    console.info("[POUCHDB-DEV] Update successful with response: " + response);
+                });
             });
     }
 
