@@ -33,6 +33,7 @@ export class OfficeService{
 
   private employee: Employee;
   private office: Office;
+  private branches: OfficePage;
 
   constructor(private http: HttpClient, @Inject('officeBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
@@ -47,13 +48,42 @@ export class OfficeService{
   }
 
   updateOffice(office: Office): Observable<Office>{
-    return this.http.put(this.baseUrl + '/offices/' + office.identifier, office)
-      .catch(Error.handleError);
+    return Observable.fromPromise<Office>(this.Store.getUpdate('branches_doc').then(row => {
+      var data = row.data.offices;
+      var index = data.findIndex(element => element.identifier == office.identifier);
+      var removedOffice = data.splice(index, 1);
+      data.splice(index, 0, office);
+
+      this.Store.update({
+        "_id": "branches_doc",
+        "_rev": row._rev,
+        data: {
+          "offices": data,
+          "totalElements": row.data.totalElements + 1,
+          "totalPages": row.data.totalPages
+        }
+      })
+    }))
+    .catch(Error.handleError)
   }
 
   deleteOffice(id: String): Observable<Office>{
-    return this.http.delete(this.baseUrl + '/offices/' + id, {})
-      .catch(Error.handleError);
+    return Observable.fromPromise<Office>(this.Store.getUpdate('branches_doc').then(row => {
+      var data = row.data.offices;
+      var index = data.findIndex(office => office.indentifier == id);
+      var removedOffice = data.splice(index, 1);
+
+      this.Store.update({
+        "_id": "branches_doc",
+        "_rev": row._rev,
+        "data": {
+          "offices": data,
+          "totalElements": row.data.totalElements + 1,
+          "totalPages": row.data.totalPages
+        }
+      })
+    }))
+    .catch(Error.handleError);
   }
 
   listOffices(fetchRequest?: FetchRequest): Observable<OfficePage>{
@@ -75,8 +105,16 @@ export class OfficeService{
       search: params
     };
 
-    return this.http.get(this.baseUrl + '/offices/' + parentIdentifier + '/branches', requestOptions)
-      .catch(Error.handleError);
+    return Observable.fromPromise<OfficePage>(this.Store.getUpdate('branches_doc').then(row => {
+      var data = row.data.offices;
+      // ensure that branches are always of the parent branch
+      var branches = data.filter(element => element.parentIdentifier == parentIdentifier);
+      row.data.offices = branches;
+      this.branches = row.data;
+    }))
+    .map(office => this.branches)
+    .do(office => console.log('[OK] Branches: ', office))
+    .catch(Error.handleError);
   }
 
   getOffice(id: string): Observable<Office>{
@@ -140,7 +178,7 @@ export class OfficeService{
       var updatedData = row.data.employees;
       var index = updatedData.findIndex(element => element.identifier == employee.identifier);
       var removedItems = updatedData.splice(index, 1); // remove old employee data
-      updatedData.splice(index, 0, employee); // replace with new employee data
+      updatedData.splice(index, 0, employee); // add new employee at the same index
       
       var elements = row.data.totalElements + 1;
       var pages = row.data.totalPages;
@@ -163,7 +201,7 @@ export class OfficeService{
     return Observable.fromPromise<Employee>(this.Store.getUpdate('employee_doc').then(row => {
       var updatedData = row.data.employees;
       var index = updatedData.findIndex(element => element.identifier == id);
-      var removedItems = updatedData.splice(index, 1); // remove old employee data
+      var removedItems = updatedData.splice(index, 1); // delete the chosen employee
       
       var elements = row.data.totalElements + 1;
       var pages = row.data.totalPages;
