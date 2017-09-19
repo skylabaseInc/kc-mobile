@@ -54,15 +54,7 @@ export class OfficeService{
       var removedOffice = data.splice(index, 1);
       data.splice(index, 0, office);
 
-      this.Store.update({
-        "_id": "branches_doc",
-        "_rev": row._rev,
-        data: {
-          "offices": data,
-          "totalElements": row.data.totalElements + 1,
-          "totalPages": row.data.totalPages
-        }
-      })
+      this.updateStoreBranches("branches_doc", row._rev, data, row.data.totalElements+1, row.data.totalPages);
     }))
     .catch(Error.handleError)
   }
@@ -73,15 +65,7 @@ export class OfficeService{
       var index = data.findIndex(office => office.indentifier == id);
       var removedOffice = data.splice(index, 1);
 
-      this.Store.update({
-        "_id": "branches_doc",
-        "_rev": row._rev,
-        "data": {
-          "offices": data,
-          "totalElements": row.data.totalElements + 1,
-          "totalPages": row.data.totalPages
-        }
-      })
+      this.updateStoreBranches("branches_doc", row._rev, data, row.data.totalElements+1, row.data.totalPages);
     }))
     .catch(Error.handleError);
   }
@@ -159,15 +143,7 @@ export class OfficeService{
       var elements = count;
       var pages = row.data.totalPages;
 
-      this.Store.update({
-        "_id": "employee_doc",
-        "_rev": row._rev,  // specify this to avoid update conflicts
-        "data": {
-          "employees": updatedData,
-          "totalElements": elements,
-          "totalPages": pages
-        }
-      });
+      this.updateStoreEmployees('employee_doc', row._rev, updatedData, elements, pages);
     }))
     .catch(Error.handleError);
   }
@@ -183,15 +159,7 @@ export class OfficeService{
       var elements = row.data.totalElements + 1;
       var pages = row.data.totalPages;
 
-      this.Store.update({
-        "_id": "employee_doc",
-        "_rev": row._rev,  // specify this to avoid update conflicts
-        "data": {
-          "employees": updatedData,
-          "totalElements": elements,
-          "totalPages": pages
-        }
-      })
+      this.updateStoreEmployees('employee_doc', row._rev, updatedData, elements, pages);
     }))
     .catch(Error.handleError);
   }
@@ -206,21 +174,38 @@ export class OfficeService{
       var elements = row.data.totalElements + 1;
       var pages = row.data.totalPages;
 
-      this.Store.update({
-        "_id": "employee_doc",
-        "_rev": row._rev,  // specify this to avoid update conflicts
-        "data": {
-          "employees": updatedData,
-          "totalElements": elements,
-          "totalPages": pages
-        }
-      })
+      this.updateStoreEmployees('employee_doc', row._rev, updatedData, elements, pages);
     }))
     .catch(Error.handleError);
   }
 
   setContactDetails(id: string, contactDetails: ContactDetail[]): Observable<void>{
     return this.http.put(this.baseUrl + '/employees/' + id + '/contacts', contactDetails);
+  }
+
+  // Helper functions
+  updateStoreEmployees(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": id,
+      "_rev": rev, // specify this to avoid update conflicts
+      "data": {
+        "employees": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    })
+  }
+
+  updateStoreBranches(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": "branches_doc",
+      "_rev": rev,
+      "data": {
+        "offices": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    })
   }
 
 }
