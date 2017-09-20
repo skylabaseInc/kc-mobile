@@ -33,8 +33,7 @@ export class DepositAccountService {
   constructor(private http: HttpClient, @Inject('depositAccountBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   createProductDefinition(productDefinition: ProductDefinition): Observable<void> {
-    // return this.http.post(`${this.baseUrl}/definitions`, productDefinition)
-
+   
     return Observable.fromPromise<void>(this.Store.getUpdate('def_doc').then(row => {
       var elements = row.data;
       this.updateStoreDefinitions('def_doc', row._rev, elements);
@@ -42,7 +41,6 @@ export class DepositAccountService {
   }
 
   updateProductDefinition(productDefinition: ProductDefinition): Observable<void> {
-    // return this.http.put(`${this.baseUrl}/definitions/${productDefinition.identifier}`, productDefinition)
     return Observable.fromPromise<void>(this.Store.getUpdate('def_doc').then(row => {
       var index = row.data.findIndex(element => element.identifier == productDefinition.identifier);
 
@@ -54,7 +52,6 @@ export class DepositAccountService {
   }
 
   deleteProductDefinition(identifier: string): Observable<void> {
-    // return this.http.delete(`${this.baseUrl}/definitions/${identifier}`)
 
     return Observable.fromPromise<void>(this.Store.getUpdate('def_doc').then(row => {
       var index = row.data.findIndex(element => element.identifier == identifier);
@@ -71,8 +68,7 @@ export class DepositAccountService {
   }
 
   findProductDefinition(identifier: string): Observable<ProductDefinition> {
-    // return this.http.get(`${this.baseUrl}/definitions/${identifier}`);
-
+    
     return Observable.fromPromise<ProductDefinition>(this.Store.getUpdate('def_doc').then(row => {
       this.definition = row.data.filter(element => element.identifier == identifier);
     }))
