@@ -56,7 +56,6 @@ export class AccountingService{
     return Observable.fromPromise<LedgerPage>(this.Store.get('ledgers_doc'))
         .map(data => data)
         .do(data => console.log("[OK] Ledger data gotten"));
-    // return this.http.get(`${this.baseUrl}/ledgers`, requestOptions);
   }
 
   public findLedger(identifier: string, silent?: boolean): Observable<Ledger>{
