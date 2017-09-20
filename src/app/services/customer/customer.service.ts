@@ -32,6 +32,8 @@ import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 @Injectable()
 export class CustomerService {
 
+  private customer: Customer;
+
   constructor(@Inject('customerBaseUrl') private baseUrl: string, private http: HttpClient, private imageService: ImageService, private Store: OfflineStoreService) {}
 
   fetchCustomers(fetchRequest: FetchRequest): Observable<CustomerPage> {
@@ -42,13 +44,15 @@ export class CustomerService {
     };
 
     return Observable.fromPromise<CustomerPage>(this.Store.get('customer_doc'))
-        .map(data => data)
-        .do(data => console.log('[OK] Customer data gotten! ')); 
-    // return this.http.get(`${this.baseUrl}/customers`, requestOptions).share();
+        .map(data => data);
   }
 
   getCustomer(id: string, silent?: boolean): Observable<Customer>{
     return this.http.get(`${this.baseUrl}/customers/${id}`, {}, silent);
+    // return Observable.fromPromise<Customer>(this.Store.getUpdate('customer_doc').then(row => {
+    //   this.customer = row.data.customer.filter(element => element.identifier == id);
+    // }))
+    // .map(customer => this.customer[0]);
   }
 
   createCustomer(customer: Customer): Observable<Customer>{
