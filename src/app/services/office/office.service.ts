@@ -156,7 +156,7 @@ export class OfficeService{
       var removedItems = row.data.employees.splice(index, 1);
       row.data.employees.splice(index, 0, employee);
 
-      this.updateStoreEmployees('employee_doc', row._rev, row.data.employees, row.data.totalElements + 1, row.data.totalPages);
+      this.updateStoreEmployees('employee_doc', row._rev, row.data.employees, row.data.totalElements, row.data.totalPages);
     }))
     .catch(Error.handleError);
   }
@@ -168,13 +168,23 @@ export class OfficeService{
       var index = row.data.employees.findIndex(element => element.identifier == id);
       var removedItems = row.data.employees.splice(index, 1); // delete the chosen employee
  
-      this.updateStoreEmployees('employee_doc', row._rev, row.data.employees, row.data.totalElements + 1, row.data.totalPages);
+      this.updateStoreEmployees('employee_doc', row._rev, row.data.employees, row.data.totalElements - 1, row.data.totalPages);
     }))
     .catch(Error.handleError);
   }
 
   setContactDetails(id: string, contactDetails: ContactDetail[]): Observable<void>{
-    return this.http.put(this.baseUrl + '/employees/' + id + '/contacts', contactDetails);
+    // return this.http.put(this.baseUrl + '/employees/' + id + '/contacts', contactDetails);
+
+    return Observable.fromPromise<void>(this.Store.getUpdate('employee_doc').then(row => {
+      var index = row.data.employees.findIndex(element => element.identifier == id);
+      this.employee = row.data.employees.filter(element => element.identifier == id);
+      this.employee.contactDetails = contactDetails;
+      var removedItem = row.data.employees.splice(index, 1);
+      row.data.employees.splice(index, 0, this.employee);
+
+      this.updateStoreEmployees('employee_doc', row._rev, row.data.employees, row.data.totalElements, row.data.totalPages);
+    }));
   }
 
   // Helper functions

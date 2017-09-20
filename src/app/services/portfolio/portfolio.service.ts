@@ -56,13 +56,11 @@ export class PortfolioService {
     const requestOptions: RequestOptionsArgs = {
       search: params
     };
-    // return this.http.get(`${this.baseUrl}/products/`, requestOptions)
     return Observable.fromPromise<ProductPage>(this.Store.get('product_doc'))
     .map(data => data);
   }
 
   createProduct(product: Product): Observable<void>{
-    //return this.http.post(`${this.baseUrl}/products`, product)
     return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
       var elements = row.data.elements.push(product);
       this.updateStoreProducts('product_doc', row._rev, row.data.elements, elements, row.data.totalPages);
@@ -70,8 +68,6 @@ export class PortfolioService {
   }
 
   getProduct(identifier: string): Observable<Product>{
-    // return this.http.get(`${this.baseUrl}/products/${identifier}`)
-
     return Observable.fromPromise<Product>(this.Store.getUpdate('product_doc').then(row => {
       this.product = row.data.elements.filter(element => element.identifier == identifier);
     }))
@@ -79,8 +75,7 @@ export class PortfolioService {
   }
 
   changeProduct(product: Product): Observable<void>{
-    // return this.http.put(`${this.baseUrl}/products/${product.identifier}`, product)
-
+    
     return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
       var index = row.data.elements.findIndex(element => element.identifier == product.identifier);
       var removedItem = row.data.elements.splice(index, 1);
@@ -91,8 +86,6 @@ export class PortfolioService {
   }
 
   deleteProduct(identifier: string): Observable<void> {
-    // return this.http.delete(`${this.baseUrl}/products/${identifier}`)
-
     return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
 
       var index = row.data.elements.findIndex(element => element.identifier == identifier);
@@ -103,7 +96,6 @@ export class PortfolioService {
   }
 
   enableProduct(identifier: string, enabled: boolean): Observable<void>{
-    // return this.http.put(`${this.baseUrl}/products/${identifier}/enabled`, enabled)
     return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
       var index = row.data.elements.findIndex(element => element.identifier == identifier);
       this.product = row.data.elements.filter(element => element.identifier == identifier);
@@ -117,14 +109,14 @@ export class PortfolioService {
   }
 
   getProductEnabled(identifier: string): Observable<boolean>{
-    // return this.http.get(`${this.baseUrl}/products/${identifier}/enabled`)
-
     return Observable.fromPromise<boolean>(this.Store.getUpdate('product_doc').then(row => {
       this.product = row.data.elements.filter(element => element.identifier == identifier && element.enabled == true);
     }))
     .map(product => this.product[0]);
   }
 
+  // TODO: Update CouchDB data to proceed with doing offline data support 
+  // ..... for tasks, cases and charges
   incompleteaccountassignments(identifier: string): Observable<AccountAssignment[]> {
     return this.http.get(`${this.baseUrl}/products/${identifier}/incompleteaccountassignments`)
   }
