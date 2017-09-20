@@ -23,30 +23,60 @@ import {ProductInstance} from './domain/instance/product-instance.model';
 import {RequestOptionsArgs, URLSearchParams} from '@angular/http';
 import {Action} from './domain/definition/action.model';
 import {DividendDistribution} from './domain/definition/dividend-distribution.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class DepositAccountService {
 
-  constructor(private http: HttpClient, @Inject('depositAccountBaseUrl') private baseUrl: string) {}
+  private definition: ProductDefinition;
+
+  constructor(private http: HttpClient, @Inject('depositAccountBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   createProductDefinition(productDefinition: ProductDefinition): Observable<void> {
-    return this.http.post(`${this.baseUrl}/definitions`, productDefinition)
+    // return this.http.post(`${this.baseUrl}/definitions`, productDefinition)
+
+    return Observable.fromPromise<void>(this.Store.getUpdate('def_doc').then(row => {
+      var elements = row.data;
+      this.updateStoreDefinitions('def_doc', row._rev, elements);
+    }))
   }
 
   updateProductDefinition(productDefinition: ProductDefinition): Observable<void> {
-    return this.http.put(`${this.baseUrl}/definitions/${productDefinition.identifier}`, productDefinition)
+    // return this.http.put(`${this.baseUrl}/definitions/${productDefinition.identifier}`, productDefinition)
+    return Observable.fromPromise<void>(this.Store.getUpdate('def_doc').then(row => {
+      var index = row.data.findIndex(element => element.identifier == productDefinition.identifier);
+
+      var removedItem = row.data.splice(index, 1);
+      row.data.splice(index, 0, productDefinition);
+
+      this.updateStoreDefinitions('def_doc', row._rev, row.data);
+    }))
   }
 
   deleteProductDefinition(identifier: string): Observable<void> {
-    return this.http.delete(`${this.baseUrl}/definitions/${identifier}`)
+    // return this.http.delete(`${this.baseUrl}/definitions/${identifier}`)
+
+    return Observable.fromPromise<void>(this.Store.getUpdate('def_doc').then(row => {
+      var index = row.data.findIndex(element => element.identifier == identifier);
+      var removedItem = row.data.splice(index, 1);
+
+      this.updateStoreDefinitions('def_doc', row._rev, row.data);
+    }))
   }
 
   fetchProductDefinitions(): Observable<ProductDefinition[]> {
-    return this.http.get(`${this.baseUrl}/definitions`);
+
+    return Observable.fromPromise<ProductDefinition[]>(this.Store.get('def_doc'))
+      .map(data => data);
   }
 
   findProductDefinition(identifier: string): Observable<ProductDefinition> {
-    return this.http.get(`${this.baseUrl}/definitions/${identifier}`);
+    // return this.http.get(`${this.baseUrl}/definitions/${identifier}`);
+
+    return Observable.fromPromise<ProductDefinition>(this.Store.getUpdate('def_doc').then(row => {
+      this.definition = row.data.filter(element => element.identifier == identifier);
+    }))
+    .map(definition => this.definition[0]);
   }
 
   processCommand(identifier: string, command: ProductDefinitionCommand): Observable<void> {
@@ -88,6 +118,14 @@ export class DepositAccountService {
 
   fetchActions(): Observable<Action[]> {
     return this.http.get(`${this.baseUrl}/actions`);
+  }
+
+  updateStoreDefinitions(id, rev, data) {
+    this.Store.update({
+      "_id": "def_doc",
+      "_rev": rev,
+      "data": data
+    });
   }
 
 
