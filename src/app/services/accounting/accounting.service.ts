@@ -159,7 +159,9 @@ export class AccountingService{
   }
 
   public getChartOfAccounts(): Observable<ChartOfAccountEntry[]> {
-    return this.http.get(`${this.baseUrl}/chartofaccounts`);
+    // return this.http.get(`${this.baseUrl}/chartofaccounts`);
+    return Observable.fromPromise<ChartOfAccountEntry[]>(this.Store.get('chartofaccounts_doc'))
+      .map(data => data);
   }
 
   public findTransactionType(code: string): Observable<Account>{

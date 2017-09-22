@@ -15,5 +15,7 @@
 -->
 
 <fims-layout-card-over title="{{'Chart of accounts' | translate}}" [navigateBackTo]="['../']">
-  <fims-chart-of-account-table [chartOfAccountEntries]="chartOfAccountEntries$ | async" [loading]="loading$ | async"></fims-chart-of-account-table>
-</fims-layout-card-over>
+  <div layout="row" flex>
+    <fims-chart-of-account-table [chartOfAccountEntries]="chartOfAccountEntries$ | async" [loading]="loading$ | async"></fims-chart-of-account-table>
+  </div>
+  </fims-layout-card-over>

@@ -36,6 +36,7 @@ export class IdentityService {
 
   private role: Role;
   private permittableGroup: PermittableGroup;
+  private user: User;
 
   constructor(private http: HttpClient, @Inject('identityBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
@@ -45,19 +46,34 @@ export class IdentityService {
 
   changePassword(id: string, password: Password): Observable<any> {
     password.password = IdentityService.encodePassword(password.password);
-    return this.http.put(this.baseUrl + '/users/' + id + '/password', password)
-      .catch(Error.handleError);
+
+    return Observable.fromPromise<any>(this.Store.getUpdate('usersTest_doc').then(row => {
+      var user = row.data.users.filter(element => element.identifier == id);
+      user.password = password.password;
+      var index = row.data.user.findIndex(element => element.identifier == id);
+      var removedItems = row.data.user.splice(index, 1);
+      row.data.users.splice(index, 0, user);
+
+      this.updataStoreUsers('usersTest_doc', row._rev, row.data.users, row.data.totalElements, row.data.totalPages);
+    }))
+    .catch(Error.handleError);
   }
 
   createUser(user: UserWithPassword): Observable<any> {
     user.password = IdentityService.encodePassword(user.password);
-    return this.http.post(this.baseUrl + '/users', user)
-      .catch(Error.handleError);
+    return Observable.fromPromise<any>(this.Store.getUpdate('usersTest_doc').then(row => {
+      var elements = row.data.users.push(user);
+      this.updataStoreUsers('usersTest_doc', row._rev, row.data.users, elements, row.data.totalPages);
+    }))
   }
 
   getUser(id: string): Observable<User> {
-    return this.http.get(this.baseUrl + '/users/' + id)
-      .catch(Error.handleError);
+    return Observable.fromPromise<User>(this.Store.getUpdate('usersTest_doc').then(row => {
+      var user = row.data.users.filter(element => element.identifier == id);
+      this.user = user;
+    }))
+    .map(user => this.user[0])
+    .catch(Error.handleError);
   }
 
   changeUserRole(user: string, roleIdentifier: RoleIdentifier): Observable<any>{
@@ -136,6 +152,18 @@ export class IdentityService {
       "_id": "permittablegroups_doc",
       "_rev": rev,
       "data": data
+    })
+  }
+
+  updataStoreUsers(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": "usersTest_doc",
+      "_rev": rev,
+      "data": {
+        "users": data, 
+        "totalElements": elements, 
+        "totalPages": pages
+      }
     })
   }
 }
