@@ -14,19 +14,21 @@
  limitations under the License.
 -->
 
-<table td-data-table>
-  <th td-data-table-column translate>Code</th>
-  <th td-data-table-column translate>Name</th>
-  <th td-data-table-column translate>Description</th>
-  <th td-data-table-column translate>Type</th>
+<div layout="row" flex>
+  <table td-data-table>
+    <th td-data-table-column translate>Code</th>
+    <th td-data-table-column translate>Name</th>
+    <th td-data-table-column translate>Description</th>
+    <th td-data-table-column translate>Type</th>
 
-  <tr td-data-table-row *ngFor="let entry of chartOfAccountEntries">
-    <td td-data-table-cell [ngStyle]="{'padding-left.px': 24+(15*entry.level)}">{{entry.code}}</td>
-    <td td-data-table-cell>{{entry.name}}</td>
-    <td td-data-table-cell>{{entry.description}}</td>
-    <td td-data-table-cell>{{entry.type}}</td>
-  </tr>
-</table>
+    <tr td-data-table-row *ngFor="let entry of chartOfAccountEntries">
+      <td td-data-table-cell [ngStyle]="{'padding-left.px': 24+(15*entry.level)}">{{entry.code}}</td>
+      <td td-data-table-cell>{{entry.name}}</td>
+      <td td-data-table-cell>{{entry.description}}</td>
+      <td td-data-table-cell>{{entry.type}}</td>
+    </tr>
+  </table>
+</div>
 
 <div class="md-padding" *ngIf="!(chartOfAccountEntries.length > 0) && !loading" layout="row" layout-align="center center">
   <h3 translate>No data for chart of accounts available.</h3>
