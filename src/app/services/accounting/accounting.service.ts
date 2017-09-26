@@ -72,7 +72,14 @@ export class AccountingService{
   }
 
   public addSubLedger(identifier: string, subLedger: Ledger): Observable<void>{
-    return this.http.post(`${this.baseUrl}/ledgers/${identifier}`, subLedger);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var index = row.data.ledgers.findIndex(element => element.identifier == identifier);
+      var removedItem = row.data.ledgers.splice(index, 1);
+      removedItem.subLedgers.push(subLedger);
+      row.data.ledgers.splice(index, 0, removedItem);
+
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public modifyLedger(ledger: Ledger): Observable<void>{
@@ -175,7 +182,8 @@ export class AccountingService{
     let requestOptions: RequestOptionsArgs = {
       params
     };
-    return this.http.get(`${this.baseUrl}/trialbalance`, requestOptions)
+    return Observable.fromPromise<TrialBalance>(this.Store.get('trialBalance_doc'))
+      .map(data => data);
   }
 
   public getChartOfAccounts(): Observable<ChartOfAccountEntry[]> {
@@ -188,8 +196,7 @@ export class AccountingService{
       var transaction_type = row.data.transactionTypes.filter(element => element.code == code);
       this.transactionType = transaction_type
     }))
-    .map(transactionType => this.transactionType[0])
-    .do(transactionType => console.log("[DATA]: ", transactionType));
+    .map(transactionType => this.transactionType[0]);
   }
 
   public createTransactionType(transactionType: TransactionType): Observable<void> {
