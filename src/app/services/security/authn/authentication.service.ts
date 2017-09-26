@@ -38,7 +38,6 @@ export class AuthenticationService {
     let loginUrl: string = '/token?grant_type=password&username=';
     return this.http.post(this.identityBaseUrl + loginUrl + userId + '&password=' + encodedPassword, {}, this.tenantHeader(tenantId))
       .map((response: Response) => this.mapResponse(response))
-      .do((response) => console.log("DATA RESPONSE: ", response))
       .catch(Error.handleError);
   }
 
