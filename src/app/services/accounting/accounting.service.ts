@@ -37,10 +37,16 @@ import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 @Injectable()
 export class AccountingService{
 
+  private ledger: Ledger;
+
   constructor(private http: HttpClient, @Inject('accountingBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   public createLedger(ledger: Ledger): Observable<void>{
-    return this.http.post(`${this.baseUrl}/ledgers`, ledger);
+    // return this.http.post(`${this.baseUrl}/ledgers`, ledger);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var elements = row.data.ledgers.push(ledger);
+      this.updateStoreLedgers('ledgers_doc', row._rev, elements, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public fetchLedgers(includeSubLedgers = false, fetchRequest?: FetchRequest, type?: AccountType): Observable<LedgerPage>{
@@ -59,7 +65,12 @@ export class AccountingService{
   }
 
   public findLedger(identifier: string, silent?: boolean): Observable<Ledger>{
-    return this.http.get(`${this.baseUrl}/ledgers/${identifier}`, {}, silent);
+    // return this.http.get(`${this.baseUrl}/ledgers/${identifier}`, {}, silent);
+    return Observable.fromPromise<Ledger>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var ledger = row.data.ledgers.filter(element => element.identifier == identifier)
+      this.ledger = ledger;
+    }))
+    .map(ledger => this.ledger[0])
   }
 
   public addSubLedger(identifier: string, subLedger: Ledger): Observable<void>{
@@ -67,11 +78,24 @@ export class AccountingService{
   }
 
   public modifyLedger(ledger: Ledger): Observable<void>{
-    return this.http.put(`${this.baseUrl}/ledgers/${ledger.identifier}`, ledger);
+    // return this.http.put(`${this.baseUrl}/ledgers/${ledger.identifier}`, ledger);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var index = row.data.ledgers.findIndex(element => element.identifier == ledger.identifier);
+      var removedItem = row.data.ledgers.splice(index, 1);
+      row.data.ledgers.splice(index, 0, ledger);
+
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public deleteLedger(identifier: string): Observable<void>{
-    return this.http.delete(`${this.baseUrl}/ledgers/${identifier}`);
+    // return this.http.delete(`${this.baseUrl}/ledgers/${identifier}`);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var index = row.data.ledgers.findIndex(element => element.identifier == identifier);
+      var removedItems = row.data.ledgers.splice(index, 1);
+
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public fetchAccountsOfLedger(identifier: string, fetchRequest?: FetchRequest): Observable<AccountPage>{
@@ -184,5 +208,17 @@ export class AccountingService{
 
   public changeTransactionType(transactionType: TransactionType): Observable<void> {
     return this.http.put(`${this.baseUrl}/transactiontypes/${transactionType.code}`, transactionType);
+  }
+
+  updateStoreLedgers(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": id,
+      "_rev": rev,
+      "data": {
+        "ledgers": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    });
   }
 }
