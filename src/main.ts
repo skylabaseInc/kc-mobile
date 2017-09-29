@@ -35,7 +35,7 @@ platformBrowserDynamic([
   { provide: 'depositAccountBaseUrl', useValue: '/api/deposit/v1' },
   { provide: 'tellerBaseUrl', useValue: '/api/teller/v1' },
   { provide: 'reportingBaseUrl', useValue: '/api/reporting/v1' },
-  { provide: 'remoteCouchDbUrl', useValue: 'http://51.15.136.236:5984/'},
+  { provide: 'remoteCouchDbUrl', useValue: 'https://51.15.136.236:6984/'},
 ]).bootstrapModule(AppModule)
 .then(() => {
   if ('serviceWorker' in navigator) {
