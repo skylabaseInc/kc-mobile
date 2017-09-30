@@ -32,14 +32,21 @@ import {ChartOfAccountEntry} from './domain/chart-of-account-entry.model';
 import {TransactionType} from './domain/transaction-type.model';
 import {TransactionTypePage} from './domain/transaction-type-page.model';
 import {AccountType} from './domain/account-type.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class AccountingService{
 
-  constructor(private http: HttpClient, @Inject('accountingBaseUrl') private baseUrl: string) {}
+  private ledger: Ledger;
+  private transactionType: Account;
+
+  constructor(private http: HttpClient, @Inject('accountingBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   public createLedger(ledger: Ledger): Observable<void>{
-    return this.http.post(`${this.baseUrl}/ledgers`, ledger);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var elements = row.data.ledgers.push(ledger);
+      this.updateStoreLedgers('ledgers_doc', row._rev, elements, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public fetchLedgers(includeSubLedgers = false, fetchRequest?: FetchRequest, type?: AccountType): Observable<LedgerPage>{
@@ -51,24 +58,47 @@ export class AccountingService{
     const requestOptions: RequestOptionsArgs = {
       params
     };
-
-    return this.http.get(`${this.baseUrl}/ledgers`, requestOptions);
+    
+    return Observable.fromPromise<LedgerPage>(this.Store.get('ledgers_doc'))
+        .map(data => data);
   }
 
   public findLedger(identifier: string, silent?: boolean): Observable<Ledger>{
-    return this.http.get(`${this.baseUrl}/ledgers/${identifier}`, {}, silent);
+    return Observable.fromPromise<Ledger>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var ledger = row.data.ledgers.filter(element => element.identifier == identifier)
+      this.ledger = ledger;
+    }))
+    .map(ledger => this.ledger[0]);
   }
 
   public addSubLedger(identifier: string, subLedger: Ledger): Observable<void>{
-    return this.http.post(`${this.baseUrl}/ledgers/${identifier}`, subLedger);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var index = row.data.ledgers.findIndex(element => element.identifier == identifier);
+      var removedItem = row.data.ledgers.splice(index, 1);
+      removedItem.subLedgers.push(subLedger);
+      row.data.ledgers.splice(index, 0, removedItem);
+
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public modifyLedger(ledger: Ledger): Observable<void>{
-    return this.http.put(`${this.baseUrl}/ledgers/${ledger.identifier}`, ledger);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var index = row.data.ledgers.findIndex(element => element.identifier == ledger.identifier);
+      var removedItem = row.data.ledgers.splice(index, 1);
+      row.data.ledgers.splice(index, 0, ledger);
+
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public deleteLedger(identifier: string): Observable<void>{
-    return this.http.delete(`${this.baseUrl}/ledgers/${identifier}`);
+    return Observable.fromPromise<void>(this.Store.getUpdate('ledgers_doc').then(row => {
+      var index = row.data.ledgers.findIndex(element => element.identifier == identifier);
+      var removedItems = row.data.ledgers.splice(index, 1);
+
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public fetchAccountsOfLedger(identifier: string, fetchRequest?: FetchRequest): Observable<AccountPage>{
@@ -152,19 +182,28 @@ export class AccountingService{
     let requestOptions: RequestOptionsArgs = {
       params
     };
-    return this.http.get(`${this.baseUrl}/trialbalance`, requestOptions)
+    return Observable.fromPromise<TrialBalance>(this.Store.get('trialBalance_doc'))
+      .map(data => data);
   }
 
   public getChartOfAccounts(): Observable<ChartOfAccountEntry[]> {
-    return this.http.get(`${this.baseUrl}/chartofaccounts`);
+    return Observable.fromPromise<ChartOfAccountEntry[]>(this.Store.get('chartofaccounts_doc'))
+      .map(data => data);
   }
 
   public findTransactionType(code: string): Observable<Account>{
-    return this.http.get(`${this.baseUrl}/transactiontypes/${code}`);
+    return Observable.fromPromise<Account>(this.Store.getUpdate('transactionTypes_doc').then(row => {
+      var transaction_type = row.data.transactionTypes.filter(element => element.code == code);
+      this.transactionType = transaction_type
+    }))
+    .map(transactionType => this.transactionType[0]);
   }
 
   public createTransactionType(transactionType: TransactionType): Observable<void> {
-    return this.http.post(`${this.baseUrl}/transactiontypes`, transactionType);
+    return Observable.fromPromise<void>(this.Store.getUpdate('transactionTypes_doc').then(row => {
+      var elements = row.data.transactionTypes.push(transactionType);
+      this.updateStoreTransactionTypes('transactionTypes_doc', row._rev, elements, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   public fetchTransactionTypes(fetchRequest?: FetchRequest): Observable<TransactionTypePage> {
@@ -174,10 +213,41 @@ export class AccountingService{
       params
     };
 
-    return this.http.get(`${this.baseUrl}/transactiontypes`, requestOptions);
+    return Observable.fromPromise<TransactionTypePage>(this.Store.get('transactionTypes_doc'))
+      .map(data => data);
   }
 
   public changeTransactionType(transactionType: TransactionType): Observable<void> {
-    return this.http.put(`${this.baseUrl}/transactiontypes/${transactionType.code}`, transactionType);
+    return Observable.fromPromise<void>(this.Store.getUpdate('transactionTypes_doc').then(row => {
+      var index = row.data.transactionTypes.findIndex(element => element.code == transactionType.code);
+      row.data.transactionTypes.splice(index, 1);
+      row.data.transactionTypes.splice(index, 0, transactionType);
+
+      this.updateStoreTransactionTypes('transactionTypes_doc', row._rev, row.data.transactionTypes, row.data.totalElements, row.data.totalPages);
+    }))
+  }
+
+  updateStoreLedgers(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": id,
+      "_rev": rev,
+      "data": {
+        "ledgers": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    });
+  }
+
+  updateStoreTransactionTypes(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": id,
+      "_rev": rev,
+      "data": {
+        "transactionTypes": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    });
   }
 }

@@ -20,68 +20,78 @@ import * as PouchDB from 'pouchdb/dist/pouchdb';
 @Injectable()
 export class OfflineStoreService implements OnInit {
 
-    private remoteCouchDb: any;
-    private localPouchDb: any;
-    private testDb: any;
+    private localDb: any;
+    private remoteDb: any;
+    private data: any;
 
-    //constructor(name, remote, onChange, @Inject('remoteCouchDbUrl') private couchDbUrl: string) {
     constructor(@Inject('remoteCouchDbUrl') private couchDbUrl: string) {
-
-        // enable debugging
         PouchDB.debug.enable('*');
+        this.localDb = new PouchDB('kuelap-mobile');
 
-        // start sync in pull mode
-        // PouchDB.sync(name, `${remote}/${name}`, {
-        //     live: true,
-        //     retry: true
-        // }).on('change', info => {
-        //     onChange(info);
-        // });
-        // this.remoteCouchDb = new PouchDB(this.couchDbUrl + 'playground', {
-        //     auth: {
-        //         username: 'admin',
-        //         password: 'admin'
-        //     }
-        // });
-        // this.localPouchDb = new PouchDB('kuelap-mobile-test');
+        this.remoteDb = new PouchDB(this.couchDbUrl + "employee_database", 
+            {
+                auth: {
+                    username: 'admin',
+                    password: 'admin'
+                }
+            }
+        );
 
-        // sync online couchDB to offline pouchDB
-        // this.localPouchDb.sync(this.remoteCouchDb, {live: true, retry: true})
-        //     .on('error', console.log.bind(console));
+        let options = {
+            live: true,
+            retry: true,
+            continuous: true
+        };
 
-        // this.getAll();
-        // this.get("offices");
+        // Synchronization mechanism
+        this.localDb.sync(this.remoteDb, options).on('complete', () => {}).on('error', err => {});
     }
     
     ngOnInit() {}
 
-    // method to handle authentication
-    authenticateUser(username, password, tenant) {
-        // var user = {
-        //     "_id": "users",
-        //     "username": username,
-        //     "password": password,
-        //     "tenant": tenant
-        // }
-        // // add or update user document
-        // this.save(user);
-    }
+    // TODO: handle offline authentication
+    authenticateUser(username, password, tenant) {}
 
-    // CRUD methods for offline data store
     getAll() {
-        return this.remoteCouchDb.allDocs({ include_docs: true })
-            .then(remoteCouchDbdb => {
-                return remoteCouchDbdb.rows.map(row => {
-                    return row.doc;
+        return this.remoteDb.allDocs({ include_docs: true })
+            .then(localDb => {
+                return localDb.rows.map(row => {
+                    this.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+                        this.handleChange(change);
+                    });
+                    return row.doc.data;
                 });
             });
     }
 
-    get(id) {
-        // return this.remoteCouchDb.get(id);
-        this.remoteCouchDb.get(id).then(item => {
-            return item;
+    get(id: string) {
+        return this.localDb.get(id)
+            .then(row => {
+                return row.data;
+            });
+    }
+
+    getUpdate(id: string) {
+        return this.localDb.get(id)
+            .then(row => {
+                return row;
+            });
+    }
+
+    add(item) {
+        return this.localDb.put(item).then(response => {
+            console.info("[POUCHDB-DEV] response: " + response);
         })
+    }
+
+    update(item) {
+        return this.localDb.get(item._id)
+            .then(updatingItem => {
+                Object.assign(updatingItem, item);
+                return this.localDb.put(updatingItem).then(response => {
+                    console.info("[POUCHDB-DEV] Update successful with response: " + response);
+                });
+            });
     }
 
     save(item) {
@@ -90,25 +100,28 @@ export class OfflineStoreService implements OnInit {
             : this.add(item);
     }
 
-    // add new item
-    add(item) {
-        return this.remoteCouchDb.post(item);
-    }
+    handleChange(change) {
+        
+        let changedDoc = null;
+        let changedIndex = null;
 
-    // update item
-    update(item) {
-        return this.remoteCouchDb.get(item._id)
-            .then(updatingItem => {
-                Object.assign(updatingItem, item);
-                return this.remoteCouchDb.put(updatingItem);
-            });
-    }
+        this.data.forEach((doc, index) => {
+            if(doc._id === change.id) {
+                changedDoc = doc;
+                changedIndex = index;
+            }
+        });
 
-    // find item by id
-    remove(id) {
-        return this.remoteCouchDb.get(id)
-            .then(item => {
-                return this.remoteCouchDb.remove(item);
-            });
-    }
+        // A document was deleted
+        if(change.deleted) {
+            this.data.splice(changedIndex, 1);
+        } else {
+            // A document was updated
+            if(changedDoc) {
+                this.data[changedIndex] = change.doc;
+            } else { // A document was added
+                this.data.push(change.doc);
+            }
+        }
+    }   
 }

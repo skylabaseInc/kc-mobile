@@ -27,11 +27,14 @@ import {TaskDefinition} from './domain/task-definition.model';
 import {ImageService} from '../image/image.service';
 import {IdentificationCard} from './domain/identification-card.model';
 import {IdentificationCardScan} from './domain/identification-card-scan.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class CustomerService {
 
-  constructor(@Inject('customerBaseUrl') private baseUrl: string, private http: HttpClient, private imageService: ImageService) {}
+  private customer: Customer;
+
+  constructor(@Inject('customerBaseUrl') private baseUrl: string, private http: HttpClient, private imageService: ImageService, private Store: OfflineStoreService) {}
 
   fetchCustomers(fetchRequest: FetchRequest): Observable<CustomerPage> {
     const params: URLSearchParams = buildSearchParams(fetchRequest);
@@ -40,19 +43,37 @@ export class CustomerService {
       search: params
     };
 
-    return this.http.get(`${this.baseUrl}/customers`, requestOptions).share();
+    return Observable.fromPromise<CustomerPage>(this.Store.get('customer_doc'))
+        .map(data => data);
   }
 
   getCustomer(id: string, silent?: boolean): Observable<Customer>{
-    return this.http.get(`${this.baseUrl}/customers/${id}`, {}, silent);
+    return this.http.get(`${this.baseUrl}/customers/${id}`, {}, silent)
+    .do(data => console.log("[DATA]: " , data));
+    // return Observable.fromPromise<Customer>(this.Store.getUpdate('customer_doc').then(row => {
+    //   this.customer = row.data.customers.filter(element => element.identifier == id);
+    // }))
+    // .map(customer => this.customer[0])
+    // .do(data => console.log("[DATA]: ", data));
   }
 
   createCustomer(customer: Customer): Observable<Customer>{
-    return this.http.post(`${this.baseUrl}/customers`, customer);
+    
+    return Observable.fromPromise<Customer>(this.Store.getUpdate('customer_doc').then(row => {
+      var elements = row.data.customers.push(customer);
+      this.updateStoreCustomers('customer_doc', row._rev, row.data.customers, elements, row.data.totalPages);
+    }));
   }
 
   updateCustomer(customer: Customer): Observable<Customer>{
-    return this.http.put(`${this.baseUrl}/customers/${customer.identifier}`, customer);
+    
+    return Observable.fromPromise<Customer>(this.Store.getUpdate('customer_doc').then(row => {
+      var index = row.data.customers.findIndex(element => element.identifier == customer.identifier);
+      row.data.customers.splice(index, 1);
+      row.data.customers.splice(index, 0, customer);
+
+      this.updateStoreCustomers('customer_doc', row._rev, row.data.customers, row.data.totalElements, row.data.totalPages);
+    }));
   }
 
   executeCustomerCommand(id: string, command: Command): Observable<void>{
@@ -144,5 +165,17 @@ export class CustomerService {
 
   deleteIdentificationCardScan(customerId: string, number: string, scanId: string): Observable<void> {
     return this.http.delete(`${this.baseUrl}/customers/${customerId}/identifications/${number}/scans/${scanId}`);
+  }
+
+  updateStoreCustomers(id, rev, data, elements, pages){
+    this.Store.update({
+      "_id": "customer_doc",
+      "_rev": rev,
+      "data": {
+        "customers": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    });
   }
 }
