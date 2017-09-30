@@ -22,8 +22,7 @@
     "static-serve": "cd dist && live-server --port=4200 --host=localhost --entry-file=/index.html"
   },
   "assets": [
-    "favicon.ico",
-    "manifest.json"
+    "favicon.ico"
   ],
   "engines": {
     "node": ">4.4 < 7",
