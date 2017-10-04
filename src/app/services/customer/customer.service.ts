@@ -48,13 +48,10 @@ export class CustomerService {
   }
 
   getCustomer(id: string, silent?: boolean): Observable<Customer>{
-    return this.http.get(`${this.baseUrl}/customers/${id}`, {}, silent)
-    .do(data => console.log("[DATA]: " , data));
-    // return Observable.fromPromise<Customer>(this.Store.getUpdate('customer_doc').then(row => {
-    //   this.customer = row.data.customers.filter(element => element.identifier == id);
-    // }))
-    // .map(customer => this.customer[0])
-    // .do(data => console.log("[DATA]: ", data));
+    return Observable.fromPromise<Customer>(this.Store.getUpdate('customer_doc').then(row => {
+      this.customer = row.data.customers.filter(element => element.identifier == id);
+    }))
+    .map(customer => this.customer[0])
   }
 
   createCustomer(customer: Customer): Observable<Customer>{
