@@ -1,58 +1,58 @@
 {
-  "/identity": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "/identity": "/identity"
+    "/identity": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "/identity": "/identity"
+        }
+    },
+    "/api/office": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/office": "/office"
+        }
+    },
+    "/api/customer": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/customer": "/customer"
+        }
+    },
+    "/api/accounting": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/accounting": "/accounting"
+        }
+    },
+    "/api/portfolio": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/portfolio": "/portfolio"
+        }
+    },
+    "/api/deposit": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/deposit": "/deposit"
+        }
+    },
+    "/api/teller": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/teller": "/teller"
+        }
+    },
+    "/api/reporting": {
+        "target": "https://pilot.kuelap.io",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/reporting": "/reporting"
+        }
     }
-  },
-  "/api/office": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/office": "/office"
-    }
-  },
-  "/api/customer": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/customer": "/customer"
-    }
-  },
-  "/api/accounting": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/accounting": "/accounting"
-    }
-  },
-  "/api/portfolio": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/portfolio": "/portfolio"
-    }
-  },
-  "/api/deposit": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/deposit": "/deposit"
-    }
-  },
-  "/api/teller": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/teller": "/teller"
-    }
-  },
-  "/api/reporting": {
-    "target": "https://pilot.kuelap.io",
-    "secure": false,
-    "pathRewrite": {
-      "^/api/reporting": "/reporting"
-    }
-  }
 }
