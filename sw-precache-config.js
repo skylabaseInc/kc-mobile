@@ -16,7 +16,7 @@ module.exports = {
   stripPrefix: 'dist/',
   navigateFallback: '/index.html',
 
-  runtimeCaching: [{
+ runtimeCaching: [{
     urlPattern: /https\:\/\/pilot\.kuelap\.io/,
     handler: 'networkFirst'
   }]

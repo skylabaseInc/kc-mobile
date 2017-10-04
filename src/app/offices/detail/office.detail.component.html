@@ -43,15 +43,16 @@
         </md-list-item>
         <h3 md-subheader translate>Branch offices</h3>
       </md-list>
-
-      <fims-data-table flex
-                       (onFetch)="fetchBranches($event)"
-                       (onActionCellClick)="rowSelect($event)"
-                       [columns]="columns"
-                       [data]="branchData"
-                       [sortable]="true"
-                       [pageable]="true">
-      </fims-data-table>
+      <div layout="row" flex>
+        <fims-data-table flex
+          (onFetch)="fetchBranches($event)"
+          (onActionCellClick)="rowSelect($event)"
+          [columns]="columns"
+          [data]="branchData"
+          [sortable]="true"
+          [pageable]="true">
+        </fims-data-table>
+      </div>
     </ng-container>
   </fims-two-column-layout>
 </fims-layout-card-over>

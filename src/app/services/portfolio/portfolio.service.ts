@@ -36,11 +36,14 @@ import {FimsCasePage} from './domain/fims-case-page.model';
 import {Case} from './domain/case.model';
 import {mapToCase, mapToFimsCase, mapToFimsCases} from './domain/mapper/fims-case.mapper';
 import {mapToFimsCasePage} from './domain/mapper/fims-case-page.mapper';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class PortfolioService {
 
-  constructor(private http: HttpClient, @Inject('portfolioBaseUrl') private baseUrl: string) {}
+  private product: Product;
+
+  constructor(private http: HttpClient, @Inject('portfolioBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   findAllPatterns(): Observable<void>{
     return this.http.get(`${this.baseUrl}/patterns/`)
@@ -53,33 +56,67 @@ export class PortfolioService {
     const requestOptions: RequestOptionsArgs = {
       search: params
     };
-    return this.http.get(`${this.baseUrl}/products/`, requestOptions)
+    return Observable.fromPromise<ProductPage>(this.Store.get('product_doc'))
+    .map(data => data);
   }
 
   createProduct(product: Product): Observable<void>{
-    return this.http.post(`${this.baseUrl}/products`, product)
+    return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
+      var elements = row.data.elements.push(product);
+      this.updateStoreProducts('product_doc', row._rev, row.data.elements, elements, row.data.totalPages);
+    }))
   }
 
   getProduct(identifier: string): Observable<Product>{
-    return this.http.get(`${this.baseUrl}/products/${identifier}`)
+    return Observable.fromPromise<Product>(this.Store.getUpdate('product_doc').then(row => {
+      this.product = row.data.elements.filter(element => element.identifier == identifier);
+    }))
+    .map(product => this.product[0]);
   }
 
   changeProduct(product: Product): Observable<void>{
-    return this.http.put(`${this.baseUrl}/products/${product.identifier}`, product)
+    
+    return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
+      var index = row.data.elements.findIndex(element => element.identifier == product.identifier);
+      var removedItem = row.data.elements.splice(index, 1);
+      row.data.elements.splice(index, 0, product);
+
+      this.updateStoreProducts('product_doc', row._rev, row.data.elements, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   deleteProduct(identifier: string): Observable<void> {
-    return this.http.delete(`${this.baseUrl}/products/${identifier}`)
+    return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
+
+      var index = row.data.elements.findIndex(element => element.identifier == identifier);
+      var removedItem = row.data.elements.splice(index, 1);
+
+      this.updateStoreProducts('product_doc', row._rev, row.data.elements, row.data.totalElements, row.data.totalPages);
+    }));
   }
 
   enableProduct(identifier: string, enabled: boolean): Observable<void>{
-    return this.http.put(`${this.baseUrl}/products/${identifier}/enabled`, enabled)
+    return Observable.fromPromise<void>(this.Store.getUpdate('product_doc').then(row => {
+      var index = row.data.elements.findIndex(element => element.identifier == identifier);
+      this.product = row.data.elements.filter(element => element.identifier == identifier);
+      this.product.enabled = enabled;
+
+      var removedItem = row.data.elements.splice(index, 1);
+      row.data.elements.splice(index, 0, this.product);
+
+      this.updateStoreProducts('product_doc', row._rev, row.data.elements, row.data.totalElements, row.data.totalPages);
+    }))
   }
 
   getProductEnabled(identifier: string): Observable<boolean>{
-    return this.http.get(`${this.baseUrl}/products/${identifier}/enabled`)
+    return Observable.fromPromise<boolean>(this.Store.getUpdate('product_doc').then(row => {
+      this.product = row.data.elements.filter(element => element.identifier == identifier && element.enabled == true);
+    }))
+    .map(product => this.product[0]);
   }
 
+  // TODO: Update CouchDB data to proceed with doing offline data support 
+  // ..... for tasks, cases and charges
   incompleteaccountassignments(identifier: string): Observable<AccountAssignment[]> {
     return this.http.get(`${this.baseUrl}/products/${identifier}/incompleteaccountassignments`)
   }
@@ -218,6 +255,18 @@ export class PortfolioService {
 
     return this.http.get(`${this.baseUrl}/individuallending/customers/${customerIdentifier}/cases`, requestOptions)
       .map((casePage: CasePage) => mapToFimsCasePage(casePage));
+  }
+
+  updateStoreProducts(id, rev, data, elements, pages){
+    this.Store.update({
+      "_id": "product_doc",
+      "_rev": rev,
+      "data": {
+        "elements": data,
+        "totalElements": elements,
+        "totalPages": pages
+      }
+    });
   }
 
 }

@@ -1,3 +1,4 @@
+import { PermittableGroupIdMapper } from '../security/authz/permittable-group-id-mapper';
 /**
  * Copyright 2017 The Mifos Initiative.
  *
@@ -28,11 +29,16 @@ import {RoleIdentifier} from './domain/role-identifier.model';
 import {User} from './domain/user.model';
 import {PermittableGroup} from '../anubis/permittable-group.model';
 import {Permission} from './domain/permission.model';
+import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 
 @Injectable()
 export class IdentityService {
 
-  constructor(private http: HttpClient, @Inject('identityBaseUrl') private baseUrl: string) {}
+  private role: Role;
+  private permittableGroup: PermittableGroup;
+  private user: User;
+
+  constructor(private http: HttpClient, @Inject('identityBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
   private static encodePassword(password: string): string{
     return btoa(password);
@@ -40,19 +46,34 @@ export class IdentityService {
 
   changePassword(id: string, password: Password): Observable<any> {
     password.password = IdentityService.encodePassword(password.password);
-    return this.http.put(this.baseUrl + '/users/' + id + '/password', password)
-      .catch(Error.handleError);
+
+    return Observable.fromPromise<any>(this.Store.getUpdate('usersTest_doc').then(row => {
+      var user = row.data.users.filter(element => element.identifier == id);
+      user.password = password.password;
+      var index = row.data.user.findIndex(element => element.identifier == id);
+      var removedItems = row.data.user.splice(index, 1);
+      row.data.users.splice(index, 0, user);
+
+      this.updataStoreUsers('usersTest_doc', row._rev, row.data.users, row.data.totalElements, row.data.totalPages);
+    }))
+    .catch(Error.handleError);
   }
 
   createUser(user: UserWithPassword): Observable<any> {
     user.password = IdentityService.encodePassword(user.password);
-    return this.http.post(this.baseUrl + '/users', user)
-      .catch(Error.handleError);
+    return Observable.fromPromise<any>(this.Store.getUpdate('usersTest_doc').then(row => {
+      var elements = row.data.users.push(user);
+      this.updataStoreUsers('usersTest_doc', row._rev, row.data.users, elements, row.data.totalPages);
+    }))
   }
 
   getUser(id: string): Observable<User> {
-    return this.http.get(this.baseUrl + '/users/' + id)
-      .catch(Error.handleError);
+    return Observable.fromPromise<User>(this.Store.getUpdate('usersTest_doc').then(row => {
+      var user = row.data.users.filter(element => element.identifier == id);
+      this.user = user;
+    }))
+    .map(user => this.user[0])
+    .catch(Error.handleError);
   }
 
   changeUserRole(user: string, roleIdentifier: RoleIdentifier): Observable<any>{
@@ -61,42 +82,88 @@ export class IdentityService {
   }
 
   listRoles(): Observable<Role[]> {
-    return this.http.get(this.baseUrl + '/roles')
-      .catch(Error.handleError);
+    return Observable.fromPromise<Role[]>(this.Store.get('roles_doc'))
+      .map(data => data);
   }
 
   getRole(id: string): Observable<Role> {
-    return this.http.get(this.baseUrl + '/roles/' + id)
-      .catch(Error.handleError);
+    return Observable.fromPromise<Role>(this.Store.getUpdate('roles_doc').then(row => {
+      this.role = row.data.filter(element => element.identifier == id);
+    }))
+    .map(role => this.role[0]);
   }
 
   createRole(role: Role): Observable<any> {
-    return this.http.post(this.baseUrl + '/roles', role)
-      .catch(Error.handleError);
+    return Observable.fromPromise<any>(this.Store.getUpdate('roles_doc').then(row => {
+      var elements = row.data.push(role);
+      this.updateStoreRoles('roles_doc', row._rev, row.data)
+    }))
   }
 
   changeRole(role: Role): Observable<any> {
-    return this.http.put(this.baseUrl + '/roles/' + role.identifier, role)
-      .catch(Error.handleError);
+    return Observable.fromPromise<any>(this.Store.getUpdate('roles_doc').then(row => {
+      var index = row.data.findIndex(element => element.identifier == role.identifier);
+      row.data.splice(index, 1);
+      row.data.splice(index, 0, role);
+
+      this.updateStoreRoles('roles_doc', row._rev, row.data);
+    }))
   }
 
   deleteRole(id: String): Observable<any> {
-    return this.http.delete(this.baseUrl + '/roles/' + id, {})
-      .catch(Error.handleError);
+    return Observable.fromPromise<any>(this.Store.getUpdate('roles_doc').then(row => {
+      var index = row.data.findIndex(element => element.identifier == id);
+      row.data.splice(index, 1);
+
+      this.updateStoreRoles('roles_doc', row._rev, row.data);
+    }))
   }
 
   createPermittableGroup(permittableGroup: PermittableGroup): Observable<PermittableGroup>{
-    return this.http.post(this.baseUrl + '/permittablegroups', permittableGroup)
-      .catch(Error.handleError);
+    return Observable.fromPromise<PermittableGroup>(this.Store.getUpdate('permittablegroups_doc').then(row => {
+      var elements = row.data.push(permittableGroup);
+
+      this.updateStorePermittableGroups('permittablegroups_doc', row._rev, row.data);
+    }))
   }
 
   getPermittableGroup(id: string): Observable<PermittableGroup>{
-    return this.http.get(this.baseUrl + '/permittablegroups/' + id)
-      .catch(Error.handleError);
+    return Observable.fromPromise<PermittableGroup>(this.Store.getUpdate('permittablegroups_doc').then(row => {
+      this.permittableGroup = row.data.filter(element => element.identifier == id);
+    }))
+    .map(permittableGroup => this.permittableGroup[0]);
   }
 
   getPermittableGroups(): Observable<PermittableGroup[]>{
-    return this.http.get(this.baseUrl + '/permittablegroups')
-      .catch(Error.handleError);
+    return Observable.fromPromise<PermittableGroup[]>(this.Store.get('permittablegroups_doc'))
+      .map(data => data);
+  }
+
+  updateStoreRoles(id, rev, data) {
+    this.Store.update({
+      "_id": "roles_doc",
+      "_rev": rev,
+      "data": data
+    });
+  }
+
+  updateStorePermittableGroups(id, rev, data) {
+    this.Store.update({
+      "_id": "permittablegroups_doc",
+      "_rev": rev,
+      "data": data
+    })
+  }
+
+  updataStoreUsers(id, rev, data, elements, pages) {
+    this.Store.update({
+      "_id": "usersTest_doc",
+      "_rev": rev,
+      "data": {
+        "users": data, 
+        "totalElements": elements, 
+        "totalPages": pages
+      }
+    })
   }
 }

@@ -1,3 +1,4 @@
+import { EmployeePage } from '../services/office/domain/employee-page.model';
 /**
  * Copyright 2017 The Mifos Initiative.
  *
@@ -22,12 +23,11 @@ import {Store} from '@ngrx/store';
 import * as fromRoot from '../store';
 import {Observable} from 'rxjs';
 import {SEARCH} from '../store/employee/employee.actions';
-import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 @Component({
   selector: 'fims-employee',
   templateUrl: './employee.component.html',
-  providers: [OfflineStoreService] 
+  providers: [] 
 })
 export class EmployeeComponent implements OnInit{
 
@@ -45,10 +45,9 @@ export class EmployeeComponent implements OnInit{
 
   private lastFetchRequest: FetchRequest = {};
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>, private Store: OfflineStoreService){}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<fromRoot.State>){}
 
   ngOnInit(): void {
-
     this.employeeData$ = this.store.select(fromRoot.getEmployeeSearchResults)
       .map(employeePage => ({
         data: employeePage.employees,
@@ -56,22 +55,11 @@ export class EmployeeComponent implements OnInit{
         totalPages: employeePage.totalPages
       }));
 
-      // put data in pouchDB
-      var customerData = {
-        "_id": "",
-        "data": this.employeeData$
-      }
-      console.info("Saving data to database....");
-      this.Store.save(customerData);
-
     this.loading$ = this.store.select(fromRoot.getEmployeeSearchLoading);
 
     this.route.queryParams.subscribe((params: Params) => {
       this.search(params['term']);
     });
-
-    // refresh offline data
-    this.refresh();
   }
 
   search(searchTerm: string): void{
@@ -91,10 +79,5 @@ export class EmployeeComponent implements OnInit{
     this.lastFetchRequest.searchTerm = this.searchTerm;
 
     this.store.dispatch({ type: SEARCH, payload: this.lastFetchRequest })
-  }
-
-  // refresh offline data
-  refresh() {
-
   }
 }
