@@ -1,11 +1,6 @@
 {
     "name": "Kuelap.io Mobile Application",
     "short_name": "Kuelap Mobile",
-    "start_url": "/index.html",
-    "background_color": "#43a047",
-    "theme_color": "#43a047",
-    "display": "fullscreen",
-    "orientation": "portrait",
     "icons": [{
             "src": "assets/icons/android-icon-36x36.png",
             "sizes": "36x36",
@@ -42,5 +37,11 @@
             "type": "image/png",
             "density": "4.0"
         }
-    ]
+    ],
+    "start_url": "/index.html",
+    "background_color": "#43a047",
+    "theme_color": "#43a047",
+    "display": "standalone",
+    "orientation": "portrait",
+    "description": "fims backoffice"
 }
