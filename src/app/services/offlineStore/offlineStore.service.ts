@@ -28,7 +28,7 @@ export class OfflineStoreService implements OnInit {
         PouchDB.debug.enable('*');
         this.localDb = new PouchDB('kuelap-mobile');
 
-        this.remoteDb = new PouchDB(this.couchDbUrl + "employee_database", 
+        this.remoteDb = new PouchDB(this.couchDbUrl + "kuelap_io", 
             {
                 auth: {
                     username: 'admin',

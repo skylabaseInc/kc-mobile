@@ -4,6 +4,7 @@
 
 * Ensure you have Node 6.10.0+ and NPM 3+ installed.
 * Install Node packages `npm i`
+* Install Service Worker Lib `npm install -g sw-precache` use `sudo` if it fails first time.
 
 ## Development
 * Follow instructions at https://github.com/mifosio/demo-server and start demo-server
@@ -14,6 +15,7 @@
 * Run license check `npm run checkLicenses`
 * Run in production mode `npm run runProd`. This is only to test if AOT is working and should never be used in a production environment.
 * Build production assets `npm run build`. Files will be stored under /dist.
+* Build Service Worker into the /dist package, `npm run precache-prod`
 
 ## Tests
 * Please follow the best practices here [Angular Testing](https://angular.io/docs/ts/latest/guide/testing.html)
