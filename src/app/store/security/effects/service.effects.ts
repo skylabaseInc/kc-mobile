@@ -131,23 +131,23 @@ export class SecurityApiEffects {
     .map(accessTokenExpirationMillies => new Date(accessTokenExpirationMillies - this.tokenExpiryBuffer))
     .map(dueTime => new securityActions.RefreshAccessTokenStartTimerAction(dueTime));
 
-  @Effect()
-  refreshAccessTokenStartTimer$: Observable<Action> = this.actions$
-    .ofType(securityActions.REFRESH_ACCESS_TOKEN_START_TIMER)
-    .map((action: securityActions.RefreshAccessTokenStartTimerAction) => action.payload)
-    .mergeMap(dueTime =>
-      Observable.timer(dueTime)
-        .switchMap(() => of(new securityActions.RefreshAccessTokenAction()))
-    );
+  // @Effect()
+  // refreshAccessTokenStartTimer$: Observable<Action> = this.actions$
+  //   .ofType(securityActions.REFRESH_ACCESS_TOKEN_START_TIMER)
+  //   .map((action: securityActions.RefreshAccessTokenStartTimerAction) => action.payload)
+  //   .mergeMap(dueTime =>
+  //     Observable.timer(dueTime)
+  //       .switchMap(() => of(new securityActions.RefreshAccessTokenAction()))
+  //   );
 
-  @Effect()
-  refreshTokenStartTimer$: Observable<Action> = this.actions$
-    .ofType(securityActions.REFRESH_TOKEN_START_TIMER)
-    .map((action: securityActions.RefreshTokenStartTimerAction) => action.payload)
-    .mergeMap(dueTime =>
-      Observable.timer(dueTime)
-        .switchMap(() => of(new securityActions.LogoutAction()))
-    );
+  // @Effect()
+  // refreshTokenStartTimer$: Observable<Action> = this.actions$
+  //   .ofType(securityActions.REFRESH_TOKEN_START_TIMER)
+  //   .map((action: securityActions.RefreshTokenStartTimerAction) => action.payload)
+  //   .mergeMap(dueTime =>
+  //     Observable.timer(dueTime)
+  //       .switchMap(() => of(new securityActions.LogoutAction()))
+  //   );
 
   @Effect()
   changePassword$: Observable<Action> = this.actions$
