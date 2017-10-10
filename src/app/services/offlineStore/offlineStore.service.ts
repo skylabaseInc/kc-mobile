@@ -22,12 +22,13 @@ export class OfflineStoreService implements OnInit {
 
     private localDb: any;
     private remoteDb: any;
+    private authDb: any;
     private data: any;
 
     constructor(@Inject('remoteCouchDbUrl') private couchDbUrl: string) {
         PouchDB.debug.enable('*');
         this.localDb = new PouchDB('kuelap-mobile');
-
+        this.authDb = new PouchDB('kuelap-auth');
         this.remoteDb = new PouchDB(this.couchDbUrl + "kuelap_io", 
             {
                 auth: {
@@ -48,9 +49,6 @@ export class OfflineStoreService implements OnInit {
     }
     
     ngOnInit() {}
-
-    // TODO: handle offline authentication
-    authenticateUser(username, password, tenant) {}
 
     getAll() {
         return this.remoteDb.allDocs({ include_docs: true })
@@ -92,6 +90,17 @@ export class OfflineStoreService implements OnInit {
                     console.info("[POUCHDB-DEV] Update successful with response: " + response);
                 });
             });
+    }
+
+    // check if user exists for authentication
+    checkUser(userId: string, document='users_doc') {
+        return this.localDb.get(document).then(row => {
+            let user = row.data.users.filter(usr => usr.identifier == userId);
+            if(user.length) {
+                return true;
+            }
+            return false;
+        })
     }
 
     save(item) {
