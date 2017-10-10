@@ -104,6 +104,8 @@ export class AuthenticationService {
 
   private authorizationHeader(tenantId: string, userId: string, accessToken: string): RequestOptionsArgs{
     let requestOptions: RequestOptionsArgs = this.tenantHeader(tenantId);
+    console.log("[Authorization Header]: ", accessToken);
+    console.log("[AUTH]: ", tenantId);
 
     requestOptions.headers.set('User', userId);
     requestOptions.headers.set('Authorization', accessToken);
