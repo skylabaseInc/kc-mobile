@@ -76,6 +76,19 @@ export class OfflineStoreService implements OnInit {
             });
     }
 
+    // Custom method to check for user existence
+    // ... part of the workaround to make up for the sync gateway
+    checkUser(userId: string, document = 'users_doc'){
+        return this.localDb.get(document).then(row => {
+
+            let user = row.data.users.filter(element => element.identifier == userId);
+            if(user.length) {
+                return true;
+            }
+            return false;
+        })
+    }
+
     add(item) {
         return this.localDb.put(item).then(response => {
             console.info("[POUCHDB-DEV] response: " + response);

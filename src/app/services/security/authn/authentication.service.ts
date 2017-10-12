@@ -43,28 +43,26 @@ export class AuthenticationService {
     const resp = this.Store.checkUser(userId).then(exists => {
       return exists;
     }).then(exists => {
-        if(exists) {
-            return this.Store.getUpdate("users_doc").then(row => {
-            let user = row.data.users.filter(usr => usr.identifier == userId);
-            if(user[0].password == this.encodedPassword) {
-              return {
-                tokenType: "bearer",
-                accessToken: this.getAccessToken(),
-                accessTokenExpiration: this.getExpirationDates(),
-                refreshTokenExpiration: "2018-10-05T05:34:14.706Z",
-                passwordExpiration: this.getExpirationDates()
-              };
+      if(exists) {
+        return this.Store.getUpdate('users_doc').then(row => {
+          let user = row.data.users.filter(usr => usr.identifier == userId);
+          if(user[0].password == this.encodedPassword) {
+            return {
+              tokenType: "bearer",
+              accessToken: this.getAccessToken(),
+              accessTokenExpiration: this.getExpirationDates(),
+              refreshTokenExpiration: this.getExpirationDates(),
+              passwordExpiration: this.getExpirationDates()
+            };
           }
         })
       } else {
-        // TODO: Create user here in pouchdb database
-        // .. this is just a workaround until the sync gateway is ready
-        return this.loginOnline(tenantId, userId, password).toPromise();
+        return this.loginOnline(tenantId, userId).toPromise();
       }
-    })
+    });
     return Observable.fromPromise(resp);
   }
-
+  
   loginOnline(tenantId: string, userId: string, password: string): Observable<Authentication> {
     let loginUrl: string = '/token?grant_type=password&username=';
     return this.http.post(this.identityBaseUrl + loginUrl + userId + '&password=' + this.encodedPassword, {}, this.tenantHeader(tenantId))
@@ -82,11 +80,9 @@ export class AuthenticationService {
     // return this.http.get(this.identityBaseUrl + '/users/' + userId + '/permissions', this.authorizationHeader(tenantId, userId, accessToken))
     //   .map((response: Response) => this.mapResponse(response))
     //   .catch(Error.handleError)
-
-    // TODO: Actually get this and save if user does not exist in the offline database
     return Observable.fromPromise<Permission[]>(this.Store.get('man_doc').then(row => {
       return row;
-    }))
+    }));
   }
 
   refreshAccessToken(tenantId: string): Observable<Authentication> {
@@ -104,8 +100,6 @@ export class AuthenticationService {
 
   private authorizationHeader(tenantId: string, userId: string, accessToken: string): RequestOptionsArgs{
     let requestOptions: RequestOptionsArgs = this.tenantHeader(tenantId);
-    console.log("[Authorization Header]: ", accessToken);
-    console.log("[AUTH]: ", tenantId);
 
     requestOptions.headers.set('User', userId);
     requestOptions.headers.set('Authorization', accessToken);
@@ -130,9 +124,8 @@ export class AuthenticationService {
     var c = new Date(year + 1, month, day);
     return c.toLocaleString();
   }
-
+  
   private getAccessToken() {
     return "Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJQbGF5IiwiL21pZm9zLmlvL3NpZ25hdHVyZVRpbWVzdGFtcCI6IjIwMTctMTAtMDRUMTJfNDdfMDYiLCIvbWlmb3MuaW8vdG9rZW5Db250ZW50Ijoie1widG9rZW5QZXJtaXNzaW9uc1wiOlt7XCJwYXRoXCI6XCJhY2NvdW50aW5nLXYxL2FjY291bnRzLyovY29tbWFuZHNcIixcImFsbG93ZWRPcGVyYXRpb25zXCI6W1wiQ0hBTkdFXCIsXCJSRUFEXCJdfSx7XCJwYXRoXCI6XCJkZXBvc2l0LXYxL2luc3RhbmNlcy8qXCIsXCJhbGxvd2VkT3BlcmF0aW9uc1wiOltcIkNIQU5HRVwiLFwiUkVBRFwiXX0se1wicGF0aFwiOlwiY3VzdG9tZXItdjEvY3VzdG9tZXJzLyovaWRlbnRpZmljYXRpb25zLyovc2NhbnMvKlwiLFwiYWxsb3dlZE9wZXJhdGlvbnNcIjpbXCJERUxFVEVcIixcIlJFQURcIl19LHtcInBhdGhcIjpcInBvcnRmb2xpby12MS9wcm9kdWN0cy8qL2Nhc2VzLyovdGFza3MvKi9leGVjdXRlZFwiLFwiYWxsb3dlZE9wZXJhdGlvbnNcIjpbXCJDSEFOR0VcIl19";
   }
-
 }
