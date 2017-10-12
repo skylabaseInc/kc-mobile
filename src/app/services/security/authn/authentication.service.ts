@@ -62,8 +62,8 @@ export class AuthenticationService {
     });
     return Observable.fromPromise(resp);
   }
-
-  loginOnline(tenantId: string, userId: string): Observable<Authentication> {
+  
+  loginOnline(tenantId: string, userId: string, password: string): Observable<Authentication> {
     let loginUrl: string = '/token?grant_type=password&username=';
     return this.http.post(this.identityBaseUrl + loginUrl + userId + '&password=' + this.encodedPassword, {}, this.tenantHeader(tenantId))
       .map((response: Response) => this.mapResponse(response))

@@ -25,7 +25,6 @@ import {Subscription} from 'rxjs';
 import {MdSelectChange} from '@angular/material';
 import {TRANSLATE_STORAGE_KEY} from '../common/i18n/translate';
 
-
 @Component({
   selector: 'fims-login',
   templateUrl: './login.component.html',

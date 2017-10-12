@@ -1,11 +1,7 @@
 {
+<<<<<<< HEAD
     "name": "Kuelap.io Mobile Application",
     "short_name": "Kuelap Mobile",
-    "start_url": "/index.html",
-    "background_color": "#43a047",
-    "theme_color": "#43a047",
-    "display": "fullscreen",
-    "orientation": "portrait",
     "icons": [{
             "src": "assets/icons/android-icon-36x36.png",
             "sizes": "36x36",
@@ -42,5 +38,59 @@
             "type": "image/png",
             "density": "4.0"
         }
-    ]
+    ],
+    "start_url": "/index.html",
+    "background_color": "#43a047",
+    "theme_color": "#43a047",
+    "display": "standalone",
+    "orientation": "portrait",
+    "description": "fims backoffice"
 }
+=======
+  "name": "Kuelap.io Mobile Application",
+  "short_name": "Kuelap Mobile",
+  "icons": [
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+	  {
+      "src": "assets/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/icons/icon-256x256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#43a047",
+  "theme_color": "#2b702e",
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "fims backoffice"
+}
+>>>>>>> 35f873ddab10051ce908e05c3adc1222a11d1ff4
