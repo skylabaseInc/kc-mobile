@@ -49,9 +49,6 @@ export class OfflineStoreService implements OnInit {
     
     ngOnInit() {}
 
-    // TODO: handle offline authentication
-    authenticateUser(username, password, tenant) {}
-
     getAll() {
         return this.remoteDb.allDocs({ include_docs: true })
             .then(localDb => {
@@ -76,6 +73,19 @@ export class OfflineStoreService implements OnInit {
             .then(row => {
                 return row;
             });
+    }
+
+    // Custom method to check for user existence
+    // ... part of the workaround to make up for the sync gateway
+    checkUser(userId: string, document = 'users_doc'){
+        return this.localDb.get(document).then(row => {
+
+            let user = row.data.users.filter(element => element.identifier == userId);
+            if(user.length) {
+                return true;
+            }
+            return false;
+        })
     }
 
     add(item) {

@@ -24,13 +24,12 @@ import {LOGIN} from '../store/security/security.actions';
 import {Subscription} from 'rxjs';
 import {MdSelectChange} from '@angular/material';
 import {TRANSLATE_STORAGE_KEY} from '../common/i18n/translate';
-import {OfflineStoreService} from '../services/offlineStore/offlineStore.service';
 
 
 @Component({
   selector: 'fims-login',
   templateUrl: './login.component.html',
-  providers: [OfflineStoreService]
+  providers: []
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -49,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   error: string;
 
-  constructor(private _loadingService: TdLoadingService, private translate: TranslateService, private formBuilder: FormBuilder, private store: Store<fromRoot.State>, private Store: OfflineStoreService) {}
+  constructor(private _loadingService: TdLoadingService, private translate: TranslateService, private formBuilder: FormBuilder, private store: Store<fromRoot.State>) {}
 
   ngOnInit(){
     this.currentLanguage = this.translate.currentLang || this.translate.getDefaultLang();
@@ -88,8 +87,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     const tenant = this.form.get('tenant').value;
     const username = this.form.get('username').value;
     const password = this.form.get('password').value;
-
-    this.Store.authenticateUser(username, password, tenant);
 
     this.store.dispatch({ type: LOGIN, payload: {
       username,
