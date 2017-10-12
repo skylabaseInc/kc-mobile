@@ -80,7 +80,6 @@ export class OfflineStoreService implements OnInit {
     // ... part of the workaround to make up for the sync gateway
     checkUser(userId: string, document = 'users_doc'){
         return this.localDb.get(document).then(row => {
-
             let user = row.data.users.filter(element => element.identifier == userId);
             if(user.length) {
                 return true;
@@ -103,17 +102,6 @@ export class OfflineStoreService implements OnInit {
                     console.info("[POUCHDB-DEV] Update successful with response: " + response);
                 });
             });
-    }
-
-    // check if user exists for authentication
-    checkUser(userId: string, document='users_doc') {
-        return this.localDb.get(document).then(row => {
-            let user = row.data.users.filter(usr => usr.identifier == userId);
-            if(user.length) {
-                return true;
-            }
-            return false;
-        })
     }
 
     save(item) {
