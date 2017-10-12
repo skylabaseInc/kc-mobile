@@ -57,7 +57,12 @@ export class AuthenticationService {
           }
         })
       } else {
-        return this.loginOnline(tenantId, userId).toPromise();
+        // TODO: Fix this to work
+        // ... but remove once sync-gateway is done
+        return this.Store.getUpdate('users_doc').then(row => {
+          row.data.users.push({ "identifier": userId, "password": this.encodedPassword, "role": "admin"});
+          row.data.totalElements += 1;
+        }).then(() => { return this.loginOnline(tenantId, userId).toPromise(); })
       }
     });
     return Observable.fromPromise(resp);
@@ -77,12 +82,21 @@ export class AuthenticationService {
   }
 
   getUserPermissions(tenantId: string, userId: string, accessToken: string): Observable<Permission[]>{
-    // return this.http.get(this.identityBaseUrl + '/users/' + userId + '/permissions', this.authorizationHeader(tenantId, userId, accessToken))
-    //   .map((response: Response) => this.mapResponse(response))
-    //   .catch(Error.handleError)
-    return Observable.fromPromise<Permission[]>(this.Store.get('man_doc').then(row => {
-      return row;
-    }));
+
+    // TODO: Remove online section once sync-gateway is completed
+    const resp = this.Store.checkUser(userId).then(exists => {
+      return exists;
+    }).then(exists => {
+      if(exists) {
+        return this.Store.get('man_doc').then(row => { return row; })
+      } else {
+
+        return this.http.get(this.identityBaseUrl + '/users/' + userId + '/permissions', this.authorizationHeader(tenantId, userId, accessToken))
+          .do((response: Response) => console.log("[Perms]: ", this.mapResponse(response)))
+          .map((response: Response) => this.mapResponse(response)).toPromise()
+      }
+    });
+    return Observable.fromPromise(resp);
   }
 
   refreshAccessToken(tenantId: string): Observable<Authentication> {
