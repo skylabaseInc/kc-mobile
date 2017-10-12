@@ -35,11 +35,7 @@ platformBrowserDynamic([
   { provide: 'depositAccountBaseUrl', useValue: '/api/deposit/v1' },
   { provide: 'tellerBaseUrl', useValue: '/api/teller/v1' },
   { provide: 'reportingBaseUrl', useValue: '/api/reporting/v1' },
-<<<<<<< HEAD
-  { provide: 'remoteCouchDbUrl', useValue: 'http://smartfinance.tech:5984/'},
-=======
   { provide: 'remoteCouchDbUrl', useValue: 'https://smartfinance.tech:6984/'},
->>>>>>> 35f873ddab10051ce908e05c3adc1222a11d1ff4
 ]).bootstrapModule(AppModule)
 .then(() => {
   if ('serviceWorker' in navigator) {
