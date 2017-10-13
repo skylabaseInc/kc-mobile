@@ -37,8 +37,9 @@ import {OfflineStoreService} from '../offlineStore/offlineStore.service';
 @Injectable()
 export class AccountingService{
 
-  private ledger: Ledger;
+  private ledger: any = [];
   private transactionType: Account;
+  private matchedAccounts: AccountPage;
 
   constructor(private http: HttpClient, @Inject('accountingBaseUrl') private baseUrl: string, private Store: OfflineStoreService) {}
 
@@ -64,9 +65,15 @@ export class AccountingService{
   }
 
   public findLedger(identifier: string, silent?: boolean): Observable<Ledger>{
+
     return Observable.fromPromise<Ledger>(this.Store.getUpdate('ledgers_doc').then(row => {
-      var ledger = row.data.ledgers.filter(element => element.identifier == identifier)
-      this.ledger = ledger;
+      row.data.ledgers.forEach(element => {
+        element.subLedgers.forEach(subElement => {
+          if(subElement.identifier == identifier) {
+            this.ledger.push(subElement);
+          }
+        })
+      })
     }))
     .map(ledger => this.ledger[0]);
   }
@@ -78,7 +85,7 @@ export class AccountingService{
       removedItem.subLedgers.push(subLedger);
       row.data.ledgers.splice(index, 0, removedItem);
 
-      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements, row.data.totalPages);
+      this.updateStoreLedgers('ledgers_doc', row._rev, row.data.ledgers, row.data.totalElements+1, row.data.totalPages);
     }))
   }
 
@@ -103,11 +110,23 @@ export class AccountingService{
 
   public fetchAccountsOfLedger(identifier: string, fetchRequest?: FetchRequest): Observable<AccountPage>{
     let params: URLSearchParams = buildSearchParams(fetchRequest);
-
+   
     let requestOptions: RequestOptionsArgs = {
       params
     };
-    return this.http.get(`${this.baseUrl}/ledgers/${identifier}/accounts`, requestOptions);
+
+    return Observable.fromPromise<AccountPage>(this.Store.getUpdate('usersTest_doc').then(row => {
+
+      let resp: any[] = [];
+      resp = row.data.accounts.filter(element => element.ledger == identifier);
+
+      this.matchedAccounts = {
+        "accounts": resp,
+        "totalPages": 1,
+        "totalElements": resp.length
+      }
+    }))
+      .map(accountPage => this.matchedAccounts);
   }
 
   public createAccount(account: Account): Observable<void>{
