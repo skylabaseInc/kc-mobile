@@ -135,7 +135,6 @@ export class OfficeService{
       this.employee = row.data.employees.filter(element => element.identifier == id);
     }))
     .map(employee => this.employee[0])
-    .catch(Error.handleError);
   }
 
   createEmployee(employee: Employee): Observable<Employee>{

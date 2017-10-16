@@ -115,7 +115,7 @@ export class AccountingService{
       params
     };
 
-    return Observable.fromPromise<AccountPage>(this.Store.getUpdate('usersTest_doc').then(row => {
+    return Observable.fromPromise<AccountPage>(this.Store.getUpdate('accLedgers_doc').then(row => {
 
       let resp: any[] = [];
       resp = row.data.accounts.filter(element => element.ledger == identifier);
