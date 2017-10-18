@@ -94,11 +94,15 @@ export class CustomerService {
   }
 
   fetchTasks(): Observable<TaskDefinition[]> {
-    return this.http.get(`${this.baseUrl}/tasks`)
+    return Observable.fromPromise<TaskDefinition[]>(this.Store.get('tasks_doc'))
+    .map(data => data)
   }
 
   createTask(task: TaskDefinition): Observable<void> {
-    return this.http.post(`${this.baseUrl}/tasks`, task);
+    return Observable.fromPromise<void>(this.Store.getUpdate('tasks_doc').then(row => {
+      var tasks = row.data.push(task);
+      this.updateStoreTasks('tasks_doc', row._rev, tasks);
+    }));
   }
 
   getPortrait(customerId: string): Observable<Blob> {
@@ -174,5 +178,9 @@ export class CustomerService {
         "totalPages": pages
       }
     });
+  }
+
+  updateStoreTasks(id, rev, data) {
+    this.Store.update({ "_id": id, "_rev": rev, "data": data });
   }
 }
