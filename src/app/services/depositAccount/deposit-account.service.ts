@@ -113,7 +113,8 @@ export class DepositAccountService {
   }
 
   fetchActions(): Observable<Action[]> {
-    return this.http.get(`${this.baseUrl}/actions`);
+    return Observable.fromPromise<Action[]>(this.Store.get('actions_doc'))
+    .map(data => data)
   }
 
   updateStoreDefinitions(id, rev, data) {
