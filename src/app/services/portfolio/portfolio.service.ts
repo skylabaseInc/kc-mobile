@@ -57,7 +57,7 @@ export class PortfolioService {
       search: params
     };
     return Observable.fromPromise<ProductPage>(this.Store.get('product_doc'))
-    .map(data => data);
+    .map(data => data)
   }
 
   createProduct(product: Product): Observable<void>{
