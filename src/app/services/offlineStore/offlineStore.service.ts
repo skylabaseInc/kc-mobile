@@ -33,7 +33,7 @@ export class OfflineStoreService implements OnInit {
             {
                 auth: {
                     username: 'admin',
-                    password: 'admin'
+                    password: '@@Admin2017'
                 }
             }
         );

@@ -23,7 +23,7 @@
   },
   "assets": [
     "favicon.ico",
-	"manifest.json"
+    "manifest.json"
   ],
   "engines": {
     "node": ">4.4 < 7",
