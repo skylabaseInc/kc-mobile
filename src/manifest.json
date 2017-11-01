@@ -1,6 +1,6 @@
 {
-  "name": "Kuelap.io Mobile Application",
-  "short_name": "Kuelap Mobile",
+  "name": "Kuelap Remote",
+  "short_name": "Kuelap Remote",
   "icons": [
     {
       "src": "assets/icons/icon-128x128.png",
@@ -43,5 +43,5 @@
   "theme_color": "#2b702e",
   "display": "standalone",
   "orientation": "portrait",
-  "description": "fims backoffice"
+  "description": "Kuelap Remote Back Office"
 }
